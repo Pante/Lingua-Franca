@@ -1,2 +1,2 @@
 # Lingua Franca
-Java Internationalisation that doesn't suck. *(WIP)*
+Java Internationalisation that doesn't suck. **(WIP)**
