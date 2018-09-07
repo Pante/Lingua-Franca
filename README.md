@@ -1,2 +1,2 @@
-# Blabber
-Java Internationalisation that doesn't suck
+# Lingua Franca
+Java Internationalisation that doesn't suck. *(WIP)*
