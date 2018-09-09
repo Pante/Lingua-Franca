@@ -23,7 +23,6 @@
  */
 package com.karuslabs.lingua.franca;
 
-import com.karuslabs.lingua.franca.bundles.Bundle;
 import com.google.common.cache.*;
 import com.google.common.collect.*;
 

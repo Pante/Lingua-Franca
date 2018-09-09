@@ -21,44 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.bundles;
+package com.karuslabs.lingua.franca.resources;
 
-import java.util.*;
+import java.io.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public class EmptyBundle extends Bundle {
-    
-    public static final EmptyBundle EMPTY = new EmptyBundle();
-    
-    
-    private EmptyBundle() {}
-    
-    
-    @Override
-    public boolean contains(String key) {
-        return false;
+public class SystemResource extends FileResource {
+
+    SystemResource(String folder) {
+        super(folder);
     }
 
+    
     @Override
-    public Set<String> keys() {
-        return Collections.EMPTY_SET;
-    }
-
-    @Override
-    public @Nullable String get(String key) {
-        return null;
-    }
-
-    @Override
-    public @Nullable String[] at(String key) {
-        return null;
-    }
-
-    @Override
-    public Locale locale() {
-        return Locale.ROOT;
+    public @Nullable InputStream load(String name) {
+        var file = new File(folder, name);
+        if (!file.isFile() || !file.canRead()) {
+            return null;
+        }
+        
+        try {
+            return new BufferedInputStream(new FileInputStream(file));
+            
+        } catch (FileNotFoundException e) {
+            return null;
+        }
     }
     
 }

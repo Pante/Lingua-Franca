@@ -21,55 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.bundles;
+package com.karuslabs.lingua.franca;
 
-import java.util.*;
+import com.karuslabs.lingua.franca.resources.Resource;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import java.util.Set;
+import java.util.concurrent.*;
 
 
-public class LegacyBundle extends Bundle {
+public class BundleLoader {
     
-    private static final String[] EMPTY = new String[] {};
-    
-    private ResourceBundle bundle;
-    private volatile @Nullable Set<String> keys;
-    
-    
-    public LegacyBundle(ResourceBundle bundle) {
-        this.bundle = bundle;
-        this.keys = null;
-    }
-    
-    
-    @Override
-    public boolean contains(String key) {
-        return bundle.containsKey(key);
-    }
-
-    @Override
-    public Set<String> keys() {
-        if (keys == null) {
-            keys = Set.of(Collections.list(bundle.getKeys()).toArray(EMPTY));
-        }
-        
-        return keys;
-    }
-    
-    
-    @Override
-    public String get(String key) {
-        return bundle.getString(key);
-    }
-
-    @Override
-    public String[] at(String key) {
-        return bundle.getStringArray(key);
-    }
-
-    @Override
-    public Locale locale() {
-        return bundle.getLocale();
-    }
+    private static final Set<Resource> GLOBAL = new ConcurrentHashMap<Resource, Object>(32).keySet();
     
 }
