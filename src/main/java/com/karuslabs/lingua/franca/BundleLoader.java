@@ -23,14 +23,133 @@
  */
 package com.karuslabs.lingua.franca;
 
-import com.karuslabs.lingua.franca.resources.Resource;
+import com.karuslabs.lingua.franca.annotations.*;
+import com.karuslabs.lingua.franca.sources.*;
 
-import java.util.Set;
+import java.util.*;
+import java.util.ResourceBundle.Control;
 import java.util.concurrent.*;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public class BundleLoader {
     
-    private static final Set<Resource> GLOBAL = new ConcurrentHashMap<Resource, Object>(32).keySet();
+    private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
+    private static final Source[] SOURCE = new Source[] {};
+    
+    
+    protected ConcurrentMap<String, Source[]> namespaces;
+    protected Set<Source> global;
+    
+    
+    public BundleLoader() {
+        this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet());
+    }
+    
+    public BundleLoader(ConcurrentMap<String, Source[]> namespaces, Set<Source> global) {
+        this.namespaces = namespaces;
+        this.global = global;
+    }
+    
+    
+    public Bundle load(String name, Locale locale) {
+        
+    }
+    
+    protected String toResourceName(String bundle, String format) {
+        return CONTROL.toResourceName(bundle, format);
+    }
+    
+    protected String toBundleName(String name, Locale locale) {
+        return CONTROL.toBundleName(name, locale);
+    }
+    
+    
+    public boolean register(Object annotated) {
+        return register(annotated.getClass());
+    }
+    
+    public boolean register(Class<?> annotated) {
+        var bundled = annotated.getAnnotation(Bundled.class);
+        var sources = load(annotated).toArray(SOURCE);
+        
+        if (bundled != null) {
+            return register(bundled.value(), sources) != null;
+            
+        } else {
+            return register(sources);
+        }
+    }
+    
+    protected List<Source> load(Class<?> annotated) {
+        var sources = new ArrayList<Source>();
+        
+        var classpaths = annotated.getAnnotation(ClassLoaderSources.class);
+        if (classpaths != null) {
+            var classloader = annotated.getClassLoader();
+            
+            for (var path : classpaths.value()) {
+                sources.add(new ClassLoaderSource(classloader, path));
+            }
+        }
+        
+        var modulepaths = annotated.getAnnotation(ModuleSources.class);
+        if (modulepaths != null) {
+            var module = annotated.getModule();
+            
+            for (var path : modulepaths.value()) {
+                sources.add(new ModuleSource(module, path));
+            }
+        }
+        
+        var paths = annotated.getAnnotation(SystemSources.class);
+        if (paths != null) {
+            for (var path : paths.values()) {
+                sources.add(new SystemSource(path));
+            }
+        }
+        
+        return sources;
+    }
+    
+    
+    public @Nullable Source[] register(String name, Source... sources) {
+        return namespaces.put(name, sources);
+    }
+    
+    public boolean register(Source... sources) {
+        return global.addAll(Set.of(sources));
+    }
+    
+    public boolean register(Source source) {
+        return global.add(source);
+    }
+
+    
+    public @Nullable Source[] unregister(String name) {
+        return namespaces.remove(name);
+    }
+    
+    public boolean unregister(Source... sources) {
+        return global.removeAll(Set.of(sources));
+    }
+    
+    public boolean unregister(Source source) {
+        return global.remove(source);
+    }
+    
+    
+    public boolean registered(String name) {
+        return namespaces.containsKey(name);
+    }
+    
+    public boolean registered(Source... sources) {
+        return global.containsAll(Set.of(sources));
+    }
+    
+    public boolean registered(Source source) {
+        return global.contains(source);
+    }
     
 }

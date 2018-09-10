@@ -30,8 +30,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public class Bundle {
-    
-    public static final Bundle EMPTY = new Bundle(Map.of(), Locale.ROOT);
+        
+    public static final Bundle EMPTY = new EmptyBundle();
     
     
     private static final ThreadLocal<MessageFormat> FORMATTER = new ThreadLocal<>() {
@@ -40,72 +40,90 @@ public class Bundle {
             return new MessageFormat("");
         }
     };
+        
+    static final Optional<String> EMPTY_STRING = Optional.empty();
+    static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
     
     
     private Map<String, Object> messages;
     private Locale locale;
+    private Bundle parent;
     private int hash;
     
     
     public Bundle(Map<String, Object> messages, Locale locale) {
+        this(messages, locale, EMPTY);
+    }
+    
+    public Bundle(Map<String, Object> messages, Locale locale, Bundle parent) {
         this.messages = messages;
         this.locale = locale;
+
         this.hash = 0;
     }
     
     
     public Optional<String> get(String key) {
-        var message = messages.get(key);
-        return message instanceof String ? Optional.of((String) message) : Optional.empty();
+        var message = find(key);
+        return message instanceof String ? Optional.of((String) message) : EMPTY_STRING;
     }
     
     public Optional<String> get(String key, Object... arguments) {
-        var message = messages.get(key);
-        return message instanceof String ? Optional.of(format((String) message, arguments)) : Optional.empty();
+        var message = find(key);
+        return message instanceof String ? Optional.of(format((String) message, arguments)) : EMPTY_STRING;
     }
     
     public @Nullable String getIfPresent(String key) {
-        var message = messages.get(key);
+        var message = find(key);
         return message instanceof String ? (String) message : null;
     }
     
     public @Nullable String getIfPresent(String key, Object... arguments) {
-        var message = messages.get(key);
+        var message = find(key);
         return message instanceof String ? format((String) message, arguments) : null;
     }
     
     
     public Optional<String> at(String key, int index) {
-        var message = messages.get(key);
-        return message instanceof String[] ? Optional.of(((String[]) message)[index]) : Optional.empty();
+        var message = find(key);
+        return message instanceof String[] ? Optional.of(((String[]) message)[index]) : EMPTY_STRING;
     }
     
     public Optional<String> at(String key, int index, Object... arguments) {
-        var message = messages.get(key);
-        return message instanceof String[] ? Optional.of(format(((String[]) message)[index], arguments)) : Optional.empty();
+        var message = find(key);
+        return message instanceof String[] ? Optional.of(format(((String[]) message)[index], arguments)) : EMPTY_STRING;
     }
     
     public @Nullable String atIfPresent(String key, int index) {
-        var message = messages.get(key);
+        var message = find(key);
         return message instanceof String[] ? ((String[]) message)[index] : null;
     }
     
     public @Nullable String atIfPresent(String key, int index, Object... arguments) {
-        var message = messages.get(key);
+        var message = find(key);
         return message instanceof String[] ? format(((String[]) message)[index], arguments) : null;
     }
     
     
     public Optional<String[]> all(String key) {
-        var message = messages.get(key);
-        return message instanceof String[] ? Optional.of((String[]) message) : Optional.empty();
+        var message = find(key);
+        return message instanceof String[] ? Optional.of((String[]) message) : EMPTY_ARRAY;
     }
     
     public @Nullable String[] allIfPresent(String key) {
-        var message = messages.get(key);
+        var message = find(key);
         return message instanceof String[] ? (String[]) message : null;
     }
     
+    
+    protected @Nullable Object find(String key) {
+        var message = messages.get(key);
+        if (message == null) {
+            message = parent.find(key);
+        }
+        
+        return message;
+    }
     
     protected String format(String message, Object... arguments) {
         var formatter = FORMATTER.get();
@@ -143,6 +161,73 @@ public class Bundle {
         }
         
         return hash;
+    }
+    
+}
+
+
+class EmptyBundle extends Bundle {    
+    
+    EmptyBundle() {
+        super(Map.of(), Locale.ROOT);
+    }
+    
+    @Override
+    public Optional<String> get(String key) {
+        return EMPTY_STRING;
+    }
+    
+    @Override
+    public Optional<String> get(String key, Object... arguments) {
+        return EMPTY_STRING;
+    }
+    
+    @Override
+    public @Nullable String getIfPresent(String key) {
+        return null;
+    }
+ 
+    @Override
+    public @Nullable String getIfPresent(String key, Object... arguments) {
+        return null;
+    }
+    
+    
+    @Override
+    public Optional<String> at(String key, int index) {
+        return EMPTY_STRING;
+    }
+    
+    @Override
+    public Optional<String> at(String key, int index, Object... arguments) {
+        return EMPTY_STRING;
+    }
+    
+    @Override
+    public @Nullable String atIfPresent(String key, int index) {
+        return null;
+    }
+    
+    @Override
+    public @Nullable String atIfPresent(String key, int index, Object... arguments) {
+        return null;
+    }
+    
+    
+    @Override
+    public Optional<String[]> all(String key) {
+        return EMPTY_ARRAY;
+    }
+    
+    @Override
+    public @Nullable String[] allIfPresent(String key) {
+        return null;
+    }
+    
+    
+    @Override
+    protected @Nullable Object find(String key) {
+        return null;
     }
     
 }

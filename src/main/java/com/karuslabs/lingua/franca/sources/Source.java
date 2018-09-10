@@ -21,32 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.resources;
+package com.karuslabs.lingua.franca.sources;
 
 import java.io.InputStream;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-class ClassLoaderResource extends FileResource {
+@FunctionalInterface
+public interface Source {
     
-    private ClassLoader loader;
-    
-    
-    ClassLoaderResource(String folder) {
-        super(folder);
-        this.loader = getClass().getClassLoader();
-    }
-    
-    public ClassLoaderResource(ClassLoader loader, String folder) {
-        super(folder);
-        this.loader = loader;
-    }
-
-    
-    @Override
-    public @Nullable InputStream load(String name) {
-        return loader.getResourceAsStream(name);
-    }
+    public @Nullable InputStream load(String name);
     
 }

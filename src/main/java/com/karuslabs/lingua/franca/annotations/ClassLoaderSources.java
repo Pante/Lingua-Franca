@@ -21,38 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.resources;
+package com.karuslabs.lingua.franca.annotations;
 
-import java.io.*;
+import java.lang.annotation.*;
+    
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 
-
-class ModuleResource extends FileResource {
+@Documented
+@Retention(RUNTIME)
+@Target({TYPE})
+public @interface ClassLoaderSources {
     
-    private Module module;
-    
-    
-    ModuleResource(String folder) {
-        super(folder);
-        this.module = getClass().getModule();
-        this.folder = folder;
-    }
-    
-    ModuleResource(Module module, String folder) {
-        super(folder);
-        this.module = module;
-    }
-
-    
-    @Override
-    public @Nullable InputStream load(String name) {
-        try {
-            return module.getResourceAsStream(name);
-            
-        } catch (IOException e) {
-            return null;
-        }
-    }
+    public String[] value();
     
 }

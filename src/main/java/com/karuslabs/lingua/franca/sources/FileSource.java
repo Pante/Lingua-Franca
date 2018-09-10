@@ -21,16 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.resources;
-
-import java.io.InputStream;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
+package com.karuslabs.lingua.franca.sources;
 
 
-@FunctionalInterface
-public interface Resource {
+public abstract class FileSource implements Source {
     
-    public @Nullable InputStream load(String name);
+    protected String folder;
+    private int hash;
+    
+    
+    public FileSource(String folder) {
+        this.folder = folder.isEmpty() || folder.charAt(folder.length() - 1) == '/' ? folder : folder + "/";
+        this.hash = 0;
+    }
+    
+    
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        
+        if (getClass() == null || getClass() != other.getClass()) {
+            return false;
+        }
+        
+        return folder.equals(((FileSource) other).folder);
+    }
+
+    @Override
+    public int hashCode() {
+        if (hash == 0) {
+            int calculated = 5;
+            calculated = 53 * calculated + getClass().hashCode();
+            calculated = 53 * calculated + folder.hashCode();
+            hash = calculated;
+        }
+        
+        return hash;
+    }
     
 }

@@ -21,19 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations;
+package com.karuslabs.lingua.franca.sources;
 
-import java.lang.annotation.*;
+import java.io.*;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-@Documented
-@Retention(RUNTIME)
-@Target({TYPE})
-public @interface ClassLoaderResource {
+public class SystemSource extends FileSource {
+
+    public SystemSource(String folder) {
+        super(folder);
+    }
+
     
-    public String[] value();
+    @Override
+    public @Nullable InputStream load(String name) {
+        var file = new File(folder, name);
+        if (!file.isFile() || !file.canRead()) {
+            return null;
+        }
+        
+        try {
+            return new BufferedInputStream(new FileInputStream(file));
+            
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
     
 }

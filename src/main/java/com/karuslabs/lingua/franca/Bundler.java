@@ -25,6 +25,8 @@ package com.karuslabs.lingua.franca;
 
 import com.google.common.cache.Cache;
 
+import com.karuslabs.lingua.franca.annotations.Bundled;
+
 import java.util.Locale;
 
 
@@ -38,32 +40,41 @@ public class Bundler {
     
     
     private Cache<String, Bundle> cache;
+    private BundleLoader loader;
     
     
-    protected Bundler(Cache<String, Bundle> cache) {
+    protected Bundler(Cache<String, Bundle> cache, BundleLoader loader) {
         this.cache = cache;
+        this.loader = loader;
     }
 
     
     public Bundle load(Object annotated, Locale locale) {
-        
+        return load(annotated, locale, loader);
     }
     
     public Bundle load(Object annotated, Locale locale, BundleLoader loader) {
-        
+        return load(annotated.getClass(), locale, loader);
     }
     
+    
     public Bundle load(Class<?> annotated, Locale locale) {
-        
+        return load(annotated, locale, loader);
     }
     
     public Bundle load(Class<?> annotated, Locale locale, BundleLoader loader) {
-        
+        var bundled = annotated.getAnnotation(Bundled.class);
+        if (bundled != null) {
+            return load(bundled.value(), locale, loader);
+            
+        } else {
+            return Bundle.EMPTY;
+        }
     }
     
     
     public Bundle load(String name, Locale locale) {
-        
+        return load(name, locale, loader);
     }
     
     public Bundle load(String name, Locale locale, BundleLoader loader) {

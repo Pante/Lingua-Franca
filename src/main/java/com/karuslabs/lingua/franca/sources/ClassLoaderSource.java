@@ -21,44 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.resources;
+package com.karuslabs.lingua.franca.sources;
+
+import java.io.InputStream;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public abstract class FileResource implements Resource {
+public class ClassLoaderSource extends FileSource {
     
-    protected String folder;
-    private int hash;
+    private ClassLoader loader;
     
     
-    public FileResource(String folder) {
-        this.folder = folder.isEmpty() || folder.charAt(folder.length() - 1) == '/' ? folder : folder + "/";
-        this.hash = 0;
+    ClassLoaderSource(String folder) {
+        super(folder);
+        this.loader = getClass().getClassLoader();
     }
     
-    
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        
-        if (getClass() == null || getClass() != other.getClass()) {
-            return false;
-        }
-        
-        return folder.equals(((FileResource) other).folder);
+    public ClassLoaderSource(ClassLoader loader, String folder) {
+        super(folder);
+        this.loader = loader;
     }
 
+    
     @Override
-    public int hashCode() {
-        if (hash == 0) {
-            int calculated = 5;
-            calculated = 53 * calculated + getClass().hashCode();
-            calculated = 53 * calculated + folder.hashCode();
-            hash = calculated;
-        }
-        
-        return hash;
+    public @Nullable InputStream load(String name) {
+        return loader.getResourceAsStream(name);
     }
     
 }
