@@ -78,7 +78,12 @@ public class Bundler {
     }
     
     public Bundle load(String name, Locale locale, BundleLoader loader) {
+        var bundle = cache.getIfPresent(loader.toBundleName(name, locale));
+        if (bundle == null) {
+             bundle = loader.load(name, locale);
+        }
         
+        return bundle;
     }
     
 }
