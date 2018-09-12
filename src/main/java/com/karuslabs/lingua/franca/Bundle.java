@@ -137,6 +137,10 @@ public class Bundle {
         return locale;
     }
     
+    public @Nullable Bundle parent() {
+        return parent;
+    }
+    
     
     @Override
     public boolean equals(Object other) {
@@ -169,7 +173,7 @@ public class Bundle {
 class EmptyBundle extends Bundle {    
     
     EmptyBundle() {
-        super(Map.of(), Locale.ROOT);
+        super(Map.of(), Locale.ROOT, null);
     }
     
     @Override

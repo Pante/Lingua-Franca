@@ -25,6 +25,7 @@ package com.karuslabs.lingua.franca;
 
 import com.karuslabs.lingua.franca.annotations.*;
 import com.karuslabs.lingua.franca.sources.*;
+import com.karuslabs.lingua.franca.spi.BundleProvider;
 
 import java.util.*;
 import java.util.ResourceBundle.Control;
@@ -33,7 +34,7 @@ import java.util.concurrent.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public class BundleLoader {
+public class BundleLoader implements BundleProvider {
     
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
@@ -53,9 +54,11 @@ public class BundleLoader {
     }
     
     
-    public Bundle load(String name, Locale locale) {
+    @Override
+    public @Nullable Bundle load(String name, Locale locale) {
         
     }
+    
     
     protected String toResourceName(String bundle, String format) {
         return CONTROL.toResourceName(bundle, format);
@@ -139,16 +142,17 @@ public class BundleLoader {
         return global.remove(source);
     }
     
-    
-    public boolean registered(String name) {
+        
+    @Override
+    public boolean provides(String name) {
         return namespaces.containsKey(name);
     }
     
-    public boolean registered(Source... sources) {
+    public boolean provides(Source... sources) {
         return global.containsAll(Set.of(sources));
     }
     
-    public boolean registered(Source source) {
+    public boolean provides(Source source) {
         return global.contains(source);
     }
     

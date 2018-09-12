@@ -26,8 +26,9 @@ package com.karuslabs.lingua.franca;
 import com.google.common.cache.Cache;
 
 import com.karuslabs.lingua.franca.annotations.Bundled;
+import com.karuslabs.lingua.franca.spi.BundleProvider;
 
-import java.util.Locale;
+import java.util.*;
 
 
 public class Bundler {    
@@ -41,11 +42,13 @@ public class Bundler {
     
     private Cache<String, Bundle> cache;
     private BundleLoader loader;
+    private ServiceLoader<BundleProvider> providers;
     
     
     protected Bundler(Cache<String, Bundle> cache, BundleLoader loader) {
         this.cache = cache;
         this.loader = loader;
+        this.providers = ServiceLoader.load(BundleProvider.class);
     }
 
     
@@ -80,8 +83,11 @@ public class Bundler {
     public Bundle load(String name, Locale locale, BundleLoader loader) {
         var bundle = cache.getIfPresent(loader.toBundleName(name, locale));
         if (bundle == null) {
-             bundle = loader.load(name, locale);
+            bundle = loader.load(name, locale);
+            
         }
+        
+        ResourceBundle
         
         return bundle;
     }
