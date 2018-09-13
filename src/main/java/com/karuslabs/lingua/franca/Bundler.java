@@ -23,12 +23,14 @@
  */
 package com.karuslabs.lingua.franca;
 
-import com.google.common.cache.Cache;
+import com.google.common.cache.*;
 
 import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.spi.BundleProvider;
 
 import java.util.*;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public class Bundler {    
@@ -40,15 +42,21 @@ public class Bundler {
     }
     
     
+    private static final ThreadLocal<ServiceLoader<BundleProvider>> PROVIDERS = new ThreadLocal<>() {
+        @Override
+        protected ServiceLoader<BundleProvider> initialValue() {
+            return ServiceLoader.load(BundleProvider.class);
+        }
+    };
+    
+    
     private Cache<String, Bundle> cache;
     private BundleLoader loader;
-    private ServiceLoader<BundleProvider> providers;
     
     
     protected Bundler(Cache<String, Bundle> cache, BundleLoader loader) {
         this.cache = cache;
         this.loader = loader;
-        this.providers = ServiceLoader.load(BundleProvider.class);
     }
 
     
@@ -81,15 +89,68 @@ public class Bundler {
     }
     
     public Bundle load(String name, Locale locale, BundleLoader loader) {
-        var bundle = cache.getIfPresent(loader.toBundleName(name, locale));
+        var bundleName = loader.toBundleName(name, locale);
+        var bundle = cache.getIfPresent(bundleName);
+        
         if (bundle == null) {
-            bundle = loader.load(name, locale);
-            
+            bundle = loadFromServices(name, locale, loader);
         }
         
-        ResourceBundle
+        if (bundle == null) {
+            cache.putAll(loadFromBundleLoader(name, loader.parents(name, locale), loader));
+            bundle = cache.getIfPresent(bundleName);
+        }
         
         return bundle;
+    }
+    
+    
+    protected @Nullable Bundle loadFromServices(String name, Locale locale, BundleLoader loader) {
+        try {
+            var providers = PROVIDERS.get().iterator();
+            while (providers.hasNext()) {
+                var bundle = providers.next().load(name, locale);
+                if (bundle != null) {
+                    cache(name, locale, bundle, loader);
+                    return bundle;
+                }
+            }
+            
+        } catch (ServiceConfigurationError e) {
+            // Ignore error
+        }
+        
+        return null;
+    }
+    
+    protected void cache(String name, Locale locale, Bundle bundle, BundleLoader loader) {
+        do {
+            cache.put(loader.toBundleName(name, locale), bundle);
+            bundle = bundle.parent();
+            locale = bundle.locale();
+        } while (bundle != Bundle.EMPTY);
+    }
+    
+    
+    protected Map<String, Bundle> loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader) {
+        var map = new HashMap<String, Bundle>(locales.size());
+        var parent = Bundle.EMPTY;
+        
+        for (var locale : locales) {
+            var bundleName = loader.toBundleName(name, locale);
+            var current = cache.getIfPresent(bundleName);
+            
+            if (current == null) {
+                current = loader.load(name, locale, parent);
+                map.put(bundleName, current);
+            }
+            
+            if (current != Bundle.EMPTY) {
+                parent = current;
+            }
+        }
+        
+        return map;
     }
     
 }

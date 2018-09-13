@@ -25,7 +25,6 @@ package com.karuslabs.lingua.franca;
 
 import com.karuslabs.lingua.franca.annotations.*;
 import com.karuslabs.lingua.franca.sources.*;
-import com.karuslabs.lingua.franca.spi.BundleProvider;
 
 import java.util.*;
 import java.util.ResourceBundle.Control;
@@ -34,12 +33,11 @@ import java.util.concurrent.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public class BundleLoader implements BundleProvider {
+public class BundleLoader {
     
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
-    
-    
+
     protected ConcurrentMap<String, Source[]> namespaces;
     protected Set<Source> global;
     
@@ -52,20 +50,28 @@ public class BundleLoader implements BundleProvider {
         this.namespaces = namespaces;
         this.global = global;
     }
+
     
-    
-    @Override
-    public @Nullable Bundle load(String name, Locale locale) {
+    public Bundle load(String base, Locale locale, Bundle parent) {
         
+        
+        return Bundle.EMPTY;
     }
     
     
-    protected String toResourceName(String bundle, String format) {
+    public List<Locale> parents(String base, Locale locale) {
+        var locales = CONTROL.getCandidateLocales(base, locale);
+        Collections.reverse(locales);
+        return locales;
+    }
+    
+    
+    public String toResourceName(String bundle, String format) {
         return CONTROL.toResourceName(bundle, format);
     }
     
-    protected String toBundleName(String name, Locale locale) {
-        return CONTROL.toBundleName(name, locale);
+    public String toBundleName(String base, Locale locale) {
+        return CONTROL.toBundleName(base, locale);
     }
     
     
@@ -75,7 +81,7 @@ public class BundleLoader implements BundleProvider {
     
     public boolean register(Class<?> annotated) {
         var bundled = annotated.getAnnotation(Bundled.class);
-        var sources = load(annotated).toArray(SOURCE);
+        var sources = parse(annotated).toArray(SOURCE);
         
         if (bundled != null) {
             return register(bundled.value(), sources) != null;
@@ -85,7 +91,7 @@ public class BundleLoader implements BundleProvider {
         }
     }
     
-    protected List<Source> load(Class<?> annotated) {
+    protected List<Source> parse(Class<?> annotated) {
         var sources = new ArrayList<Source>();
         
         var classpaths = annotated.getAnnotation(ClassLoaderSources.class);
@@ -117,8 +123,8 @@ public class BundleLoader implements BundleProvider {
     }
     
     
-    public @Nullable Source[] register(String name, Source... sources) {
-        return namespaces.put(name, sources);
+    public @Nullable Source[] register(String base, Source... sources) {
+        return namespaces.put(base, sources);
     }
     
     public boolean register(Source... sources) {
@@ -130,8 +136,8 @@ public class BundleLoader implements BundleProvider {
     }
 
     
-    public @Nullable Source[] unregister(String name) {
-        return namespaces.remove(name);
+    public @Nullable Source[] unregister(String base) {
+        return namespaces.remove(base);
     }
     
     public boolean unregister(Source... sources) {
@@ -143,16 +149,15 @@ public class BundleLoader implements BundleProvider {
     }
     
         
-    @Override
-    public boolean provides(String name) {
-        return namespaces.containsKey(name);
+    public boolean registered(String base) {
+        return namespaces.containsKey(base);
     }
     
-    public boolean provides(Source... sources) {
+    public boolean registered(Source... sources) {
         return global.containsAll(Set.of(sources));
     }
     
-    public boolean provides(Source source) {
+    public boolean registered(Source source) {
         return global.contains(source);
     }
     

@@ -137,7 +137,7 @@ public class Bundle {
         return locale;
     }
     
-    public @Nullable Bundle parent() {
+    public Bundle parent() {
         return parent;
     }
     
@@ -173,7 +173,7 @@ public class Bundle {
 class EmptyBundle extends Bundle {    
     
     EmptyBundle() {
-        super(Map.of(), Locale.ROOT, null);
+        super(Map.of(), Locale.ROOT, EMPTY);
     }
     
     @Override
