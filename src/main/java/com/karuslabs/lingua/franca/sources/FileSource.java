@@ -27,7 +27,7 @@ package com.karuslabs.lingua.franca.sources;
 public abstract class FileSource implements Source {
     
     protected String folder;
-    private int hash;
+    private volatile int hash;
     
     
     public FileSource(String folder) {
@@ -42,7 +42,7 @@ public abstract class FileSource implements Source {
             return true;
         }
         
-        if (getClass() == null || getClass() != other.getClass()) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
         

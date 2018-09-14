@@ -46,9 +46,9 @@ public class ModuleSource extends FileSource {
 
     
     @Override
-    public @Nullable InputStream load(String name) {
+    public @Nullable InputStream load(String resource) {
         try {
-            return module.getResourceAsStream(name);
+            return module.getResourceAsStream(resource);
             
         } catch (IOException e) {
             return null;

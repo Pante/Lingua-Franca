@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Target({TYPE})
-public @interface Provided {
+public @interface Provides {
     
     public String[] value();
     

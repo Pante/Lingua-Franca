@@ -33,7 +33,7 @@ public class ClassLoaderSource extends FileSource {
     private ClassLoader loader;
     
     
-    ClassLoaderSource(String folder) {
+    public ClassLoaderSource(String folder) {
         super(folder);
         this.loader = getClass().getClassLoader();
     }
@@ -45,8 +45,8 @@ public class ClassLoaderSource extends FileSource {
 
     
     @Override
-    public @Nullable InputStream load(String name) {
-        return loader.getResourceAsStream(name);
+    public @Nullable InputStream load(String resource) {
+        return loader.getResourceAsStream(resource);
     }
     
 }

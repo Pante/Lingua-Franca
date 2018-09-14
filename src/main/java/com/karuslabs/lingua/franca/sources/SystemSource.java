@@ -36,8 +36,8 @@ public class SystemSource extends FileSource {
 
     
     @Override
-    public @Nullable InputStream load(String name) {
-        var file = new File(folder, name);
+    public @Nullable InputStream load(String resource) {
+        var file = new File(folder, resource);
         if (!file.isFile() || !file.canRead()) {
             return null;
         }

@@ -36,8 +36,8 @@ public class Locales {
     
     private static final BiMap<String, Locale> LOCALES;
     
-    private static final Cache<String, Locale> TAG_CACHE = CacheBuilder.newBuilder().expireAfterAccess(5, MINUTES).build();
-    private static final Cache<Locale, String> LOCALE_CACHE = CacheBuilder.newBuilder().expireAfterAccess(5, MINUTES).build();
+    private static final Cache<String, Locale> TAG_CACHE = CacheBuilder.newBuilder().maximumSize(512).expireAfterAccess(5, MINUTES).build();
+    private static final Cache<Locale, String> LOCALE_CACHE = CacheBuilder.newBuilder().maximumSize(512).expireAfterAccess(5, MINUTES).build();
     
     private static final Set<String> LANGUAGES = Set.of(Locale.getISOLanguages());
     private static final Set<String> COUNTRIES = Set.of(Locale.getISOCountries());
@@ -48,39 +48,45 @@ public class Locales {
         LOCALES = HashBiMap.create(locales.length);
         
         for (var locale : locales) {
-            LOCALES.put(locale.toLanguageTag().replace('-', '_'), locale);
+            LOCALES.put(locale.toLanguageTag(), locale);
         }
     }
 
     
     public static Locale of(String tag) {
+        tag = tag.replace('_', '-');
         var locale = LOCALES.get(tag);
         
         if (locale == null) {
             locale = TAG_CACHE.getIfPresent(tag);
             
             if (locale == null) {
-                locale = Locale.forLanguageTag(tag.replace('_', '-'));
+                locale = Locale.forLanguageTag(tag);
                 TAG_CACHE.put(tag, locale);
             }
         }
         
         return locale;
     }
-        
+    
+    
     public static String of(Locale locale) {
+        return of(locale, '-');
+    }
+    
+    public static String of(Locale locale, char delimiter) {
         var tag = LOCALES.inverse().get(locale);
         
         if (tag == null) {
             tag = LOCALE_CACHE.getIfPresent(locale);
             
             if (tag == null) {
-                tag = locale.toLanguageTag().replace('-', '_'); 
+                tag = locale.toLanguageTag(); 
                 LOCALE_CACHE.put(locale, tag);
             }
         }
         
-        return tag;
+        return tag.replace('-', delimiter);
     }
     
     

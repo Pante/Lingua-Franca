@@ -24,8 +24,10 @@
 package com.karuslabs.lingua.franca;
 
 import com.karuslabs.lingua.franca.annotations.*;
+import com.karuslabs.lingua.franca.codec.Stringifier;
 import com.karuslabs.lingua.franca.sources.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.ResourceBundle.Control;
 import java.util.concurrent.*;
@@ -37,32 +39,59 @@ public class BundleLoader {
     
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
-
+    
     protected ConcurrentMap<String, Source[]> namespaces;
     protected Set<Source> global;
+    protected String[] formats;
     
     
     public BundleLoader() {
-        this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet());
+        this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet(), "json", "properties", "xml", "yml", "yaml");
     }
     
-    public BundleLoader(ConcurrentMap<String, Source[]> namespaces, Set<Source> global) {
+    public BundleLoader(ConcurrentMap<String, Source[]> namespaces, Set<Source> global, String... formats) {
         this.namespaces = namespaces;
         this.global = global;
+        this.formats = formats;
     }
 
     
-    public Bundle load(String base, Locale locale, Bundle parent) {
+    public Bundle load(String name, Locale locale, Bundle parent) {
+        var sources = namespaces.get(name);
+        var bundleName = toBundleName(name, locale);
         
+        Map<String, Object> messages = null;
+        if (sources != null) {
+            messages = load(sources, bundleName);
+        }
         
-        return Bundle.EMPTY;
+        if (messages == null) {
+            messages = load(global.toArray(SOURCE), bundleName);
+        }
+        
+        return messages == null ? Bundle.EMPTY : new Bundle(messages, locale, parent);
+    }
+    
+    protected @Nullable Map<String, Object> load(Source[] sources, String bundle) {
+        for (var source : sources) {
+            for (var format : formats) {
+                try (var stream = source.load(toResourceName(bundle, format))) {
+                    if (stream != null) {
+                        return Stringifier.stringify().from(stream, format);
+                    }
+                    
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+        }
+        
+        return null;
     }
     
     
-    public List<Locale> parents(String base, Locale locale) {
-        var locales = CONTROL.getCandidateLocales(base, locale);
-        Collections.reverse(locales);
-        return locales;
+    public List<Locale> parents(String name, Locale locale) {
+        return CONTROL.getCandidateLocales(name, locale);
     }
     
     
@@ -70,8 +99,8 @@ public class BundleLoader {
         return CONTROL.toResourceName(bundle, format);
     }
     
-    public String toBundleName(String base, Locale locale) {
-        return CONTROL.toBundleName(base, locale);
+    public String toBundleName(String name, Locale locale) {
+        return CONTROL.toBundleName(name, locale);
     }
     
     

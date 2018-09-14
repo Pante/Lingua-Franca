@@ -32,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface BundleProvider {
     
-    public @Nullable Bundle load(String name, Locale locale);
+    public @Nullable Bundle get(String name, Locale locale);
     
     public boolean provides(String name);
     

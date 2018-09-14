@@ -31,6 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @FunctionalInterface
 public interface Source {
     
-    public @Nullable InputStream load(String name);
+    public @Nullable InputStream load(String resource);
     
 }

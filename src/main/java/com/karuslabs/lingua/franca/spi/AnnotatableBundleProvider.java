@@ -23,31 +23,25 @@
  */
 package com.karuslabs.lingua.franca.spi;
 
-import com.karuslabs.lingua.franca.spi.annotations.Provided;
+import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
 import java.util.*;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public abstract class AnnotatableBundleProvider implements BundleProvider {
     
-    private volatile @Nullable Set<String> names;
+    private Set<String> bundles;
+    
+    
+    public AnnotatableBundleProvider() {
+        var provided = getClass().getAnnotation(Provides.class);
+        bundles = provided == null ? Set.of() : Set.of(provided.value());
+    }
     
 
     @Override
     public boolean provides(String name) {
-        if (names == null) {
-            var annotation = getClass().getAnnotation(Provided.class);
-            if (annotation != null) {
-                names = Set.of(annotation.value());
-
-            } else {
-                names = Set.of();
-            }
-        }
-        
-        return names.contains(name);
+        return bundles.contains(name);
     }
     
 }

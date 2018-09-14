@@ -24,6 +24,7 @@
 package com.karuslabs.lingua.franca;
 
 import com.google.common.cache.*;
+import com.google.common.collect.Lists;
 
 import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.spi.BundleProvider;
@@ -97,8 +98,7 @@ public class Bundler {
         }
         
         if (bundle == null) {
-            cache.putAll(loadFromBundleLoader(name, loader.parents(name, locale), loader));
-            bundle = cache.getIfPresent(bundleName);
+            bundle = loadFromBundleLoader(name, Lists.reverse(loader.parents(name, locale)), loader);
         }
         
         return bundle;
@@ -109,7 +109,7 @@ public class Bundler {
         try {
             var providers = PROVIDERS.get().iterator();
             while (providers.hasNext()) {
-                var bundle = providers.next().load(name, locale);
+                var bundle = providers.next().get(name, locale);
                 if (bundle != null) {
                     cache(name, locale, bundle, loader);
                     return bundle;
@@ -132,25 +132,24 @@ public class Bundler {
     }
     
     
-    protected Map<String, Bundle> loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader) {
-        var map = new HashMap<String, Bundle>(locales.size());
-        var parent = Bundle.EMPTY;
-        
+    protected Bundle loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader) {
+        var current = Bundle.EMPTY;
         for (var locale : locales) {
             var bundleName = loader.toBundleName(name, locale);
-            var current = cache.getIfPresent(bundleName);
             
-            if (current == null) {
-                current = loader.load(name, locale, parent);
-                map.put(bundleName, current);
+            var child = cache.getIfPresent(bundleName);
+            if (child == null) {
+                child = loader.load(name, locale, current);
             }
             
-            if (current != Bundle.EMPTY) {
-                parent = current;
+            if (child != Bundle.EMPTY) {
+                current = child;
             }
+            
+            cache.put(bundleName, current);
         }
         
-        return map;
+        return current;
     }
     
 }
