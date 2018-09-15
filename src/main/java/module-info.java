@@ -21,48 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.sources;
-
-import java.io.InputStream;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-
-public class ClassLoaderSource extends FileSource {
+open module LinguaFranca {
+    uses com.karuslabs.lingua.franca.spi.BundleProvider;
     
-    private ClassLoader loader;
+    exports com.karuslabs.lingua.franca;
+    exports com.karuslabs.lingua.franca.annotations;
+    exports com.karuslabs.lingua.franca.codec;
+    exports com.karuslabs.lingua.franca.sources;
+    exports com.karuslabs.lingua.franca.spi;
+    exports com.karuslabs.lingua.franca.spi.annotations;
     
-    
-    public ClassLoaderSource(String folder) {
-        super(folder);
-        this.loader = getClass().getClassLoader();
-    }
-    
-    public ClassLoaderSource(ClassLoader loader, String folder) {
-        super(folder);
-        this.loader = loader;
-    }
-
-    
-    @Override
-    public @Nullable InputStream load(String resource) {
-        return loader.getResourceAsStream(resource);
-    }
-    
-    
-    @Override
-    public boolean equals(Object other) {
-        return super.equals(other) && loader.equals(((ClassLoaderSource) other).loader);
-    }
-    
-    @Override
-    public int hashCode() {
-        return 53 * super.hashCode() + loader.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-        return String.format(getClass().getName() + "[folder = %s, classloader = %s]", folder, loader.toString());
-    }
-    
+    requires com.google.common;
+    requires org.checkerframework.checker.qual;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.dataformat.javaprop;
+    requires com.fasterxml.jackson.dataformat.yaml;
 }

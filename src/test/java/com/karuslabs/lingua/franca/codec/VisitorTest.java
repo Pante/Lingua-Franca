@@ -22,63 +22,62 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.franca;
+package com.karuslabs.lingua.franca.codec;
 
-import com.karuslabs.lingua.franca.Locales;
-import java.util.Locale;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.*;
+
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.of;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class LocalesTest {
+class VisitorTest {
     
-    private static final String TAG = "en_UD";
-    private static final Locale LOCALE = new Locale("en", "UD");
+    static final JsonNodeFactory factory = JsonNodeFactory.instance;
     
     
-    @ParameterizedTest
-    @MethodSource({"locales_provider"})
-    void of_locale(String tag, Locale locale) {
-        var preloaded = Locales.of(LOCALE);
-        
-        assertEquals(tag, Locales.of(locale));
-    }
+    @Spy Visitor<Object, Object> visitor = new Visitor<>(null){};
     
     
     @ParameterizedTest
-    @MethodSource({"locales_provider"}) 
-    void of_tag(String tag, Locale locale) {
-        var preloaded = Locales.of(TAG);
+    @MethodSource({"visit_provider"})
+    void visit(JsonNode node) {
+        visitor.visit(null, node, null);
         
-        assertEquals(locale, Locales.of(tag));
+        verify(visitor).visit(null, node.getClass().cast(node), null);
+        verify(visitor).visitDefault(null, node, null);
+    }
+    
+    static Stream<JsonNode> visit_provider() {
+        return Stream.of(
+            factory.arrayNode(),
+            factory.objectNode(),
+            factory.binaryNode(new byte[] {}),
+            factory.booleanNode(true),
+            MissingNode.getInstance(),
+            factory.nullNode(),
+            factory.numberNode(0),
+            factory.pojoNode(null),
+            factory.textNode("")
+        );
     }
     
     
-    static Stream<Arguments> locales_provider() {
-        return Stream.of(of("en-UD", LOCALE));
-    }
-    
-        
-    @ParameterizedTest
-    @CsvSource({"ENGLISH, false", "EN, true", "en, true"})
-    void isISOLanguage(String language, boolean expected) {
-        assertEquals(expected, Locales.isISOLanguage(language));
-    }
-    
-        
-    @ParameterizedTest
-    @CsvSource({"SINGAPORE, false", "SG, true", "sg, true"})
-    void isISOCountry(String country, boolean expected) {
-        assertEquals(expected, Locales.isISOCountry(country));
+    @Test
+    void visit_exception() {
+        ValueNode value = when(mock(ValueNode.class).getNodeType()).thenReturn(JsonNodeType.ARRAY).getMock();
+        assertEquals("Unsupported node: ARRAY", assertThrows(UnsupportedOperationException.class, () -> visitor.visit(null, value, null)).getMessage());
     }
     
 }

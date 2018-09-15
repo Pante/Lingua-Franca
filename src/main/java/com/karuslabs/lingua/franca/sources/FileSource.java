@@ -61,4 +61,9 @@ public abstract class FileSource implements Source {
         return hash;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getName() + "[folder = " + folder + "]";
+    }
+    
 }

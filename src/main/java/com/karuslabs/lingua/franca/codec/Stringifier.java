@@ -26,7 +26,6 @@ package com.karuslabs.lingua.franca.codec;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.*;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.*;
@@ -47,7 +46,6 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
     
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final ObjectMapper PROPERTIES = new JavaPropsMapper();
-    private static final ObjectMapper XML = new XmlMapper();
     private static final ObjectMapper YAML = new ObjectMapper(new YAMLFactory());
     
     private static final String[] EMPTY = new String[0];
@@ -74,9 +72,6 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
 
             case "properties":
                 return PROPERTIES;
-                            
-            case "xml":
-                return XML;
                 
             case "yml": case "yaml":
                 return YAML;

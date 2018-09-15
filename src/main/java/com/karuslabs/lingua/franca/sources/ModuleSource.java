@@ -55,4 +55,20 @@ public class ModuleSource extends FileSource {
         }
     }
     
+    
+    @Override
+    public boolean equals(Object other) {
+        return super.equals(other) && module.equals(((ModuleSource) other).module);
+    }
+    
+    @Override
+    public int hashCode() {
+        return 53 * super.hashCode() + module.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return String.format(getClass().getName() + "[folder = %s, module = %s]", folder, module.toString());
+    }
+    
 }

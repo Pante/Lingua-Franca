@@ -33,10 +33,12 @@ import java.util.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 
 public class Bundler {    
     
-    private static Bundler BUNDLER = null;
+    private static Bundler BUNDLER = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
     
     public static Bundler bundler() {
         return BUNDLER;

@@ -21,48 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.sources;
 
-import java.io.InputStream;
+package com.karuslabs.lingua.franca.spi;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import com.karuslabs.lingua.franca.Bundle;
+import com.karuslabs.lingua.franca.spi.annotations.Provides;
+
+import java.util.Locale;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
-public class ClassLoaderSource extends FileSource {
+@ExtendWith(MockitoExtension.class)
+class AnnotatableBundleProviderTest {
     
-    private ClassLoader loader;
+    AnnotatableBundleProvider provider = new Provider();
     
     
-    public ClassLoaderSource(String folder) {
-        super(folder);
-        this.loader = getClass().getClassLoader();
+    @Test
+    void provides() {
+        assertTrue(provider.provides("a"));
+        assertTrue(provider.provides("b"));
+        assertFalse(provider.provides("c"));
     }
     
-    public ClassLoaderSource(ClassLoader loader, String folder) {
-        super(folder);
-        this.loader = loader;
-    }
+}
 
-    
+@Provides({"a", "b"})
+class Provider extends AnnotatableBundleProvider {
+
     @Override
-    public @Nullable InputStream load(String resource) {
-        return loader.getResourceAsStream(resource);
-    }
-    
-    
-    @Override
-    public boolean equals(Object other) {
-        return super.equals(other) && loader.equals(((ClassLoaderSource) other).loader);
-    }
-    
-    @Override
-    public int hashCode() {
-        return 53 * super.hashCode() + loader.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-        return String.format(getClass().getName() + "[folder = %s, classloader = %s]", folder, loader.toString());
+    public Bundle get(String name, Locale locale) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

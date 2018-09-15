@@ -22,10 +22,8 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.franca;
+package com.karuslabs.lingua.franca.sources;
 
-import com.karuslabs.lingua.franca.Locales;
-import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,46 +37,49 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 
 @ExtendWith(MockitoExtension.class)
-class LocalesTest {
+class FileSourceTest {
     
-    private static final String TAG = "en_UD";
-    private static final Locale LOCALE = new Locale("en", "UD");
+    static FileSource source = new SystemSource("folder");
     
     
     @ParameterizedTest
-    @MethodSource({"locales_provider"})
-    void of_locale(String tag, Locale locale) {
-        var preloaded = Locales.of(LOCALE);
-        
-        assertEquals(tag, Locales.of(locale));
+    @MethodSource({"equality_provider"})
+    void equals(FileSource other, boolean expected) {
+        assertEquals(expected, source.equals(other));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"locales_provider"}) 
-    void of_tag(String tag, Locale locale) {
-        var preloaded = Locales.of(TAG);
-        
-        assertEquals(locale, Locales.of(tag));
+    @MethodSource({"equality_provider"})
+    void hashCode(FileSource other, boolean expected) {
+        assertEquals(expected, source.hashCode() == other.hashCode());
     }
     
     
-    static Stream<Arguments> locales_provider() {
-        return Stream.of(of("en-UD", LOCALE));
+    static Stream<Arguments> equality_provider() {
+        return Stream.of(
+            of(source, true),
+            of(new SystemSource("folder"), true),
+            of(new SystemSource("folder/"), true),
+            of(new SystemSource("foLder"), false),
+            of(new ClassLoaderSource("folder"), false)
+        );
     }
     
-        
+    
     @ParameterizedTest
-    @CsvSource({"ENGLISH, false", "EN, true", "en, true"})
-    void isISOLanguage(String language, boolean expected) {
-        assertEquals(expected, Locales.isISOLanguage(language));
+    @MethodSource({"toString_provider"})
+    void source_toString(String folder, String expected) {
+        assertEquals(expected, new SystemSource(folder).toString());
     }
     
-        
-    @ParameterizedTest
-    @CsvSource({"SINGAPORE, false", "SG, true", "sg, true"})
-    void isISOCountry(String country, boolean expected) {
-        assertEquals(expected, Locales.isISOCountry(country));
+    static Stream<Arguments> toString_provider() {
+        var name = SystemSource.class.getName() + "[%s]";
+        return Stream.of(
+            of("", String.format(name, "")),
+            of("folder", String.format(name, "folder/")),
+            of("folder/", String.format(name, "folder/"))
+        );
     }
     
 }

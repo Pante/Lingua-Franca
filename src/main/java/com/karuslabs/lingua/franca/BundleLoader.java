@@ -37,6 +37,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BundleLoader {
     
+    private static final BundleLoader LOADER = new BundleLoader();
+    
+    
+    public static BundleLoader loader() {
+        return LOADER;
+    }
+    
+    
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
     
