@@ -24,8 +24,10 @@
 
 package com.karuslabs.lingua.franca.sources;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
@@ -34,12 +36,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class FileSourceTest {
+class ModuleSourceTest {
     
-    static FileSource source = new SystemSource("folder");
+    static ModuleSource source = new ModuleSource("sources");
+    static String file = "source.yml";
+    
+    
+    @Test
+    void load() {
+        assertNotNull(new ModuleSource("sources").load(file));
+    }
+    
+    @Test
+    void load_exception() throws IOException {
+        Module module = when(mock(Module.class).getResourceAsStream(any())).thenThrow(IOException.class).getMock();
+        assertNull(new ModuleSource(module, "sources").load(file));
+    }
     
     
     @ParameterizedTest
@@ -59,27 +75,15 @@ class FileSourceTest {
     static Stream<Arguments> equality_provider() {
         return Stream.of(
             of(source, true),
-            of(new SystemSource("folder"), true),
-            of(new SystemSource("folder/"), true),
-            of(new SystemSource("foLder"), false),
-            of(new ClassLoaderSource("folder"), false)
+            of(new ModuleSource("sources"), true),
+            of(new ModuleSource(mock(Module.class), "sources"), false)
         );
     }
     
     
-    @ParameterizedTest
-    @MethodSource({"toString_provider"})
-    void source_toString(String folder, String expected) {
-        assertEquals(expected, new SystemSource(folder).toString());
-    }
-    
-    static Stream<Arguments> toString_provider() {
-        var name = SystemSource.class.getName() + "[folder = %s]";
-        return Stream.of(
-            of("", String.format(name, "")),
-            of("folder", String.format(name, "folder/")),
-            of("folder/", String.format(name, "folder/"))
-        );
+    @Test
+    void source_toString() {
+        assertEquals(String.format(ModuleSource.class.getName() + "[module = %s, folder = %s]", ModuleSource.class.getModule(), "sources/"), new ModuleSource("sources").toString());
     }
     
 }

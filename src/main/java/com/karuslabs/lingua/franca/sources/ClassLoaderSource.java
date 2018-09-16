@@ -46,7 +46,7 @@ public class ClassLoaderSource extends FileSource {
     
     @Override
     public @Nullable InputStream load(String resource) {
-        return loader.getResourceAsStream(resource);
+        return loader.getResourceAsStream(folder + resource);
     }
     
     
@@ -62,7 +62,7 @@ public class ClassLoaderSource extends FileSource {
     
     @Override
     public String toString() {
-        return String.format(getClass().getName() + "[folder = %s, classloader = %s]", folder, loader.toString());
+        return String.format(getClass().getName() + "[classloader = %s, folder = %s]", loader, folder);
     }
     
 }

@@ -103,11 +103,15 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
         var strings = new ArrayList<String>(array.size());
         for (int i = 0; i < array.size(); i++) {
             var value = array.get(i);
+            var indexed = path + "[" + i + "]";
+            
             if (value.isArray() || value.isObject()) {
-                visit(path + "[" + i + "]", value, map);
+                visit(indexed, value, map);
 
             } else {
-                strings.add(value.asText());
+                var text = value.asText();
+                strings.add(text);
+                map.put(indexed, text);
             }
         }
 

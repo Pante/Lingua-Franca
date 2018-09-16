@@ -21,53 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.karuslabs.lingua.franca.sources;
 
-import java.io.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-public class ModuleSource extends FileSource {
+@ExtendWith(MockitoExtension.class)
+class SystemSourceTest {
     
-    private Module module;
+    SystemSource source = new SystemSource(getClass().getClassLoader().getResource("sources").getPath());
     
     
-    public ModuleSource(String folder) {
-        super(folder);
-        this.module = getClass().getModule();
-    }
-    
-    public ModuleSource(Module module, String folder) {
-        super(folder);
-        this.module = module;
-    }
-
-    
-    @Override
-    public @Nullable InputStream load(String resource) {
-        try {
-            return module.getResourceAsStream(folder + resource);
-            
-        } catch (IOException e) {
-            return null;
-        }
+    @Test
+    void load() {
+        assertNotNull(source.load("source.yml"));
     }
     
     
-    @Override
-    public boolean equals(Object other) {
-        return super.equals(other) && module.equals(((ModuleSource) other).module);
+    @Test
+    void load_folder() {
+        assertNull(source.load(""));
     }
     
-    @Override
-    public int hashCode() {
-        return 53 * super.hashCode() + module.hashCode();
-    }
     
-    @Override
-    public String toString() {
-        return String.format(getClass().getName() + "[module = %s, folder = %s]", module.toString(), folder);
+    @Test
+    void load_exception() {
+        assertNull(source.load("source.xml"));
     }
     
 }

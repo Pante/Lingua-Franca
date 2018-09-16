@@ -58,7 +58,7 @@ public class Bundle {
     public Bundle(Map<String, Object> messages, Locale locale, Bundle parent) {
         this.messages = messages;
         this.locale = locale;
-
+        this.parent = parent;
         this.hash = 0;
     }
     
@@ -86,22 +86,46 @@ public class Bundle {
     
     public Optional<String> at(String key, int index) {
         var message = find(key);
-        return message instanceof String[] ? Optional.of(((String[]) message)[index]) : EMPTY_STRING;
+        if (message instanceof String[]) {
+            var messages = (String[]) message;
+            if (index >= 0 && index < messages.length) {
+                return Optional.of(messages[index]);
+            }
+        }
+        return EMPTY_STRING;
     }
     
     public Optional<String> at(String key, int index, Object... arguments) {
         var message = find(key);
-        return message instanceof String[] ? Optional.of(format(((String[]) message)[index], arguments)) : EMPTY_STRING;
+        if (message instanceof String[]) {
+            var messages = (String[]) message;
+            if (index >= 0 && index < messages.length) {
+                return Optional.of(format(messages[index], arguments));
+            }
+        }
+        return EMPTY_STRING;
     }
     
     public @Nullable String atIfPresent(String key, int index) {
         var message = find(key);
-        return message instanceof String[] ? ((String[]) message)[index] : null;
+        if (message instanceof String[]) {
+            var messages = (String[]) message;
+            if (index >= 0 && index < messages.length) {
+                return messages[index];
+            }
+        }
+        return null;
     }
     
     public @Nullable String atIfPresent(String key, int index, Object... arguments) {
         var message = find(key);
-        return message instanceof String[] ? format(((String[]) message)[index], arguments) : null;
+        if (message instanceof String[]) {
+            var messages = (String[]) message;
+            if (index >= 0 && index < messages.length) {
+                return format(messages[index], arguments);
+            }
+        }
+        return null;
     }
     
     
@@ -118,7 +142,7 @@ public class Bundle {
     
     protected @Nullable Object find(String key) {
         var message = messages.get(key);
-        if (message == null) {
+        if (message == null && parent != EMPTY) {
             message = parent.find(key);
         }
         

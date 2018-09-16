@@ -62,16 +62,29 @@ class StringifierTest {
     @Test
     void visit_json() {
         var results = Stringifier.stringify().from(getClass().getClassLoader().getResourceAsStream(ENCODED + "json"), "json");
-        assertEquals(5, results.size());
+        assertEquals(12, results.size());
         
         array = (String[]) results.get("a.b");
         assertArrayEquals(new String[] {"first", "2", "true"}, array);
         
+        assertEquals("first", results.get("a.b[0]"));
+        assertEquals("2", results.get("a.b[3]"));
+        assertEquals("true", results.get("a.b[4]"));
+        
+        
         array = (String[]) results.get("a.b[1].c");
         assertArrayEquals(new String[] {"second", "1", "false"}, array);
         
+        assertEquals("second", results.get("a.b[1].c[0]"));
+        assertEquals("1", results.get("a.b[1].c[1]"));
+        assertEquals("false", results.get("a.b[1].c[2]"));
+        
+        
         array = (String[]) results.get("a.b[2]");
         assertArrayEquals(new String[] {"value"}, array);
+        
+        assertEquals("value", results.get("a.b[2][0]"));
+        
         
         assertEquals("third", results.get("e.f"));
         
@@ -93,10 +106,15 @@ class StringifierTest {
     void visit_yaml() {
         var results = Stringifier.stringify().from(getClass().getClassLoader().getResourceAsStream(ENCODED + "yml"), "yml");
         
-        assertEquals(4, results.size());
+        assertEquals(7, results.size());
         
         array = (String[]) results.get("a.b");
         assertArrayEquals(new String[] {"first", "1", "true"}, array);
+        
+        assertEquals("first", results.get("a.b[0]"));
+        assertEquals("1", results.get("a.b[1]"));
+        assertEquals("true", results.get("a.b[2]"));
+        
         
         assertEquals("second", results.get("c.d"));
         

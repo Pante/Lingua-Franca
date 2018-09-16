@@ -26,6 +26,7 @@ package com.karuslabs.lingua.franca.sources;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
@@ -34,12 +35,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class FileSourceTest {
+class ClassLoaderSourceTest {
     
-    static FileSource source = new SystemSource("folder");
+    static ClassLoaderSource source = new ClassLoaderSource("sources");
+    static String file = "source.yml";
+    
+    
+    @Test
+    void load() {
+        assertNotNull(new ClassLoaderSource("sources").load(file));
+    }
     
     
     @ParameterizedTest
@@ -59,27 +68,15 @@ class FileSourceTest {
     static Stream<Arguments> equality_provider() {
         return Stream.of(
             of(source, true),
-            of(new SystemSource("folder"), true),
-            of(new SystemSource("folder/"), true),
-            of(new SystemSource("foLder"), false),
-            of(new ClassLoaderSource("folder"), false)
+            of(new ClassLoaderSource("sources"), true),
+            of(new ClassLoaderSource(mock(ClassLoader.class), "sources"), false)
         );
     }
     
     
-    @ParameterizedTest
-    @MethodSource({"toString_provider"})
-    void source_toString(String folder, String expected) {
-        assertEquals(expected, new SystemSource(folder).toString());
-    }
-    
-    static Stream<Arguments> toString_provider() {
-        var name = SystemSource.class.getName() + "[folder = %s]";
-        return Stream.of(
-            of("", String.format(name, "")),
-            of("folder", String.format(name, "folder/")),
-            of("folder/", String.format(name, "folder/"))
-        );
+    @Test
+    void source_toString() {
+        assertEquals(String.format(ClassLoaderSource.class.getName() + "[classloader = %s, folder = %s]", ClassLoaderSource.class.getClassLoader(), "sources/"), new ClassLoaderSource("sources").toString());
     }
     
 }
