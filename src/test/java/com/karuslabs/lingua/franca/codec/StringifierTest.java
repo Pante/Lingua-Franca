@@ -24,7 +24,6 @@
 
 package com.karuslabs.lingua.franca.codec;
 
-import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -62,7 +61,7 @@ class StringifierTest {
     @Test
     void visit_json() {
         var results = Stringifier.stringify().from(getClass().getClassLoader().getResourceAsStream(ENCODED + "json"), "json");
-        assertEquals(12, results.size());
+        assertEquals(13, results.size());
         
         array = (String[]) results.get("a.b");
         assertArrayEquals(new String[] {"first", "2", "true"}, array);
@@ -89,6 +88,8 @@ class StringifierTest {
         assertEquals("third", results.get("e.f"));
         
         assertEquals("fourth", results.get("g"));
+        
+        assertArrayEquals(new String[] {}, (String[]) results.get("h"));
     }
         
     

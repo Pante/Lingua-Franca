@@ -27,10 +27,7 @@ package com.karuslabs.lingua.franca;
 import com.karuslabs.lingua.franca.codec.Stringifier;
 
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.*;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -50,6 +47,7 @@ import static org.mockito.Mockito.*;
 class BundleTest {
     
     static Bundle bundle = new Bundle(Stringifier.stringify().from(BundleTest.class.getClassLoader().getResourceAsStream("bundle.yml"), "yml"), Locale.ENGLISH);
+    static Bundle chained = new Bundle(Map.of("array", new String[] {"a"}, "array[0]", "a"), Locale.ENGLISH, new Bundle(Map.of("key", "value"), Locale.ROOT));
     static final String value = "?";
     static final String[] empty = new String[] {};
     
@@ -69,95 +67,104 @@ class BundleTest {
     
     
     @Test
-    void getIfPresent() {
-        assertEquals("b {0}", bundle.getIfPresent("key[1]"));
-        assertNull(bundle.getIfPresent("key"));
-    }
-    
-    
-    @Test
-    void getIfPresent_arguments() {
-        assertEquals("b ?", bundle.getIfPresent("key[1]", value));
-        assertNull(bundle.getIfPresent("key"));
-    }
-    
-    
-    @Test
-    void at() {
-        assertEquals("a {0}", bundle.at("key", 0).orElse(value));
-        assertEquals(value, bundle.at("key", 2).orElse(value));
-    }
-    
-    
-    @Test
-    void at_arguments() {
-        assertEquals("a ?", bundle.at("key", 0, value).orElse(value));
-        assertEquals(value, bundle.at("key", 2, value).orElse(value));
-    }
-    
-    
-    @Test
-    void atIfPresent() {
-        assertEquals("a {0}", bundle.atIfPresent("key", 0));
-        assertNull(bundle.atIfPresent("key", 2));
-    }
-    
-    
-    @Test
-    void atIfPresent_arguments() {
-        assertEquals("b ?", bundle.atIfPresent("key", 1, value));
-        assertNull(bundle.atIfPresent("key", 2, value));
-    }
-    
-    
-    @Test
-    void all() {
-        assertArrayEquals(new String[]{"a {0}", "b {0}"}, bundle.all("key").orElse(empty));
-        assertArrayEquals(empty, bundle.all("other").orElse(empty));
-    }
-    
-    
-    @Test
-    void allIfPresent() {
-        assertArrayEquals(new String[]{"a {0}", "b {0}"}, bundle.allIfPresent("key"));
-        assertNull(bundle.allIfPresent("other"));
-    }
-    
-    
-    @Test
     void find() {
-        var bundle = new Bundle(Map.of(), Locale.ENGLISH, new Bundle(Map.of("key", "value"), Locale.ROOT));
-        assertEquals("value", bundle.find("key"));
+        assertEquals("b {0}", bundle.find("key[1]"));
+        assertNull(bundle.find("key"));
     }
     
     
     @Test
-    void find_null() {
-        assertNull(bundle.find("something"));
+    void find_arguments() {
+        assertEquals("b ?", bundle.find("key[1]", value));
+        assertNull(bundle.find("key"));
+    }
+    
+    
+    @Test
+    void messages() {
+        assertArrayEquals(new String[]{"a {0}", "b {0}"}, bundle.messages("key").orElse(empty));
+        assertArrayEquals(empty, bundle.messages("other").orElse(empty));
+    }
+    
+    
+    @Test
+    void messagesIfPresent() {
+        assertArrayEquals(new String[]{"a {0}", "b {0}"}, bundle.messagesIfPresent("key"));
+        assertNull(bundle.messagesIfPresent("other"));
+    }
+    
+    
+    @Test
+    void retrieve() {
+        assertEquals("value", chained.retrieve("key"));
+    }
+    
+    
+    @Test
+    void retrieve_null() {
+        assertNull(bundle.retrieve("something"));
     }
     
     
     @Test
     void format_concurrency() throws InterruptedException, ExecutionException {
         var start = new CountDownLatch(2);
-        var end = new CountDownLatch(3);
         
         var executor = Executors.newFixedThreadPool(2);
         
         var first = executor.submit(() -> {
             start.countDown();
-            return bundle.getIfPresent("key[0]", "first");
+            start.await();
+            return bundle.find("key[0]", "first");
         });
         
         var second = executor.submit(() -> {
             start.countDown();
-            return bundle.getIfPresent("key[1]", "second");
+            start.await();
+            return bundle.find("key[1]", "second");
         });
-        
-        end.countDown();
         
         assertEquals("a first", first.get());
         assertEquals("b second", second.get());
+    }
+    
+    
+    @Test
+    void keys() {
+        var keys = chained.keys();
+        assertEquals(2, keys.size());
+        
+        assertTrue(keys.containsAll(Set.of("array[0]", "key")));
+    }
+    
+    
+    @Test
+    void getters() {
+        assertEquals(Locale.ENGLISH, bundle.locale());
+        assertSame(Bundle.EMPTY, bundle.parent());
+    }
+    
+    
+    @ParameterizedTest
+    @MethodSource({"equality_provider"})
+    void equals(Bundle other, boolean expected) {
+        assertEquals(expected, bundle.equals(other));
+    }
+    
+    
+    @ParameterizedTest
+    @MethodSource({"equality_provider"})
+    void hashCode(Bundle other, boolean expected) {
+        assertEquals(expected, bundle.hashCode() == other.hashCode());
+    }
+    
+    
+    static Stream<Arguments> equality_provider() {
+        return Stream.of(
+            of(bundle, true),
+            of(new Bundle(Map.of(), Locale.ENGLISH), true),
+            of(Bundle.EMPTY, false)
+        );
     }
     
 }

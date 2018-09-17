@@ -46,9 +46,10 @@ public class Bundle {
     
     
     private Map<String, Object> messages;
+    private volatile @Nullable Set<String> keys;
     private Locale locale;
     private Bundle parent;
-    private int hash;
+    private volatile int hash;
     
     
     public Bundle(Map<String, Object> messages, Locale locale) {
@@ -57,93 +58,50 @@ public class Bundle {
     
     public Bundle(Map<String, Object> messages, Locale locale, Bundle parent) {
         this.messages = messages;
+        this.keys = null;
         this.locale = locale;
         this.parent = parent;
         this.hash = 0;
     }
-    
+
     
     public Optional<String> get(String key) {
-        var message = find(key);
+        var message = retrieve(key);
         return message instanceof String ? Optional.of((String) message) : EMPTY_STRING;
     }
     
     public Optional<String> get(String key, Object... arguments) {
-        var message = find(key);
+        var message = retrieve(key);
         return message instanceof String ? Optional.of(format((String) message, arguments)) : EMPTY_STRING;
     }
     
-    public @Nullable String getIfPresent(String key) {
-        var message = find(key);
+    
+    public @Nullable String find(String key) {
+        var message = retrieve(key);
         return message instanceof String ? (String) message : null;
     }
     
-    public @Nullable String getIfPresent(String key, Object... arguments) {
-        var message = find(key);
+    public @Nullable String find(String key, Object... arguments) {
+        var message = retrieve(key);
         return message instanceof String ? format((String) message, arguments) : null;
     }
     
-    
-    public Optional<String> at(String key, int index) {
-        var message = find(key);
-        if (message instanceof String[]) {
-            var messages = (String[]) message;
-            if (index >= 0 && index < messages.length) {
-                return Optional.of(messages[index]);
-            }
-        }
-        return EMPTY_STRING;
+
+    public Optional<String[]> messages(String key) {
+        var messages = retrieve(key);
+        return messages instanceof String[] ? Optional.of((String[]) messages) : EMPTY_ARRAY;
     }
     
-    public Optional<String> at(String key, int index, Object... arguments) {
-        var message = find(key);
-        if (message instanceof String[]) {
-            var messages = (String[]) message;
-            if (index >= 0 && index < messages.length) {
-                return Optional.of(format(messages[index], arguments));
-            }
-        }
-        return EMPTY_STRING;
-    }
-    
-    public @Nullable String atIfPresent(String key, int index) {
-        var message = find(key);
-        if (message instanceof String[]) {
-            var messages = (String[]) message;
-            if (index >= 0 && index < messages.length) {
-                return messages[index];
-            }
-        }
-        return null;
-    }
-    
-    public @Nullable String atIfPresent(String key, int index, Object... arguments) {
-        var message = find(key);
-        if (message instanceof String[]) {
-            var messages = (String[]) message;
-            if (index >= 0 && index < messages.length) {
-                return format(messages[index], arguments);
-            }
-        }
-        return null;
+    public @Nullable String[] messagesIfPresent(String key) {
+        var messages = retrieve(key);
+        return messages instanceof String[] ? (String[]) messages : null;
     }
     
     
-    public Optional<String[]> all(String key) {
-        var message = find(key);
-        return message instanceof String[] ? Optional.of((String[]) message) : EMPTY_ARRAY;
-    }
-    
-    public @Nullable String[] allIfPresent(String key) {
-        var message = find(key);
-        return message instanceof String[] ? (String[]) message : null;
-    }
-    
-    
-    protected @Nullable Object find(String key) {
+    protected @Nullable Object retrieve(String key) {
         var message = messages.get(key);
-        if (message == null && parent != EMPTY) {
-            message = parent.find(key);
+        if (message == null) {
+            message = parent.retrieve(key);
         }
         
         return message;
@@ -156,6 +114,26 @@ public class Bundle {
         return formatter.format(arguments);
     }
     
+    
+    public Set<String> keys() {
+        var set = keys;
+        if (set == null) {
+            synchronized (EMPTY_ARRAY) {
+                set = keys;
+                if (set == null) {
+                    set = new HashSet<>(parent.keys());
+                    for (var entry : messages.entrySet()) {
+                        if (entry.getValue() instanceof String) {
+                            set.add(entry.getKey());
+                        }
+                    }
+                    this.keys = set = Collections.unmodifiableSet(set);
+                }
+            }
+        }
+        
+        return set;
+    }
     
     public Locale locale() {
         return locale;
@@ -172,11 +150,7 @@ public class Bundle {
             return true;
         }
         
-        if (getClass() == null || getClass() != other.getClass()) {
-            return false;
-        }
-        
-        return locale.equals(((Bundle) other).locale);
+        return other instanceof Bundle && locale.equals(((Bundle) other).locale);
     }
 
     @Override
@@ -200,6 +174,18 @@ class EmptyBundle extends Bundle {
         super(Map.of(), Locale.ROOT, EMPTY);
     }
     
+        
+    @Override
+    public @Nullable String find(String key) {
+        return null;
+    }
+ 
+    @Override
+    public @Nullable String find(String key, Object... arguments) {
+        return null;
+    }
+    
+    
     @Override
     public Optional<String> get(String key) {
         return EMPTY_STRING;
@@ -210,52 +196,25 @@ class EmptyBundle extends Bundle {
         return EMPTY_STRING;
     }
     
-    @Override
-    public @Nullable String getIfPresent(String key) {
-        return null;
-    }
- 
-    @Override
-    public @Nullable String getIfPresent(String key, Object... arguments) {
-        return null;
-    }
-    
     
     @Override
-    public Optional<String> at(String key, int index) {
-        return EMPTY_STRING;
-    }
-    
-    @Override
-    public Optional<String> at(String key, int index, Object... arguments) {
-        return EMPTY_STRING;
-    }
-    
-    @Override
-    public @Nullable String atIfPresent(String key, int index) {
-        return null;
-    }
-    
-    @Override
-    public @Nullable String atIfPresent(String key, int index, Object... arguments) {
-        return null;
-    }
-    
-    
-    @Override
-    public Optional<String[]> all(String key) {
+    public Optional<String[]> messages(String key) {
         return EMPTY_ARRAY;
     }
     
     @Override
-    public @Nullable String[] allIfPresent(String key) {
+    public @Nullable String[] messagesIfPresent(String key) {
         return null;
     }
     
+    @Override
+    protected @Nullable Object retrieve(String key) {
+        return null;
+    }
     
     @Override
-    protected @Nullable Object find(String key) {
-        return null;
+    public Set<String> keys() {
+        return Collections.EMPTY_SET;
     }
     
 }

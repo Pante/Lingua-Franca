@@ -117,6 +117,9 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
 
         if (!strings.isEmpty()) {
             map.put(path, strings.toArray(EMPTY));
+            
+        } else {
+            map.put(path, EMPTY);
         }
         
         return map;
