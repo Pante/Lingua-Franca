@@ -35,12 +35,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
-import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
-import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -173,6 +171,54 @@ class BundleTest {
 @ExtendWith(MockitoExtension.class)
 class EmptyBundleTest {
     
+    Bundle empty = Bundle.EMPTY;
     
+    
+    @Test
+    void find() {
+        assertNull(empty.find(""));
+    }
+    
+    
+    @Test
+    void find_arguments() {
+        assertNull(empty.find("", ""));
+    }
+    
+    
+    @Test
+    void get() {
+        assertSame(Optional.empty(), empty.get(""));
+    }
+    
+    
+    @Test
+    void get_arguments() {
+        assertSame(Optional.empty(), empty.get("", ""));
+    }
+    
+    
+    @Test
+    void messages() {
+        assertSame(Optional.empty(), empty.messages(""));
+    }
+    
+    
+    @Test
+    void messagesIfPresent() {
+        assertNull(empty.messagesIfPresent(""));
+    }
+    
+    
+    @Test
+    void retrieve() {
+        assertNull(empty.retrieve(""));
+    }
+    
+    
+    @Test
+    void keys() {
+        assertEquals(Collections.EMPTY_SET, empty.keys());
+    }
     
 }

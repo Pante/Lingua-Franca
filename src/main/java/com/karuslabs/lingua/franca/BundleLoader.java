@@ -48,7 +48,7 @@ public class BundleLoader {
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
     
-    protected ConcurrentMap<String, Source[]> namespaces;
+    protected ConcurrentMap<String, Set<Source>> namespaces;
     protected Set<Source> global;
     protected String[] formats;
     
@@ -57,7 +57,7 @@ public class BundleLoader {
         this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet(), "json", "properties", "xml", "yml", "yaml");
     }
     
-    public BundleLoader(ConcurrentMap<String, Source[]> namespaces, Set<Source> global, String... formats) {
+    public BundleLoader(ConcurrentMap<String, Set<Source>> namespaces, Set<Source> global, String... formats) {
         this.namespaces = namespaces;
         this.global = global;
         this.formats = formats;
@@ -74,13 +74,13 @@ public class BundleLoader {
         }
         
         if (messages == null) {
-            messages = load(global.toArray(SOURCE), bundleName);
+            messages = load(global, bundleName);
         }
         
         return messages == null ? Bundle.EMPTY : new Bundle(messages, locale, parent);
     }
     
-    protected @Nullable Map<String, Object> load(Source[] sources, String bundle) {
+    protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {
         for (var source : sources) {
             for (var format : formats) {
                 try (var stream = source.load(toResourceName(bundle, format))) {
@@ -120,12 +120,7 @@ public class BundleLoader {
         var bundled = annotated.getAnnotation(Bundled.class);
         var sources = parse(annotated).toArray(SOURCE);
         
-        if (bundled != null) {
-            return register(bundled.value(), sources) != null;
-            
-        } else {
-            return register(sources);
-        }
+        return bundled == null ? register(sources) : register(bundled.value(), sources);
     }
     
     protected List<Source> parse(Class<?> annotated) {
@@ -158,14 +153,49 @@ public class BundleLoader {
         
         return sources;
     }
+        
+        
+    public boolean contains(String base) {
+        return namespaces.containsKey(base);
+    }
+    
+    public boolean contains(String base, Source source) {
+        var bundle = namespaces.get(base);
+        return bundle != null && bundle.contains(source);
+    }
+    
+    public boolean contains(String base, Source... sources) {
+        var bundle = namespaces.get(base);
+        return bundle != null && bundle.containsAll(List.of(sources));
+    }
+    
+    public boolean contains(Source source) {
+        return global.contains(source);
+    }
+        
+    public boolean contains(Source... sources) {
+        return global.containsAll(List.of(sources));
+    }
     
     
-    public @Nullable Source[] register(String base, Source... sources) {
-        return namespaces.put(base, sources);
+    public @Nullable boolean register(String base, Source... sources) {
+        var set = namespaces.get(base);
+        var changed = false;
+        
+        if (set == null) {
+            set = ConcurrentHashMap.newKeySet(sources.length);
+            changed = Collections.addAll(set, sources);
+            namespaces.put(base, set);
+            
+        } else {
+            changed = Collections.addAll(set, sources);
+        }
+        
+        return changed;
     }
     
     public boolean register(Source... sources) {
-        return global.addAll(Set.of(sources));
+        return Collections.addAll(global, sources);
     }
     
     public boolean register(Source source) {
@@ -173,29 +203,16 @@ public class BundleLoader {
     }
 
     
-    public @Nullable Source[] unregister(String base) {
+    public @Nullable Set<Source> unregister(String base) {
         return namespaces.remove(base);
     }
     
     public boolean unregister(Source... sources) {
-        return global.removeAll(Set.of(sources));
+        return global.removeAll(List.of(sources));
     }
     
     public boolean unregister(Source source) {
         return global.remove(source);
-    }
-    
-        
-    public boolean registered(String base) {
-        return namespaces.containsKey(base);
-    }
-    
-    public boolean registered(Source... sources) {
-        return global.containsAll(Set.of(sources));
-    }
-    
-    public boolean registered(Source source) {
-        return global.contains(source);
     }
     
 }

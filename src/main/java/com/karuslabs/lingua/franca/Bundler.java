@@ -154,4 +154,9 @@ public class Bundler {
         return current;
     }
     
+    
+    public BundleLoader loader() {
+        return loader;
+    }
+    
 }
