@@ -21,19 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations;
 
-import java.lang.annotation.*;
+package com.karuslabs.lingua.franca;
+
+import com.karuslabs.lingua.franca.spi.BundleProvider;
+import java.util.ServiceLoader;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
+
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.of;
+import static org.mockito.Mockito.*;
+
+
+@ExtendWith(MockitoExtension.class)
+class BundlerTest {
     
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-
-@Documented
-@Retention(RUNTIME)
-@Target({TYPE})
-public @interface SystemSources {
+    static Bundler bundler = Bundler.bundler();
     
-    public String[] value();
+    
+    @Test
+    void lol() {
+        ServiceLoader<BundleProvider> loader = ServiceLoader.load(BundleProvider.class);
+        assertNotNull(loader.iterator().next());
+    }
     
 }

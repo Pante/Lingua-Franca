@@ -21,19 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations;
+package com.karuslabs.lingua.franca.spi;
 
-import java.lang.annotation.*;
+import com.karuslabs.lingua.franca.Bundle;
+
+import java.util.*;
+
+import static org.mockito.Mockito.mock;
+
+
+public class MockBundleProvider implements BundleProvider {
     
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-
-@Documented
-@Retention(RUNTIME)
-@Target({TYPE})
-public @interface SystemSources {
     
-    public String[] value();
+    @Override
+    public Bundle get(String name, Locale locale) {
+        return new Bundle(Map.of("key", "value"), Locale.ENGLISH);
+    }
+
+    @Override
+    public boolean provides(String name) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
