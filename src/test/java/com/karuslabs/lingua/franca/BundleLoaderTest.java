@@ -136,11 +136,21 @@ class BundleLoaderTest {
     
     
     @Test
-    void add_namespaces() {
+    void add_namespaces_array() {
         assertTrue(loader.add("named", named1, named2));
         assertTrue(loader.namespaces.get("named").equals(Set.of(named1, named2)));
         
         assertTrue(loader.add("named", unnamed1, unnamed2));
+        assertTrue(loader.namespaces.get("named").equals(Set.of(named1, named2, unnamed1, unnamed2)));
+    }
+    
+    
+    @Test
+    void add_namespaces_collection() {
+        assertTrue(loader.add("named", List.of(named1, named2)));
+        assertTrue(loader.namespaces.get("named").equals(Set.of(named1, named2)));
+        
+        assertTrue(loader.add("named", List.of(unnamed1, unnamed2)));
         assertTrue(loader.namespaces.get("named").equals(Set.of(named1, named2, unnamed1, unnamed2)));
     }
     
@@ -153,11 +163,20 @@ class BundleLoaderTest {
     
     
     @Test     
-    void add_globals() {
+    void add_globals_array() {
         assertFalse(cached.add(unnamed1, unnamed2));
         
         loader.add(unnamed1);
         assertTrue(loader.add(unnamed1, unnamed2));
+    }
+    
+    
+    @Test
+    void add_globals_collection() {
+        assertFalse(cached.add(List.of(unnamed1, unnamed2)));
+        
+        loader.add(unnamed1);
+        assertTrue(loader.add(List.of(unnamed1, unnamed2)));
     }
     
     

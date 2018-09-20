@@ -68,7 +68,12 @@ public class BundleLoader {
         var sources = namespaces.getOrDefault(name, global);
         var bundleName = toBundleName(name, locale);
         
-        Map<String, Object> messages = load(sources, bundleName);
+        Map<String, Object> messages = null;
+        
+        if (!sources.isEmpty()) {
+            messages = load(sources, bundleName);
+        }
+         
         if (messages == null && sources != global) {
             messages = load(global, bundleName);
         }
@@ -152,43 +157,38 @@ public class BundleLoader {
 
     
     public @Nullable boolean add(String name, Source source) {
-        var set = namespaces.get(name);
-        var changed = false;
-        
-        if (set == null) {
-            set = ConcurrentHashMap.newKeySet(1);
-            changed = set.add(source);
-            namespaces.put(name, set);
-            
-        } else {
-            changed = set.add(source);
-        }
-        
-        return changed;
+        return get(name, 1).add(source);
     }
     
     public @Nullable boolean add(String name, Source... sources) {
+        return Collections.addAll(get(name, sources.length), sources);
+    }
+    
+    public @Nullable boolean add(String name, Collection<? extends Source> sources) {
+        return get(name, sources.size()).addAll(sources);
+    }
+    
+    protected Set<Source> get(String name, int length) {
         var set = namespaces.get(name);
-        var changed = false;
-        
         if (set == null) {
-            set = ConcurrentHashMap.newKeySet(sources.length);
-            changed = Collections.addAll(set, sources);
+            set = ConcurrentHashMap.newKeySet(length);
             namespaces.put(name, set);
-            
-        } else {
-            changed = Collections.addAll(set, sources);
         }
         
-        return changed;
+        return set;
     }
      
+    
     public boolean add(Source source) {
         return global.add(source);
     }
     
     public boolean add(Source... sources) {
         return Collections.addAll(global, sources);
+    }
+    
+    public boolean add(Collection<? extends Source> sources) {
+        return global.addAll(sources);
     }
     
         
@@ -202,8 +202,12 @@ public class BundleLoader {
     }
     
     public boolean contains(String name, Source... sources) {
+        return contains(name, List.of(sources));
+    }
+    
+    public boolean contains(String name, Collection<? extends Source> sources) {
         var bundle = namespaces.get(name);
-        return bundle != null && bundle.containsAll(List.of(sources));
+        return bundle != null && bundle.containsAll(sources);
     }
     
     public boolean contains(Source source) {
@@ -211,7 +215,11 @@ public class BundleLoader {
     }
         
     public boolean contains(Source... sources) {
-        return global.containsAll(List.of(sources));
+        return contains(List.of(sources));
+    }
+    
+    public boolean contains(Collection<? extends Source> sources) {
+        return global.containsAll(sources);
     }
 
     
@@ -225,8 +233,12 @@ public class BundleLoader {
     }
     
     public boolean remove(String name, Source... sources) {
+        return remove(name, List.of(sources));
+    }
+    
+    public boolean remove(String name, Collection<? extends Source> sources) {
         var set = namespaces.get(name);
-        return set != null && set.removeAll(List.of(sources));
+        return set != null && set.removeAll(sources);
     }
         
     public boolean remove(Source source) {
@@ -234,7 +246,11 @@ public class BundleLoader {
     }
     
     public boolean remove(Source... sources) {
-        return global.removeAll(List.of(sources));
+        return remove(List.of(sources));
+    }
+    
+    public boolean remove(Collection<? extends Source> sources) {
+        return global.removeAll(sources);
     }
     
 }
