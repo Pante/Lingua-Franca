@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-open module LinguaFranca {
+open module com.karuslabs.lingua.franca {
     uses com.karuslabs.lingua.franca.spi.BundleProvider;
     
     exports com.karuslabs.lingua.franca;

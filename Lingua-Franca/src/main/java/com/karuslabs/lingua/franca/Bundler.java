@@ -96,7 +96,7 @@ public class Bundler {
         var bundle = cache.getIfPresent(bundleName);
         
         if (bundle == null) {
-            bundle = loadFromServices(name, locale, loader);
+            bundle = loadFromServices(PROVIDERS.get().iterator(), name, locale, loader);
         }
         
         if (bundle == null) {
@@ -107,9 +107,8 @@ public class Bundler {
     }
     
     
-    protected @Nullable Bundle loadFromServices(String name, Locale locale, BundleLoader loader) {
+    protected @Nullable Bundle loadFromServices(Iterator<BundleProvider> providers, String name, Locale locale, BundleLoader loader) {
         try {
-            var providers = PROVIDERS.get().iterator();
             while (providers.hasNext()) {
                 var bundle = providers.next().get(name, locale);
                 if (bundle != null) {
