@@ -22,7 +22,9 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.franca.sources;
+package com.karuslabs.lingua.franca;
+
+import java.util.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,32 +34,63 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class SystemSourceTest {
+class EmptyBundleTest {
     
-    SystemSource source = new SystemSource(getClass().getClassLoader().getResource("sources").getPath());
-    
-    @Test
-    void relative_root() {
-        assertNotNull(SystemSource.RELATIVE_ROOT.load("pom.xml"));
-    }
-    
+    Bundle empty = Bundle.EMPTY;
     
     
     @Test
-    void load() {
-        assertNotNull(source.load("source.yml"));
+    void empty() {
+        assertSame(empty, EmptyBundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
+        assertEquals(Locale.CHINESE, EmptyBundle.empty(Locale.CHINESE, empty).locale());
     }
     
     
     @Test
-    void load_folder() {
-        assertNull(source.load(""));
+    void find() {
+        assertNull(empty.find(""));
     }
     
     
     @Test
-    void load_exception() {
-        assertNull(source.load("source.xml"));
+    void find_arguments() {
+        assertNull(empty.find("", ""));
+    }
+    
+    
+    @Test
+    void get() {
+        assertSame(Optional.empty(), empty.get(""));
+    }
+    
+    
+    @Test
+    void get_arguments() {
+        assertSame(Optional.empty(), empty.get("", ""));
+    }
+    
+    
+    @Test
+    void messages() {
+        assertSame(Optional.empty(), empty.messages(""));
+    }
+    
+    
+    @Test
+    void messagesIfPresent() {
+        assertNull(empty.messagesIfPresent(""));
+    }
+    
+    
+    @Test
+    void retrieve() {
+        assertNull(empty.retrieve(""));
+    }
+    
+    
+    @Test
+    void keys() {
+        assertEquals(Collections.EMPTY_SET, empty.keys());
     }
     
 }

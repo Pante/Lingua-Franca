@@ -165,60 +165,11 @@ class BundleTest {
         );
     }
     
-}
-
-
-@ExtendWith(MockitoExtension.class)
-class EmptyBundleTest {
-    
-    Bundle empty = Bundle.EMPTY;
-    
     
     @Test
-    void find() {
-        assertNull(empty.find(""));
-    }
-    
-    
-    @Test
-    void find_arguments() {
-        assertNull(empty.find("", ""));
-    }
-    
-    
-    @Test
-    void get() {
-        assertSame(Optional.empty(), empty.get(""));
-    }
-    
-    
-    @Test
-    void get_arguments() {
-        assertSame(Optional.empty(), empty.get("", ""));
-    }
-    
-    
-    @Test
-    void messages() {
-        assertSame(Optional.empty(), empty.messages(""));
-    }
-    
-    
-    @Test
-    void messagesIfPresent() {
-        assertNull(empty.messagesIfPresent(""));
-    }
-    
-    
-    @Test
-    void retrieve() {
-        assertNull(empty.retrieve(""));
-    }
-    
-    
-    @Test
-    void keys() {
-        assertEquals(Collections.EMPTY_SET, empty.keys());
+    void bundle_toString() {
+        var message = String.format(bundle.getClass().getName() + "[locale = %s, parent locale = %s]", bundle.locale().toString(), bundle.parent().locale().toString());
+        assertEquals(message, bundle.toString());
     }
     
 }

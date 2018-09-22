@@ -30,6 +30,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ModuleSource extends FileSource {
     
+    public static final ModuleSource ROOT = new ModuleSource("");
+    
+    
     private Module module;
     
     

@@ -78,7 +78,7 @@ public class BundleLoader {
             messages = load(global, bundleName);
         }
         
-        return messages == null ? Bundle.EMPTY : new Bundle(messages, locale, parent);
+        return messages == null ? EmptyBundle.empty(locale, parent) : new Bundle(messages, locale, parent);
     }
     
     protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {

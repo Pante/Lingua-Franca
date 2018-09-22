@@ -12,6 +12,7 @@
     
     <modules>
         <module>lingua-franca</module>
+        <module>examples</module>
     </modules>
     
     <properties>

@@ -21,51 +21,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.sources;
+package com.karuslabs.lingua.franca;
 
-import java.io.InputStream;
+import java.util.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import static com.karuslabs.lingua.franca.Bundle.EMPTY_STRING;
 
-public class ClassLoaderSource extends FileSource {
-    
-    public static final ClassLoaderSource ROOT = new ClassLoaderSource("");
-    
-    
-    private ClassLoader loader;
-    
-    
-    public ClassLoaderSource(String folder) {
-        super(folder);
-        this.loader = getClass().getClassLoader();
-    }
-    
-    public ClassLoaderSource(ClassLoader loader, String folder) {
-        super(folder);
-        this.loader = loader;
-    }
 
+public class EmptyBundle extends Bundle {    
     
+    public static Bundle empty(Locale locale, Bundle parent) {
+        return Locale.ROOT.equals(locale) ?  Bundle.EMPTY : new EmptyBundle(locale, parent);
+    }
+    
+    
+    
+    public EmptyBundle(Locale locale, Bundle parent) {
+        super(Map.of(), locale, parent);
+    }
+    
+        
     @Override
-    public @Nullable InputStream load(String resource) {
-        return loader.getResourceAsStream(folder + resource);
+    public @Nullable String find(String key) {
+        return null;
+    }
+ 
+    @Override
+    public @Nullable String find(String key, Object... arguments) {
+        return null;
     }
     
     
     @Override
-    public boolean equals(Object other) {
-        return super.equals(other) && loader.equals(((ClassLoaderSource) other).loader);
+    public Optional<String> get(String key) {
+        return EMPTY_STRING;
     }
     
     @Override
-    public int hashCode() {
-        return 53 * super.hashCode() + loader.hashCode();
+    public Optional<String> get(String key, Object... arguments) {
+        return EMPTY_STRING;
+    }
+    
+    
+    @Override
+    public Optional<String[]> messages(String key) {
+        return EMPTY_ARRAY;
     }
     
     @Override
-    public String toString() {
-        return String.format(getClass().getName() + "[classloader = %s, folder = %s]", loader, folder);
+    public @Nullable String[] messagesIfPresent(String key) {
+        return null;
+    }
+    
+    @Override
+    protected @Nullable Object retrieve(String key) {
+        return null;
+    }
+    
+    @Override
+    public Set<String> keys() {
+        return Collections.EMPTY_SET;
     }
     
 }

@@ -29,7 +29,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public class SystemSource extends FileSource {
-
+    
+    public static final SystemSource RELATIVE_ROOT = new SystemSource("./");
+    
+    
     public SystemSource(String folder) {
         super(folder);
     }

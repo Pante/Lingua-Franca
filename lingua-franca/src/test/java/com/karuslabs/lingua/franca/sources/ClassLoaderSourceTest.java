@@ -46,6 +46,12 @@ class ClassLoaderSourceTest {
     
     
     @Test
+    void root() {
+        assertNotNull(ClassLoaderSource.ROOT.load("bundle.yml"));
+    }
+    
+    
+    @Test
     void load() {
         assertNotNull(new ClassLoaderSource("sources").load(file));
     }

@@ -45,7 +45,7 @@ public class Bundler {
     }
     
     
-    private static final ThreadLocal<ServiceLoader<BundleProvider>> PROVIDERS = new ThreadLocal<>() {
+    static final ThreadLocal<ServiceLoader<BundleProvider>> PROVIDERS = new ThreadLocal<>() {
         @Override
         protected ServiceLoader<BundleProvider> initialValue() {
             return ServiceLoader.load(BundleProvider.class);
@@ -96,7 +96,7 @@ public class Bundler {
         var bundle = cache.getIfPresent(bundleName);
         
         if (bundle == null) {
-            bundle = loadFromServices(PROVIDERS.get().iterator(), name, locale, loader);
+            bundle = loadFromServices(name, locale, loader);
         }
         
         if (bundle == null) {
@@ -107,8 +107,9 @@ public class Bundler {
     }
     
     
-    protected @Nullable Bundle loadFromServices(Iterator<BundleProvider> providers, String name, Locale locale, BundleLoader loader) {
+    protected @Nullable Bundle loadFromServices(String name, Locale locale, BundleLoader loader) {
         try {
+            var providers = PROVIDERS.get().iterator();
             while (providers.hasNext()) {
                 var bundle = providers.next().get(name, locale);
                 if (bundle != null) {
@@ -156,6 +157,10 @@ public class Bundler {
     
     public BundleLoader loader() {
         return loader;
+    }
+    
+    protected Cache<String, Bundle> cache() {
+        return cache;
     }
     
 }

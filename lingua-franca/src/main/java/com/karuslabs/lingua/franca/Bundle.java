@@ -30,9 +30,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public class Bundle {
-        
-    public static final Bundle EMPTY = new EmptyBundle();
     
+    public static final Bundle EMPTY;
+    
+    static {
+        EMPTY = new EmptyBundle(Locale.ROOT, null);
+        EMPTY.parent = EMPTY;
+    }
+
     
     private static final ThreadLocal<MessageFormat> FORMATTER = new ThreadLocal<>() {
         @Override
@@ -48,12 +53,12 @@ public class Bundle {
     private Map<String, Object> messages;
     private volatile @Nullable Set<String> keys;
     private Locale locale;
-    private Bundle parent;
+    protected Bundle parent;
     private volatile int hash;
     
     
     public Bundle(Map<String, Object> messages, Locale locale) {
-        this(messages, locale, EMPTY);
+        this(messages, locale, EmptyBundle.EMPTY);
     }
     
     public Bundle(Map<String, Object> messages, Locale locale, Bundle parent) {
@@ -165,56 +170,10 @@ public class Bundle {
         return hash;
     }
     
-}
-
-
-class EmptyBundle extends Bundle {    
-    
-    EmptyBundle() {
-        super(Map.of(), Locale.ROOT, EMPTY);
-    }
-    
-        
-    @Override
-    public @Nullable String find(String key) {
-        return null;
-    }
- 
-    @Override
-    public @Nullable String find(String key, Object... arguments) {
-        return null;
-    }
-    
     
     @Override
-    public Optional<String> get(String key) {
-        return EMPTY_STRING;
-    }
-    
-    @Override
-    public Optional<String> get(String key, Object... arguments) {
-        return EMPTY_STRING;
-    }
-    
-    
-    @Override
-    public Optional<String[]> messages(String key) {
-        return EMPTY_ARRAY;
-    }
-    
-    @Override
-    public @Nullable String[] messagesIfPresent(String key) {
-        return null;
-    }
-    
-    @Override
-    protected @Nullable Object retrieve(String key) {
-        return null;
-    }
-    
-    @Override
-    public Set<String> keys() {
-        return Collections.EMPTY_SET;
+    public String toString() {
+        return String.format(getClass().getName() + "[locale = %s, parent locale = %s]", locale().toString(), parent.locale().toString());
     }
     
 }
