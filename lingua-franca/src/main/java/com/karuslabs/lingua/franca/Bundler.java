@@ -61,6 +61,33 @@ public class Bundler {
         this.cache = cache;
         this.loader = loader;
     }
+    
+    
+    public Bundle reload(Object annotated, Locale locale) {
+        return reload(annotated, locale, loader);
+    }
+    
+    public Bundle reload(Object annotated, Locale locale, BundleLoader loader) {
+        return reload(annotated.getClass(), locale, loader);
+    }
+    
+    
+    public Bundle reload(Class<?> annotated, Locale locale) {
+        return reload(annotated, locale, loader);
+    }
+    
+    public Bundle reload(Class<?> annotated, Locale locale, BundleLoader loader) {
+        return load(annotated, locale, loader, true);
+    }
+    
+    
+    public Bundle reload(String name, Locale locale) {
+        return reload(name, locale, loader);
+    }
+    
+    public Bundle reload(String name, Locale locale, BundleLoader loader) {
+        return load(name, locale, loader, true);
+    }
 
     
     public Bundle load(Object annotated, Locale locale) {
@@ -77,9 +104,14 @@ public class Bundler {
     }
     
     public Bundle load(Class<?> annotated, Locale locale, BundleLoader loader) {
+        return load(annotated, locale, loader, false);
+    }
+    
+    
+    protected Bundle load(Class<?> annotated, Locale locale, BundleLoader loader, boolean reload) {
         var bundled = annotated.getAnnotation(Bundled.class);
         if (bundled != null) {
-            return load(bundled.value(), locale, loader);
+            return load(bundled.value(), locale, loader, reload);
             
         } else {
             return Bundle.EMPTY;
@@ -92,15 +124,24 @@ public class Bundler {
     }
     
     public Bundle load(String name, Locale locale, BundleLoader loader) {
+       return load(name, locale, loader, false);
+    }
+    
+    
+    protected Bundle load(String name, Locale locale, BundleLoader loader, boolean reload) {
         var bundleName = loader.toBundleName(name, locale);
-        var bundle = cache.getIfPresent(bundleName);
+        Bundle bundle = null;
+        
+        if (!reload) {
+            bundle = cache.getIfPresent(bundleName);
+        }
         
         if (bundle == null) {
             bundle = loadFromServices(name, locale, loader);
         }
         
         if (bundle == null) {
-            bundle = loadFromBundleLoader(name, Lists.reverse(loader.parents(name, locale)), loader);
+            bundle = loadFromBundleLoader(name, Lists.reverse(loader.parents(name, locale)), loader, reload);
         }
         
         return bundle;
@@ -134,12 +175,16 @@ public class Bundler {
     }
     
     
-    protected Bundle loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader) {
+    protected Bundle loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader, boolean reload) {
         var current = Bundle.EMPTY;
         for (var locale : locales) {
             var bundleName = loader.toBundleName(name, locale);
             
-            var child = cache.getIfPresent(bundleName);
+            Bundle child = null;
+            if (!reload) {
+                child = cache.getIfPresent(bundleName);
+            }
+            
             if (child == null) {
                 child = loader.load(name, locale, current);
             }

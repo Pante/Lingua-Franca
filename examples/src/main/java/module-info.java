@@ -21,27 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.spi;
-
-import com.karuslabs.lingua.franca.spi.annotations.Provides;
-
-import java.util.*;
-
-
-public abstract class AnnotatableBundleProvider implements BundleProvider {
+module com.karuslabs.lingua.franca.examples {
     
-    private Set<String> bundles;
+    provides com.karuslabs.lingua.franca.spi.BundleProvider with com.karuslabs.example.NoFallbackBundleProvider;
     
-    
-    public AnnotatableBundleProvider() {
-        var provided = getClass().getAnnotation(Provides.class);
-        bundles = provided == null ? Set.of() : Set.of(provided.value());
-    }
-    
-
-    @Override
-    public boolean provides(String name) {
-        return bundles.contains(name);
-    }
+    requires com.karuslabs.lingua.franca;
     
 }

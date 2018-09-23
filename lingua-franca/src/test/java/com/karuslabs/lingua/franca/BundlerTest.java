@@ -40,13 +40,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
-import org.mockito.*;
 import org.mockito.junit.jupiter.*;
 import org.mockito.quality.Strictness;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
 
 
@@ -86,6 +84,27 @@ class BundlerTest {
     static class Annotated {
         
     }
+    
+    
+    @ParameterizedTest
+    @MethodSource({"reload_provider"})
+    void reload(Function<Bundler, Bundle> function) {
+        bundler.loader().add(ClassLoaderSource.ROOT);
+        
+        var bundle = function.apply(bundler);
+                
+        assertEquals(Locale.UK, bundle.locale());
+        assertNotSame(bundle, function.apply(bundler));
+    }
+    
+    static Stream<Function<Bundler, Bundle>> reload_provider() {
+        return Stream.of(
+            bundler -> bundler.reload(new Annotated(), Locale.UK),
+            bundler -> bundler.reload(Annotated.class, Locale.UK),
+            bundler -> bundler.reload(name, Locale.UK)
+        );
+    }
+    
     
     @ParameterizedTest
     @MethodSource({"load_provider"})
@@ -184,8 +203,8 @@ class BundlerTest {
     
     @Test
     void loadFromBundleLoader() {
-        var parent = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.ENGLISH)), bundler.loader());
-        var bundle = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.UK)), bundler.loader());
+        var parent = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.ENGLISH)), bundler.loader(), false);
+        var bundle = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.UK)), bundler.loader(), false);
         
         assertEquals("Morning", bundle.find("hello"));
         assertEquals("Hey", bundle.parent().find("hello"));
@@ -198,7 +217,7 @@ class BundlerTest {
     
     @Test
     void loadFromBundleLoader_empty() {
-        var bundle = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.FRANCE)), bundler.loader());
+        var bundle = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.FRANCE)), bundler.loader(), false);
         
         assertEquals(Locale.FRANCE, bundle.locale());
         assertEquals(Locale.FRENCH, bundle.parent().locale());

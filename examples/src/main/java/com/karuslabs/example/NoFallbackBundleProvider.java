@@ -21,42 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-package com.karuslabs.lingua.franca.spi;
+package com.karuslabs.example;
 
 import com.karuslabs.lingua.franca.Bundle;
+import com.karuslabs.lingua.franca.BundleLoader;
+import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
+import com.karuslabs.lingua.franca.sources.SystemSource;
+import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
 import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
 import java.util.Locale;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-
-@ExtendWith(MockitoExtension.class)
-class AnnotatableBundleProviderTest {
-    
-    AnnotatableBundleProvider provider = new Provider();
+@Provides({"no_fallback"})
+public class NoFallbackBundleProvider extends AnnotatedBundleProvider {
     
     
-    @Test
-    void provides() {
-        assertTrue(provider.provides("a"));
-        assertTrue(provider.provides("b"));
-        assertFalse(provider.provides("c"));
+    private BundleLoader loader;
+    
+    
+    public NoFallbackBundleProvider() {
+        loader = new BundleLoader();
+        loader.add(new ClassLoaderSource("custom/bundles"));
+        loader.add(new SystemSource("./custom/bundles"));
     }
     
-}
-
-@Provides({"a", "b"})
-class Provider extends AnnotatableBundleProvider {
-
+    
     @Override
     public Bundle get(String name, Locale locale) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (provides(name)) {
+            return loader.load(name, locale, Bundle.EMPTY);
+            
+        } else {
+            return Bundle.EMPTY;
+        }
     }
     
 }
