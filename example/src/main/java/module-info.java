@@ -23,7 +23,9 @@
  */
 module com.karuslabs.lingua.franca.examples {
     
-    provides com.karuslabs.lingua.franca.spi.BundleProvider with com.karuslabs.example.NoFallbackBundleProvider;
+    provides com.karuslabs.lingua.franca.spi.BundleProvider with com.karuslabs.example.CustomBundleProvider;
+        
+    exports com.karuslabs.example;
     
     requires com.karuslabs.lingua.franca;
     

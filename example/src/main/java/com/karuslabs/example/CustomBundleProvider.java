@@ -24,36 +24,23 @@
 package com.karuslabs.example;
 
 import com.karuslabs.lingua.franca.Bundle;
-import com.karuslabs.lingua.franca.BundleLoader;
-import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
-import com.karuslabs.lingua.franca.sources.SystemSource;
 import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
 import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
 import java.util.Locale;
+import java.util.Map;
 
 
-@Provides({"no_fallback"})
-public class NoFallbackBundleProvider extends AnnotatedBundleProvider {
-    
-    
-    private BundleLoader loader;
-    
-    
-    public NoFallbackBundleProvider() {
-        loader = new BundleLoader();
-        loader.add(new ClassLoaderSource("custom/bundles"));
-        loader.add(new SystemSource("./custom/bundles"));
-    }
-    
-    
+@Provides({"single_bundle"})
+public class CustomBundleProvider extends AnnotatedBundleProvider {
+
     @Override
     public Bundle get(String name, Locale locale) {
         if (provides(name)) {
-            return loader.load(name, locale, Bundle.EMPTY);
+            return new Bundle(Map.of("description", "This is a custom bundle created by a custom bundle provider, it is actually really straight-forward."), locale);
             
         } else {
-            return Bundle.EMPTY;
+            return null;
         }
     }
     
