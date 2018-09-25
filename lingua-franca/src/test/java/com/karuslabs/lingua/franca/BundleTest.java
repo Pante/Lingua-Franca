@@ -48,6 +48,13 @@ class BundleTest {
     static Bundle chained = new Bundle(Map.of("array", new String[] {"a"}, "array[0]", "a"), Locale.ENGLISH, new Bundle(Map.of("key", "value"), Locale.ROOT));
     static final String value = "?";
     static final String[] empty = new String[] {};
+
+    
+    @Test
+    void empty() {
+        assertSame(empty, EmptyBundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
+        assertEquals(Locale.CHINESE, EmptyBundle.empty(Locale.CHINESE, Bundle.EMPTY).locale());
+    }
     
     
     @Test

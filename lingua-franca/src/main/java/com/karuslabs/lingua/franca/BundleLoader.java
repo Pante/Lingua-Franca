@@ -47,14 +47,14 @@ public class BundleLoader {
     
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
-    
+
+    protected String[] formats;
     protected ConcurrentMap<String, Set<Source>> namespaces;
     protected Set<Source> global;
-    protected String[] formats;
-    
+
     
     public BundleLoader() {
-        this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet(), "json", "properties", "xml", "yml", "yaml");
+        this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet(), "json", "properties", "yml", "yaml");
     }
     
     public BundleLoader(ConcurrentMap<String, Set<Source>> namespaces, Set<Source> global, String... formats) {
@@ -97,8 +97,7 @@ public class BundleLoader {
         
         return null;
     }
-    
-    
+
     public List<Locale> parents(String name, Locale locale) {
         return CONTROL.getCandidateLocales(name, locale);
     }
@@ -115,7 +114,7 @@ public class BundleLoader {
     
     public boolean add(Object annotated) {
         return add(annotated.getClass());
-    }
+}
     
     public boolean add(Class<?> annotated) {
         var bundled = annotated.getAnnotation(Bundled.class);
@@ -251,6 +250,19 @@ public class BundleLoader {
     
     public boolean remove(Collection<? extends Source> sources) {
         return global.removeAll(sources);
+    }
+    
+    
+    public String[] formats() {
+        return Arrays.copyOf(formats, formats.length);
+    }
+    
+    public ConcurrentMap<String, Set<Source>> namespaces() {
+        return namespaces;
+    }
+    
+    public Set<Source> global() {
+        return global;
     }
     
 }

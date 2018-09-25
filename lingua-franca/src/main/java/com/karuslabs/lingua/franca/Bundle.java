@@ -37,6 +37,10 @@ public class Bundle {
         EMPTY = new EmptyBundle(Locale.ROOT, null);
         EMPTY.parent = EMPTY;
     }
+    
+    public static Bundle empty(Locale locale, Bundle parent) {
+        return Locale.ROOT.equals(locale) ?  Bundle.EMPTY : new EmptyBundle(locale, parent);
+    }
 
     
     private static final ThreadLocal<MessageFormat> FORMATTER = new ThreadLocal<>() {

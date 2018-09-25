@@ -32,12 +32,6 @@ import static com.karuslabs.lingua.franca.Bundle.EMPTY_STRING;
 
 public class EmptyBundle extends Bundle {    
     
-    public static Bundle empty(Locale locale, Bundle parent) {
-        return Locale.ROOT.equals(locale) ?  Bundle.EMPTY : new EmptyBundle(locale, parent);
-    }
-    
-    
-    
     public EmptyBundle(Locale locale, Bundle parent) {
         super(Map.of(), locale, parent);
     }

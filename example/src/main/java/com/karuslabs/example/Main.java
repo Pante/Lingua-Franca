@@ -51,15 +51,17 @@ public class Main {
         
         while (true) {
             System.out.println("\nEnter the locale to view puns. (en_GB, es, zh)");
-            System.out.println("Enter 'provider' to view custom BundleProvider implementation");
+            System.out.println("Enter 'custom_bundle' to view custom BundleProvider implementation");
             System.out.println("Enter 'reload' to force reloading.");
-            System.out.println("Enter 'exit' to exit.\n");
+            System.out.println("Enter 'exit' to exit.");
             
             var entered = scanner.nextLine();
             
+            System.out.println("\n");
+            
             switch (entered.toLowerCase()) {
-                case "provider":
-                    provider();
+                case "custom_bundle":
+                    customBundle();
                     break;
                 
                 case "reload":
@@ -76,8 +78,8 @@ public class Main {
         }
     }
     
-    private static void provider() {
-        Bundle bundle = Bundler.bundler().load("single_bundle", Locale.ITALY);
+    private static void customBundle() {
+        Bundle bundle = Bundler.bundler().load("custom_bundle", Locale.ITALY);
         System.out.println(bundle.get("description").orElse("I forgot the description!"));
     }
     
@@ -110,13 +112,13 @@ class Puns {
         String question = bundle.find("first.question");
         Optional<String> answer = bundle.get("first.answer");
         
-        ask(question, answer.orElse("I forgot the first answer!"));
+        ask(question, answer.orElse("I forgot the answer!"));
         
         
         question = bundle.find("second.question");
         answer = bundle.get("second.answer");
         
-        ask(question, answer.orElse("I forgot the second answer!"));
+        ask(question, answer.orElse("I forgot the answer!"));
         
         
         String response = bundle.find("responses[0]", System.getProperty("user.name"));

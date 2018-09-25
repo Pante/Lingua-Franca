@@ -193,7 +193,7 @@ class BundlerTest {
     
     @Test
     void cache_empty() {
-        bundler.cache("empty", Locale.JAPAN, EmptyBundle.empty(Locale.JAPAN, Bundle.EMPTY), bundler.loader());
+        bundler.cache("empty", Locale.JAPAN, Bundle.empty(Locale.JAPAN, Bundle.EMPTY), bundler.loader());
         var bundle = bundler.cache().getIfPresent("empty_ja_JP");
         
         assertEquals(1, bundler.cache().size());

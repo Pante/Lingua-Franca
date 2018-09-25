@@ -31,13 +31,13 @@ import java.util.Locale;
 import java.util.Map;
 
 
-@Provides({"single_bundle"})
+@Provides({"custom_bundle"})
 public class CustomBundleProvider extends AnnotatedBundleProvider {
 
     @Override
     public Bundle get(String name, Locale locale) {
         if (provides(name)) {
-            return new Bundle(Map.of("description", "This is a custom bundle created by a custom bundle provider, it is actually really straight-forward."), locale);
+            return new Bundle(Map.of("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward."), locale);
             
         } else {
             return null;

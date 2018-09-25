@@ -36,14 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class EmptyBundleTest {
     
-    Bundle empty = Bundle.EMPTY;
-    
-    
-    @Test
-    void empty() {
-        assertSame(empty, EmptyBundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
-        assertEquals(Locale.CHINESE, EmptyBundle.empty(Locale.CHINESE, empty).locale());
-    }
+    static Bundle empty = Bundle.EMPTY;
     
     
     @Test

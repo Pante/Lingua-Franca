@@ -54,7 +54,7 @@ class BundleLoaderTest {
     static Source unnamed1 = new ClassLoaderSource("unnamed3");
     static Source unnamed2 = new ClassLoaderSource("unnamed4");
     static Control control = Control.getControl(Control.FORMAT_DEFAULT);
-    
+
     static {
         cached.add("named", named1, named2);
         cached.add(unnamed1, unnamed2);
