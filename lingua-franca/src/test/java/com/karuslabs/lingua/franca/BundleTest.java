@@ -52,7 +52,7 @@ class BundleTest {
     
     @Test
     void empty() {
-        assertSame(empty, EmptyBundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
+        assertSame(Bundle.EMPTY, EmptyBundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
         assertEquals(Locale.CHINESE, EmptyBundle.empty(Locale.CHINESE, Bundle.EMPTY).locale());
     }
     

@@ -39,7 +39,7 @@ public class Bundle {
     }
     
     public static Bundle empty(Locale locale, Bundle parent) {
-        return Locale.ROOT.equals(locale) ?  Bundle.EMPTY : new EmptyBundle(locale, parent);
+        return Locale.ROOT.equals(locale) ?  EMPTY : new EmptyBundle(locale, parent);
     }
 
     
