@@ -21,28 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.template;
+package com.karuslabs.lingua.franca.template.annotations;
 
-import com.karuslabs.lingua.franca.BundleLoader;
+import java.lang.annotation.*;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
-public class Template {
+@Documented
+@Retention(RUNTIME)
+@Repeatable(Platforms.class)
+@Target({TYPE})
+public @interface Platform {
     
-    public boolean generate(Path file, List<Locale> locales, String destination) {
-        var folder = Paths.get(destination);
-        try {
-            for (var locale : locales) {
-               Files.copy(file, folder);
-            }
-            return true;
-            
-        } catch (IOException e) {
-            return false;
-        }
-    }
+    public In template();
+    
+    public String destination();
+    
+    public String[] locales();
     
 }

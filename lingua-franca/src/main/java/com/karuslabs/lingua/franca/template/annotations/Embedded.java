@@ -31,9 +31,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Retention(RUNTIME)
+@Repeatable(Embeddings.class)
 @Target({TYPE})
-public @interface Generations {
+public @interface Embedded {
     
-    public Generate[] value();
+    public String template();
+    
+    public String destination();
+    
+    public String[] locales();
     
 }

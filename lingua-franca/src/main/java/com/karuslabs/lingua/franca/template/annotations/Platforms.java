@@ -21,50 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.sources;
+package com.karuslabs.lingua.franca.template.annotations;
 
-import java.io.InputStream;
+import java.lang.annotation.*;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
-public class ClassLoaderSource extends FileSource {
+@Documented
+@Retention(RUNTIME)
+@Target({TYPE})
+public @interface Platforms {
     
-    public static final ClassLoaderSource ROOT = new ClassLoaderSource("");
-    
-    
-    private ClassLoader loader;
-    
-    
-    public ClassLoaderSource(String folder) {
-        this(STACK.getCallerClass().getClassLoader(), folder);
-    }
-    
-    public ClassLoaderSource(ClassLoader loader, String folder) {
-        super(folder);
-        this.loader = loader;
-    }
-
-    
-    @Override
-    public @Nullable InputStream load(String resource) {
-        return loader.getResourceAsStream(folder + resource);
-    }
-    
-    
-    @Override
-    public boolean equals(Object other) {
-        return super.equals(other) && loader.equals(((ClassLoaderSource) other).loader);
-    }
-    
-    @Override
-    public int hashCode() {
-        return 53 * super.hashCode() + loader.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-        return String.format(getClass().getName() + "[classloader = %s, folder = %s]", loader, folder);
-    }
+    public Platform[] value();
     
 }

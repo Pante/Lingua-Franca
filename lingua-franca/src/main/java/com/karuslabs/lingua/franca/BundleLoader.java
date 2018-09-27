@@ -252,17 +252,4 @@ public class BundleLoader {
         return global.removeAll(sources);
     }
     
-    
-    public String[] formats() {
-        return Arrays.copyOf(formats, formats.length);
-    }
-    
-    public ConcurrentMap<String, Set<Source>> namespaces() {
-        return namespaces;
-    }
-    
-    public Set<Source> global() {
-        return global;
-    }
-    
 }

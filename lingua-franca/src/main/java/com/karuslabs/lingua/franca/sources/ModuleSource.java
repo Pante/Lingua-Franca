@@ -37,8 +37,7 @@ public class ModuleSource extends FileSource {
     
     
     public ModuleSource(String folder) {
-        super(folder);
-        this.module = getClass().getModule();
+        this(STACK.getCallerClass().getModule(), folder);
     }
     
     public ModuleSource(Module module, String folder) {

@@ -23,8 +23,12 @@
  */
 package com.karuslabs.lingua.franca.sources;
 
+import java.lang.StackWalker.Option;
+
 
 public abstract class FileSource implements Source {
+    
+    static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
     
     protected String folder;
     private volatile int hash;
