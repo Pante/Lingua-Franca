@@ -7,11 +7,11 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>lingua-lint-maven-plugin</artifactId>
+    <artifactId>lingua-maven-plugin</artifactId>
     <packaging>jar</packaging>
     
-    <name>Lingua Lint Maven Plugin</name>
-    <description>Lint Maven Plugin for Lingua Franca projects</description>
+    <name>Lingua Maven Plugin</name>
+    <description>Lint and template generation Maven Plugin for Lingua Franca projects</description>
     
     <dependencies>
         <dependency>

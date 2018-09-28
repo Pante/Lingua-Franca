@@ -23,7 +23,8 @@
  */
 package com.karuslabs.lingua.franca.template;
 
-import com.karuslabs.lingua.franca.BundleLoader;
+import com.karuslabs.lingua.franca.*;
+import com.karuslabs.lingua.franca.template.annotations.*;
 
 import java.io.*;
 import java.lang.StackWalker.Option;
@@ -35,6 +36,84 @@ public class Templates {
     
     private static final BundleLoader LOADER = BundleLoader.loader();
     private static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
+    
+    
+    public static boolean fromEmbedded(Object annotated) {
+        return fromEmbedded(annotated.getClass(), STACK.getCallerClass(), LOADER);
+    }
+
+     public static boolean fromEmbedded(Object annotated, BundleLoader loader) {
+        return fromEmbedded(annotated.getClass(), STACK.getCallerClass(), loader);
+    }
+    
+     
+    public static boolean fromEmbedded(Class<?> annotated) {
+        return fromEmbedded(annotated, STACK.getCallerClass(), LOADER);
+    }
+    
+    public static boolean fromEmbedded(Class<?> annotated, BundleLoader loader) {
+        return fromEmbedded(annotated, STACK.getCallerClass(), loader);
+    }
+    
+    
+    private static boolean fromEmbedded(Class<?> annotated, Class<?> caller, BundleLoader loader) {
+        var success = true;
+        
+        for (var embedded : annotated.getAnnotationsByType(Embedded.class)) {
+            var locales = new ArrayList<Locale>(embedded.locales().length);
+            for (var locale : embedded.locales()) {
+                locales.add(Locales.of(locale));
+            }
+            
+            success &= fromClassLoader(embedded.template(), caller.getClassLoader(), locales, embedded.destination(), loader);
+        }
+        
+        return success;
+    }
+    
+    
+    public static boolean fromPlatforms(Object annotated) {
+        return fromPlatforms(annotated.getClass(), STACK.getCallerClass(), LOADER);
+    }
+
+     public static boolean fromPlatforms(Object annotated, BundleLoader loader) {
+        return fromPlatforms(annotated.getClass(), STACK.getCallerClass(), loader);
+    }
+    
+     
+    public static boolean fromPlatforms(Class<?> annotated) {
+        return fromPlatforms(annotated, STACK.getCallerClass(), LOADER);
+    }
+    
+    public static boolean fromPlatforms(Class<?> annotated, BundleLoader loader) {
+        return fromPlatforms(annotated, STACK.getCallerClass(), loader);
+    }
+    
+    
+    private static boolean fromPlatforms(Class<?> annotated, Class<?> caller, BundleLoader loader) {
+        var success = true;
+        
+        for (var platform : annotated.getAnnotationsByType(Platform.class)) {
+            var locales = new ArrayList<Locale>(platform.locales().length);
+            for (var locale : platform.locales()) {
+                locales.add(Locales.of(locale));
+            }
+            
+            var template = platform.template();
+            if (!template.embedded().isEmpty()) {
+                success &= fromClassLoader(template.embedded(), caller.getClassLoader(), locales, platform.destination(), loader);
+                
+            } else if (!template.system().isEmpty()) {
+                success &= fromPlatform(new File(template.system()), locales, platform.destination(), loader);
+                
+            } else {
+                throw new IllegalArgumentException("Invalid template, either an embedded or system template must be specified");
+            }
+        }
+        
+        return success;
+    }
+    
     
     
     public static boolean fromClassLoader(String file, Collection<Locale> locales, String destination) {
@@ -51,7 +130,7 @@ public class Templates {
     }
     
     public static boolean fromClassLoader(String file, ClassLoader loader, Collection<Locale> locales, String destination, BundleLoader bundleLoader) {
-        return from(file, loader.getResourceAsStream(file), locales, destination, bundleLoader);
+        return from(new File(file), loader.getResourceAsStream(file), locales, destination, bundleLoader);
     }
     
     
@@ -70,56 +149,60 @@ public class Templates {
     
     public static boolean fromModule(String file, Module module, Collection<Locale> locales, String destination, BundleLoader loader) {
         try {
-            return from(file, module.getResourceAsStream(file), locales, destination, loader);
+            return from(new File(file), module.getResourceAsStream(file), locales, destination, loader);
             
         } catch (IOException e) {
-            return false;
+            throw new UncheckedIOException(e);
         }
     }
     
     
-    public static boolean fromSystem(String file, Collection<Locale> locales, String destination) {
-        return fromSystem(file, locales, destination, LOADER);
+    public static boolean fromPlatform(File file, Collection<Locale> locales, String destination) {
+        return fromPlatform(file, locales, destination, LOADER);
     }
     
-    public static boolean fromSystem(String file, Collection<Locale> locales, String destination, BundleLoader loader) {
+    public static boolean fromPlatform(File file, Collection<Locale> locales, String destination, BundleLoader loader) {
         try {
             return from(file, new FileInputStream(file), locales, destination, loader);
             
         } catch (FileNotFoundException e) {
-            return false;
+            throw new UncheckedIOException(e);
         }
     }
     
     
-    public static boolean from(String file, InputStream stream, Collection<Locale> locales, String destination) {
+    public static boolean from(File file, InputStream stream, Collection<Locale> locales, String destination) {
         return from(file, stream, locales, destination, LOADER);
     }
     
-    public static boolean from(String source, InputStream stream, Collection<Locale> locales, String destination, BundleLoader loader) {
-        var segments = new File(source).getName().split(".");
+    public static boolean from(File file, InputStream stream, Collection<Locale> locales, String destination, BundleLoader loader) {
+        var segments = file.getName().split(".");
         if (segments.length < 2) {
-            return false;
+            throw new IllegalArgumentException("Invalid file name, file name is missing an extension");
         }
         
         var name = segments[segments.length - 2];
         var format = segments[segments.length - 1];
         
         try (var in = stream.markSupported() ? stream : new BufferedInputStream(stream)) {
+            boolean success = true;
             for (var locale : locales) {
                 var bundle = loader.toResourceName(loader.toBundleName(name, locale), format);
-                var file = Paths.get(destination, bundle);
+                var target = Paths.get(destination, bundle);
                 
-                if (Files.notExists(file)) {
+                var creatable = Files.notExists(target);
+                if (creatable) {
                     in.mark(Integer.MAX_VALUE);
-                    Files.copy(in, file);
+                    Files.copy(in, target);
                     in.reset();
-                }    
+                }
+                
+                success &= creatable;
             }
-            return true;
+            return success;
             
         } catch (IOException e) {
-            return false;
+            throw new UncheckedIOException(e);
         }
     }
     

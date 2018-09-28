@@ -29,13 +29,13 @@ import com.karuslabs.lingua.franca.Locales;
 import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.annotations.ClassLoaderSources;
 import com.karuslabs.lingua.franca.annotations.ModuleSources;
-import com.karuslabs.lingua.franca.annotations.SystemSources;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.sources.ModuleSource;
 
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Scanner;
+import com.karuslabs.lingua.franca.annotations.SystemSources;
 
 
 public class Main {

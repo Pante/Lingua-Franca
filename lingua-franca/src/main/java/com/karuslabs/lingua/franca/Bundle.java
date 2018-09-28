@@ -54,7 +54,7 @@ public class Bundle {
     static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
     
     
-    private Map<String, Object> messages;
+    Map<String, Object> messages;
     private volatile @Nullable Set<String> keys;
     private Locale locale;
     protected Bundle parent;
