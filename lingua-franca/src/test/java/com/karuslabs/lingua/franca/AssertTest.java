@@ -21,38 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.karuslabs.lingua.franca;
 
-import java.util.*;
+import com.google.common.cache.CacheBuilder;
+
+import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
+
+import java.util.Locale;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-public class Assert {
+@ExtendWith(MockitoExtension.class)
+class AssertTest {
     
-    public static boolean subset(Bundle bundle) {
-        var root = bundle;
-        while (root.parent() != Bundle.EMPTY) {
-            root = root.parent();
-        }
-        
-        while (bundle != Bundle.EMPTY) {
-            if (!subset(root.messages, bundle.messages)) {
-                return false;
-            }
-            bundle = bundle.parent();
-        }
-        
-        return true;
+    Bundler bundler = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
+    
+    
+    AssertTest() {
+        bundler.loader().add(ClassLoaderSource.ROOT);
+        bundler.loader().add(new ClassLoaderSource("assertion"));
     }
     
-    public static boolean subset(Map<String, Object> parent, Map<String, Object> child) {
-        for (var entry : child.entrySet()) {
-            var value = parent.get(entry.getKey());
-            if (value == null || (value instanceof String && !(entry.getValue() instanceof String))) {
-                return false;
-            }
-        }
-        
-        return true;
+    
+    @Test
+    void subset_bundle_true() {
+        assertTrue(Assert.subset(bundler.load("loaded", Locale.UK)));
+    }
+    
+    
+    @Test
+    void subset_bundle_false() {
+        assertFalse(Assert.subset(bundler.load("invalid", Locale.UK)));
     }
     
 }

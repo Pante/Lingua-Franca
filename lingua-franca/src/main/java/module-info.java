@@ -30,6 +30,8 @@ open module com.karuslabs.lingua.franca {
     exports com.karuslabs.lingua.franca.sources;
     exports com.karuslabs.lingua.franca.spi;
     exports com.karuslabs.lingua.franca.spi.annotations;
+    exports com.karuslabs.lingua.franca.template;
+    exports com.karuslabs.lingua.franca.template.annotations;
     
     requires com.google.common;
     requires org.checkerframework.checker.qual;

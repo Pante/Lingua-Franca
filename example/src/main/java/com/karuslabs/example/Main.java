@@ -29,13 +29,15 @@ import com.karuslabs.lingua.franca.Locales;
 import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.annotations.ClassLoaderSources;
 import com.karuslabs.lingua.franca.annotations.ModuleSources;
+import com.karuslabs.lingua.franca.annotations.SystemSources;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.sources.ModuleSource;
+import com.karuslabs.lingua.franca.template.annotations.In;
+import com.karuslabs.lingua.franca.template.annotations.Platform;
 
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Scanner;
-import com.karuslabs.lingua.franca.annotations.SystemSources;
 
 
 public class Main {
@@ -90,6 +92,7 @@ public class Main {
 @ClassLoaderSources({"puns/classloader"})
 @ModuleSources({"puns/module"})
 @SystemSources({"./"})
+@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"ja_JP", "fr_FR"}, destination = "./")
 class Puns {
     
     private Bundler bundler = Bundler.bundler();

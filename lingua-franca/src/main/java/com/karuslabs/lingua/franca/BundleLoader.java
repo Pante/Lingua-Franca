@@ -66,7 +66,7 @@ public class BundleLoader {
     
     public Bundle load(String name, Locale locale, Bundle parent) {
         var sources = namespaces.getOrDefault(name, global);
-        var bundleName = toBundleName(name, locale);
+        var bundleName = CONTROL.toBundleName(name, locale);
         
         Map<String, Object> messages = null;
         
@@ -84,7 +84,7 @@ public class BundleLoader {
     protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {
         for (var source : sources) {
             for (var format : formats) {
-                try (var stream = source.load(toResourceName(bundle, format))) {
+                try (var stream = source.load(CONTROL.toResourceName(bundle, format))) {
                     if (stream != null) {
                         return Stringifier.stringify().from(stream, format);
                     }
@@ -100,15 +100,6 @@ public class BundleLoader {
 
     public List<Locale> parents(String name, Locale locale) {
         return CONTROL.getCandidateLocales(name, locale);
-    }
-    
-    
-    public String toResourceName(String bundle, String format) {
-        return CONTROL.toResourceName(bundle, format);
-    }
-    
-    public String toBundleName(String name, Locale locale) {
-        return CONTROL.toBundleName(name, locale);
     }
     
     

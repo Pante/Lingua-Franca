@@ -1,0 +1,9 @@
+language: java
+jdk:
+  - openjdk10
+
+script: 
+  - mvn --settings travis-settings.xml deploy
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

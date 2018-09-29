@@ -27,22 +27,14 @@ package com.karuslabs.lingua.franca;
 import com.karuslabs.lingua.franca.annotations.*;
 import com.karuslabs.lingua.franca.sources.*;
 
-import java.io.*;
 import java.util.ResourceBundle.Control;
 import java.util.*;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
-
-import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.of;
-import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -96,18 +88,6 @@ class BundleLoaderTest {
     @Test
     void parents() {
         assertEquals(control.getCandidateLocales("", Locale.SIMPLIFIED_CHINESE), loader.parents("", Locale.SIMPLIFIED_CHINESE));
-    }
-    
-    
-    @Test
-    void toResourceName() {
-        assertEquals(control.toResourceName("bundled", "yml"), loader.toResourceName("bundled", "yml"));
-    }
-    
-    
-    @Test
-    void toBundleName() {
-        assertEquals(control.toBundleName("bundled", Locale.ENGLISH), loader.toBundleName("bundled", Locale.ENGLISH));
     }
     
     

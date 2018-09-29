@@ -8,7 +8,7 @@
     </parent>
     
     <artifactId>lingua-maven-plugin</artifactId>
-    <packaging>jar</packaging>
+    <packaging>maven-plugin</packaging>
     
     <name>Lingua Maven Plugin</name>
     <description>Lint and template generation Maven Plugin for Lingua Franca projects</description>
@@ -18,6 +18,13 @@
             <groupId>com.karuslabs</groupId>
             <artifactId>lingua-franca</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
             <scope>compile</scope>
         </dependency>
         

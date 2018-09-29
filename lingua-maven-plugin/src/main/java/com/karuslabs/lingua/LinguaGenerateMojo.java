@@ -21,38 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca;
+package com.karuslabs.lingua;
 
-import java.util.*;
+import org.apache.maven.plugin.*;
+import org.apache.maven.plugins.annotations.Mojo;
+
+import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_RESOURCES;
 
 
-public class Assert {
-    
-    public static boolean subset(Bundle bundle) {
-        var root = bundle;
-        while (root.parent() != Bundle.EMPTY) {
-            root = root.parent();
-        }
-        
-        while (bundle != Bundle.EMPTY) {
-            if (!subset(root.messages, bundle.messages)) {
-                return false;
-            }
-            bundle = bundle.parent();
-        }
-        
-        return true;
-    }
-    
-    public static boolean subset(Map<String, Object> parent, Map<String, Object> child) {
-        for (var entry : child.entrySet()) {
-            var value = parent.get(entry.getKey());
-            if (value == null || (value instanceof String && !(entry.getValue() instanceof String))) {
-                return false;
-            }
-        }
-        
-        return true;
+@Mojo(name = "lingua-generate", defaultPhase = GENERATE_RESOURCES, threadSafe = false)
+public class LinguaGenerateMojo extends AbstractMojo {
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

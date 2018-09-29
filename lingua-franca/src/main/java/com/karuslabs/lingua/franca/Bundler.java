@@ -39,6 +39,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 public class Bundler {    
     
     private static Bundler BUNDLER = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
+    private static final ResourceBundle.Control CONTROL = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
     
     public static Bundler bundler() {
         return BUNDLER;
@@ -129,7 +130,7 @@ public class Bundler {
     
     
     protected Bundle load(String name, Locale locale, BundleLoader loader, boolean reload) {
-        var bundleName = loader.toBundleName(name, locale);
+        var bundleName = CONTROL.toBundleName(name, locale);
         Bundle bundle = null;
         
         if (!reload) {
@@ -137,7 +138,7 @@ public class Bundler {
         }
         
         if (bundle == null) {
-            bundle = loadFromServices(name, locale, loader);
+            bundle = loadFromServices(name, locale);
         }
         
         if (bundle == null) {
@@ -148,13 +149,13 @@ public class Bundler {
     }
     
     
-    protected @Nullable Bundle loadFromServices(String name, Locale locale, BundleLoader loader) {
+    protected @Nullable Bundle loadFromServices(String name, Locale locale) {
         try {
             var providers = PROVIDERS.get().iterator();
             while (providers.hasNext()) {
                 var bundle = providers.next().get(name, locale);
                 if (bundle != null) {
-                    cache(name, locale, bundle, loader);
+                    cache(name, locale, bundle);
                     return bundle;
                 }
             }
@@ -166,9 +167,9 @@ public class Bundler {
         return null;
     }
     
-    protected void cache(String name, Locale locale, Bundle bundle, BundleLoader loader) {
+    protected void cache(String name, Locale locale, Bundle bundle) {
         do {
-            cache.put(loader.toBundleName(name, locale), bundle);
+            cache.put(CONTROL.toBundleName(name, locale), bundle);
             bundle = bundle.parent();
             locale = bundle.locale();
         } while (bundle != Bundle.EMPTY);
@@ -178,7 +179,7 @@ public class Bundler {
     protected Bundle loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader, boolean reload) {
         var current = Bundle.EMPTY;
         for (var locale : locales) {
-            var bundleName = loader.toBundleName(name, locale);
+            var bundleName = CONTROL.toBundleName(name, locale);
             
             Bundle child = null;
             if (!reload) {

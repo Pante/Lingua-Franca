@@ -34,29 +34,19 @@ import java.util.*;
 
 public class Templates {
     
-    private static final BundleLoader LOADER = BundleLoader.loader();
+    private static final ResourceBundle.Control CONTROL = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
     private static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
-    
+
     
     public static boolean fromEmbedded(Object annotated) {
-        return fromEmbedded(annotated.getClass(), STACK.getCallerClass(), LOADER);
+        return fromEmbedded(annotated.getClass(), STACK.getCallerClass());
     }
-
-     public static boolean fromEmbedded(Object annotated, BundleLoader loader) {
-        return fromEmbedded(annotated.getClass(), STACK.getCallerClass(), loader);
-    }
-    
      
     public static boolean fromEmbedded(Class<?> annotated) {
-        return fromEmbedded(annotated, STACK.getCallerClass(), LOADER);
+        return fromEmbedded(annotated, STACK.getCallerClass());
     }
     
-    public static boolean fromEmbedded(Class<?> annotated, BundleLoader loader) {
-        return fromEmbedded(annotated, STACK.getCallerClass(), loader);
-    }
-    
-    
-    private static boolean fromEmbedded(Class<?> annotated, Class<?> caller, BundleLoader loader) {
+    private static boolean fromEmbedded(Class<?> annotated, Class<?> caller) {
         var success = true;
         
         for (var embedded : annotated.getAnnotationsByType(Embedded.class)) {
@@ -65,7 +55,7 @@ public class Templates {
                 locales.add(Locales.of(locale));
             }
             
-            success &= fromClassLoader(embedded.template(), caller.getClassLoader(), locales, embedded.destination(), loader);
+            success &= fromClassLoader(embedded.template(), caller.getClassLoader(), locales, embedded.destination());
         }
         
         return success;
@@ -73,24 +63,14 @@ public class Templates {
     
     
     public static boolean fromPlatforms(Object annotated) {
-        return fromPlatforms(annotated.getClass(), STACK.getCallerClass(), LOADER);
+        return fromPlatforms(annotated.getClass(), STACK.getCallerClass());
     }
-
-     public static boolean fromPlatforms(Object annotated, BundleLoader loader) {
-        return fromPlatforms(annotated.getClass(), STACK.getCallerClass(), loader);
-    }
-    
      
     public static boolean fromPlatforms(Class<?> annotated) {
-        return fromPlatforms(annotated, STACK.getCallerClass(), LOADER);
+        return fromPlatforms(annotated, STACK.getCallerClass());
     }
     
-    public static boolean fromPlatforms(Class<?> annotated, BundleLoader loader) {
-        return fromPlatforms(annotated, STACK.getCallerClass(), loader);
-    }
-    
-    
-    private static boolean fromPlatforms(Class<?> annotated, Class<?> caller, BundleLoader loader) {
+    private static boolean fromPlatforms(Class<?> annotated, Class<?> caller) {
         var success = true;
         
         for (var platform : annotated.getAnnotationsByType(Platform.class)) {
@@ -101,10 +81,10 @@ public class Templates {
             
             var template = platform.template();
             if (!template.embedded().isEmpty()) {
-                success &= fromClassLoader(template.embedded(), caller.getClassLoader(), locales, platform.destination(), loader);
+                success &= fromClassLoader(template.embedded(), caller.getClassLoader(), locales, platform.destination());
                 
             } else if (!template.system().isEmpty()) {
-                success &= fromPlatform(new File(template.system()), locales, platform.destination(), loader);
+                success &= from(new File(template.system()), locales, platform.destination());
                 
             } else {
                 throw new IllegalArgumentException("Invalid template, either an embedded or system template must be specified");
@@ -113,57 +93,34 @@ public class Templates {
         
         return success;
     }
+
     
-    
-    
-    public static boolean fromClassLoader(String file, Collection<Locale> locales, String destination) {
-        return fromClassLoader(file, STACK.getCallerClass().getClassLoader(), locales, destination);
+    public static boolean fromClassLoader(String source, Collection<Locale> locales, String destination) {
+        return fromClassLoader(source, STACK.getCallerClass().getClassLoader(), locales, destination);
     }
     
-    public static boolean fromClassLoader(String file, Collection<Locale> locales, String destination, BundleLoader loader) {
-        return fromClassLoader(file, STACK.getCallerClass().getClassLoader(), locales, destination, loader);
-    }
-    
-    
-    public static boolean fromClassLoader(String file, ClassLoader loader, Collection<Locale> locales, String destination) {
-        return fromClassLoader(file, loader, locales, destination, LOADER);
-    }
-    
-    public static boolean fromClassLoader(String file, ClassLoader loader, Collection<Locale> locales, String destination, BundleLoader bundleLoader) {
-        return from(new File(file), loader.getResourceAsStream(file), locales, destination, bundleLoader);
+    public static boolean fromClassLoader(String source, ClassLoader loader, Collection<Locale> locales, String destination) {
+        return from(new File(source), loader.getResourceAsStream(source), locales, destination);
     }
     
     
-    public static boolean fromModule(String file, Collection<Locale> locales, String destination) {
-        return fromModule(file, STACK.getCallerClass().getModule(), locales, destination, LOADER);
+    public static boolean fromModule(String source, Collection<Locale> locales, String destination) {
+        return fromModule(source, STACK.getCallerClass().getModule(), locales, destination);
     }
     
-    public static boolean fromModule(String file, Collection<Locale> locales, String destination, BundleLoader loader) {
-        return fromModule(file, STACK.getCallerClass().getModule(), locales, destination, loader);
-    }
-    
-    
-    public static boolean fromModule(String file, Module module, Collection<Locale> locales, String destination) {
-        return fromModule(file, module, locales, destination, LOADER);
-    }
-    
-    public static boolean fromModule(String file, Module module, Collection<Locale> locales, String destination, BundleLoader loader) {
+    public static boolean fromModule(String source, Module module, Collection<Locale> locales, String destination) {
         try {
-            return from(new File(file), module.getResourceAsStream(file), locales, destination, loader);
+            return from(new File(source), module.getResourceAsStream(source), locales, destination);
             
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
+
     
-    
-    public static boolean fromPlatform(File file, Collection<Locale> locales, String destination) {
-        return fromPlatform(file, locales, destination, LOADER);
-    }
-    
-    public static boolean fromPlatform(File file, Collection<Locale> locales, String destination, BundleLoader loader) {
+    public static boolean from(File source, Collection<Locale> locales, String destination) {
         try {
-            return from(file, new FileInputStream(file), locales, destination, loader);
+            return from(source, new FileInputStream(source), locales, destination);
             
         } catch (FileNotFoundException e) {
             throw new UncheckedIOException(e);
@@ -171,23 +128,20 @@ public class Templates {
     }
     
     
-    public static boolean from(File file, InputStream stream, Collection<Locale> locales, String destination) {
-        return from(file, stream, locales, destination, LOADER);
-    }
-    
-    public static boolean from(File file, InputStream stream, Collection<Locale> locales, String destination, BundleLoader loader) {
-        var segments = file.getName().split(".");
+    public static boolean from(File source, InputStream stream, Collection<Locale> locales, String destination) {
+        var segments = source.getName().split("\\.");
         if (segments.length < 2) {
             throw new IllegalArgumentException("Invalid file name, file name is missing an extension");
         }
         
-        var name = segments[segments.length - 2];
-        var format = segments[segments.length - 1];
-        
+        return from(segments[segments.length - 2], segments[segments.length - 1], stream, locales, destination);
+    }
+    
+    public static boolean from(String name, String format, InputStream stream, Collection<Locale> locales, String destination) {
         try (var in = stream.markSupported() ? stream : new BufferedInputStream(stream)) {
             boolean success = true;
             for (var locale : locales) {
-                var bundle = loader.toResourceName(loader.toBundleName(name, locale), format);
+                var bundle = CONTROL.toResourceName(CONTROL.toBundleName(name, locale), format);
                 var target = Paths.get(destination, bundle);
                 
                 var creatable = Files.notExists(target);

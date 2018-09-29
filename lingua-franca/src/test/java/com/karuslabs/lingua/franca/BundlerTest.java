@@ -26,8 +26,8 @@ package com.karuslabs.lingua.franca;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
-import com.karuslabs.lingua.franca.annotations.Bundled;
 
+import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.spi.BundleProvider;
 
@@ -148,7 +148,7 @@ class BundlerTest {
     void loadFromServices() {
         Bundler.PROVIDERS.set(mock_service());
         
-        var bundle = bundler.loadFromServices("loaded", Locale.UK, bundler.loader());
+        var bundle = bundler.loadFromServices("loaded", Locale.UK);
         
         
         assertEquals(Locale.UK, bundle.locale());
@@ -163,7 +163,7 @@ class BundlerTest {
     void loadFromServices_nonexistent() {
         Bundler.PROVIDERS.set(mock_service());
 
-        assertNull(bundler.loadFromServices("something", Locale.UK, bundler.loader()));
+        assertNull(bundler.loadFromServices("something", Locale.UK));
         assertEquals(0, bundler.cache().size());
     }
     
@@ -173,14 +173,14 @@ class BundlerTest {
         service = when(mock(ServiceLoader.class).iterator()).thenThrow(ServiceConfigurationError.class).getMock();
         Bundler.PROVIDERS.set(service);
         
-        assertNull(bundler.loadFromServices("loaded", Locale.UK, bundler.loader()));
+        assertNull(bundler.loadFromServices("loaded", Locale.UK));
         assertEquals(0, bundler.cache().size());
     }
     
     
     @Test
     void cache() {
-        bundler.cache("bundled", Locale.UK, chained, bundler.loader());
+        bundler.cache("bundled", Locale.UK, chained);
         var bundle = bundler.cache().getIfPresent("bundled_en_GB");
         
         assertEquals(3, bundler.cache().size());
@@ -193,7 +193,7 @@ class BundlerTest {
     
     @Test
     void cache_empty() {
-        bundler.cache("empty", Locale.JAPAN, Bundle.empty(Locale.JAPAN, Bundle.EMPTY), bundler.loader());
+        bundler.cache("empty", Locale.JAPAN, Bundle.empty(Locale.JAPAN, Bundle.EMPTY));
         var bundle = bundler.cache().getIfPresent("empty_ja_JP");
         
         assertEquals(1, bundler.cache().size());
