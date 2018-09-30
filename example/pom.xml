@@ -30,6 +30,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>10</source>
+                    <target>10</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.karuslabs</groupId>
+                            <artifactId>lingua-franca</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <showWarnings>true</showWarnings>
+                </configuration>
             </plugin>
    
             <plugin>
@@ -44,7 +57,6 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>

@@ -11,4 +11,5 @@ second:
     answer: "A dino-snore."
     
 responses:
-    - "*{0} BOO!!!!*"
+    - "*{0} sighs*"
+    - "*Bring out the rotten tomatoes*"

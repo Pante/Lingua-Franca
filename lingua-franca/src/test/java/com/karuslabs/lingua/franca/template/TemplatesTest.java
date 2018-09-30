@@ -205,7 +205,7 @@ class TemplatesTest {
     @Test
     void from_file_stream_exception() {
         Executable function = () -> Templates.from(new File("hurhur"), getClass().getClassLoader().getResourceAsStream(LOADED), LOCALES, DESTINATION);
-        assertEquals("Invalid file name, file name is missing an extension", assertThrows(IllegalArgumentException.class, function).getMessage());
+        assertEquals("Invalid file name, file name is either blank or missing an extension", assertThrows(IllegalArgumentException.class, function).getMessage());
     }
             
     

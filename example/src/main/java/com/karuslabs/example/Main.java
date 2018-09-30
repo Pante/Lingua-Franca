@@ -32,6 +32,7 @@ import com.karuslabs.lingua.franca.annotations.ModuleSources;
 import com.karuslabs.lingua.franca.annotations.SystemSources;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.sources.ModuleSource;
+import com.karuslabs.lingua.franca.template.Templates;
 import com.karuslabs.lingua.franca.template.annotations.In;
 import com.karuslabs.lingua.franca.template.annotations.Platform;
 
@@ -51,8 +52,10 @@ public class Main {
         Bundler.bundler().loader().add(puns);
         Bundler.bundler().loader().add(new ClassLoaderSource(""), new ModuleSource(""));
         
+        Templates.fromPlatforms(puns);
+        
         while (true) {
-            System.out.println("\nEnter the locale to view puns. (en_GB, es, zh)");
+            System.out.println("\nEnter the locale to view puns. (en_GB, es, fr_FR, ja-JP, zh)");
             System.out.println("Enter 'custom_bundle' to view custom BundleProvider implementation");
             System.out.println("Enter 'reload' to force reloading.");
             System.out.println("Enter 'exit' to exit.");
@@ -92,7 +95,7 @@ public class Main {
 @ClassLoaderSources({"puns/classloader"})
 @ModuleSources({"puns/module"})
 @SystemSources({"./"})
-@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"ja_JP", "fr_FR"}, destination = "./")
+@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"fr_FR", "ja_JP"}, destination = "./")
 class Puns {
     
     private Bundler bundler = Bundler.bundler();
@@ -126,6 +129,9 @@ class Puns {
         
         String response = bundle.find("responses[0]", System.getProperty("user.name"));
         System.out.println(response);
+        
+        String[] responses = bundle.messagesIfPresent("responses");
+        System.out.println(responses[1]);
     }
     
     private void ask(String question, String answer) {

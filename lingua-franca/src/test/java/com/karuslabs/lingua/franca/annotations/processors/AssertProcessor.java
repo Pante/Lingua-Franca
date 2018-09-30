@@ -21,20 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua;
+package com.karuslabs.lingua.franca.annotations.processors;
 
-import org.apache.maven.plugin.*;
-import org.apache.maven.plugins.annotations.Mojo;
+import com.karuslabs.lingua.franca.spi.annotations.processors.ProvidesProcessor;
 
-import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_RESOURCES;
+import javax.annotation.processing.*;
+
+import static javax.lang.model.SourceVersion.RELEASE_10;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@Mojo(name = "lingua-generate", defaultPhase = GENERATE_RESOURCES, threadSafe = false)
-public class LinguaGenerateMojo extends AbstractMojo {
-
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+public class AssertProcessor {
+    
+    public static void annotations(Class<?> processor) throws ClassNotFoundException {
+        assertEquals(RELEASE_10, processor.getAnnotation(SupportedSourceVersion.class).value());
+        
+        var annotations = ProvidesProcessor.class.getAnnotation(SupportedAnnotationTypes.class);
+        for (var annotation : annotations.value()) {
+            Class.forName(annotation);
+        }
     }
     
 }

@@ -40,25 +40,29 @@ public class Templates {
     
     public static boolean fromEmbedded(Object annotated) {
         return fromEmbedded(annotated.getClass(), STACK.getCallerClass());
-    }
+    } 
      
     public static boolean fromEmbedded(Class<?> annotated) {
         return fromEmbedded(annotated, STACK.getCallerClass());
     }
     
-    private static boolean fromEmbedded(Class<?> annotated, Class<?> caller) {
+    public static boolean fromEmbedded(Class<?> annotated, Class<?> caller) {
         var success = true;
         
         for (var embedded : annotated.getAnnotationsByType(Embedded.class)) {
-            var locales = new ArrayList<Locale>(embedded.locales().length);
+            success &= fromEmbedded(embedded, caller);
+        }
+        
+        return success;
+    }
+    
+    public static boolean fromEmbedded(Embedded embedded, Class<?> caller) {
+        var locales = new ArrayList<Locale>(embedded.locales().length);
             for (var locale : embedded.locales()) {
                 locales.add(Locales.of(locale));
             }
             
-            success &= fromClassLoader(embedded.template(), caller.getClassLoader(), locales, embedded.destination());
-        }
-        
-        return success;
+        return fromClassLoader(embedded.template(), caller.getClassLoader(), locales, embedded.destination());
     }
     
     
@@ -70,28 +74,32 @@ public class Templates {
         return fromPlatforms(annotated, STACK.getCallerClass());
     }
     
-    private static boolean fromPlatforms(Class<?> annotated, Class<?> caller) {
+    public static boolean fromPlatforms(Class<?> annotated, Class<?> caller) {
         var success = true;
         
         for (var platform : annotated.getAnnotationsByType(Platform.class)) {
-            var locales = new ArrayList<Locale>(platform.locales().length);
-            for (var locale : platform.locales()) {
-                locales.add(Locales.of(locale));
-            }
-            
-            var template = platform.template();
-            if (!template.embedded().isEmpty()) {
-                success &= fromClassLoader(template.embedded(), caller.getClassLoader(), locales, platform.destination());
-                
-            } else if (!template.system().isEmpty()) {
-                success &= from(new File(template.system()), locales, platform.destination());
-                
-            } else {
-                throw new IllegalArgumentException("Invalid template, either an embedded or system template must be specified");
-            }
+            success &= fromPlatforms(platform, caller);
         }
         
         return success;
+    }
+    
+    public static boolean fromPlatforms(Platform platform, Class<?> caller) {
+        var locales = new ArrayList<Locale>(platform.locales().length);
+        for (var locale : platform.locales()) {
+            locales.add(Locales.of(locale));
+        }
+
+        var template = platform.template();
+        if (!template.embedded().isEmpty()) {
+            return fromClassLoader(template.embedded(), caller.getClassLoader(), locales, platform.destination());
+
+        } else if (!template.system().isEmpty()) {
+            return from(new File(template.system()), locales, platform.destination());
+
+        } else {
+            throw new IllegalArgumentException("Invalid template, either an embedded or system template must be specified");
+        }
     }
 
     
@@ -129,12 +137,13 @@ public class Templates {
     
     
     public static boolean from(File source, InputStream stream, Collection<Locale> locales, String destination) {
-        var segments = source.getName().split("\\.");
-        if (segments.length < 2) {
-            throw new IllegalArgumentException("Invalid file name, file name is missing an extension");
+        var name = source.getName();
+        int index = name.lastIndexOf('.');
+        if (index <= 0) {
+            throw new IllegalArgumentException("Invalid file name, file name is either blank or missing an extension");
         }
         
-        return from(segments[segments.length - 2], segments[segments.length - 1], stream, locales, destination);
+        return from(name.substring(0, index), name.substring(index + 1), stream, locales, destination);
     }
     
     public static boolean from(String name, String format, InputStream stream, Collection<Locale> locales, String destination) {

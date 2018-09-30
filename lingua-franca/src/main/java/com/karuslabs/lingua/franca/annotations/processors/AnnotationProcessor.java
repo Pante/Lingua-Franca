@@ -21,20 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua;
+package com.karuslabs.lingua.franca.annotations.processors;
 
-import org.apache.maven.plugin.*;
-import org.apache.maven.plugins.annotations.Mojo;
+import java.io.File;
+import java.util.*;
+import javax.annotation.processing.*;
+import javax.lang.model.element.*;
+import javax.lang.model.util.Types;
 
-import static org.apache.maven.plugins.annotations.LifecyclePhase.COMPILE;
+import static java.util.stream.Collectors.toSet;
 
 
-@Mojo(name = "lingua-lint", defaultPhase = COMPILE, threadSafe = false)
-public class LinguaLintMojo extends AbstractMojo {
-
+public abstract class AnnotationProcessor extends AbstractProcessor {
+    
+    protected static final File RESOURCES = new File("./src/main/resources");
+    
+    protected Messager messager;
+    protected Types types;
+    
+    
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized void init(ProcessingEnvironment environment) {
+        super.init(environment);
+        messager = environment.getMessager();
+        types = environment.getTypeUtils();
+    }
+    
+        
+    public Set<Element> types(Set<? extends TypeElement> annotations, RoundEnvironment environment) {
+        return annotations.stream().map(environment::getElementsAnnotatedWith).flatMap(Collection::stream).collect(toSet());
     }
     
 }

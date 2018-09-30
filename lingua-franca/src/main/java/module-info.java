@@ -33,10 +33,12 @@ open module com.karuslabs.lingua.franca {
     exports com.karuslabs.lingua.franca.template;
     exports com.karuslabs.lingua.franca.template.annotations;
     
-    requires com.google.common;
-    requires org.checkerframework.checker.qual;
+    requires java.compiler;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.dataformat.javaprop;
     requires com.fasterxml.jackson.dataformat.yaml;
+    requires com.google.common;
+    requires org.checkerframework.checker.qual;
+    requires java.base;
 }
