@@ -27,25 +27,16 @@ package com.karuslabs.lingua.franca.spi.annotations.processors;
 import com.karuslabs.lingua.franca.annotations.processors.*;
 import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
 import com.karuslabs.lingua.franca.spi.annotations.Provides;
-import java.lang.annotation.Annotation;
-import java.util.Set;
 
-import java.util.stream.Stream;
-import javax.annotation.processing.SupportedAnnotationTypes;
+import java.util.Set;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
-
-import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static javax.tools.Diagnostic.Kind.ERROR;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
 
 

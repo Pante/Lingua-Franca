@@ -13,6 +13,7 @@
     <modules>
         <module>lingua-franca</module>
         <module>example</module>
+        <module>lingua-maven-plugin</module>
     </modules>
     
     <properties>

@@ -23,47 +23,38 @@
  */
 package com.karuslabs.lingua.franca.annotations.processors;
 
+import com.karuslabs.lingua.franca.annotations.ModuleSources;
+
 import java.net.URL;
 import java.util.*;
 import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.TypeMirror;
 
+import static javax.lang.model.SourceVersion.RELEASE_10;
 import static javax.tools.Diagnostic.Kind.*;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public abstract class SourcesProcessor extends AnnotationProcessor {
-    
-    private String annotation;
-    
-    
-    public SourcesProcessor(String annotation) {
-        this.annotation = annotation;
+@SupportedSourceVersion(RELEASE_10)
+@SupportedAnnotationTypes({
+    "com.karuslabs.lingua.franca.annotations.ModuleSources"
+})
+public class ModuleSourcesProcessor extends SourcesProcessor {
+
+    public ModuleSourcesProcessor() {
+        super("ModuleSources");
     }
-    
-    
+
+
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment environment) {
-        for (var element : types(annotations, environment))  {
-            process(directories(element), element);
-        }
-        return false;
+    protected String[] directories(Element element) {
+        return element.getAnnotation(ModuleSources.class).value();
     }
-    
-    protected void process(String[] directories, Element element) {
-        if (directories.length == 0) {
-            messager.printMessage(ERROR, "Empty @" + annotation + " annotated type, " + element.asType().toString() + ", sources cannot be empty", element);
-        }
-        
-        for (var directory : directories) {
-            if (find(directory) == null) {
-                messager.printMessage(ERROR, "Invalid directory, " + directory + " for @" + annotation + " annotated type, " + element.asType().toString() + ", directory must exist and be a directory", element);
-            }
-        }
+
+    @Override
+    protected URL find(String file) {
+        return getClass().getClassLoader().getResource(file);
     }
-    
-    protected abstract String[] directories(Element element);
-    
-    protected abstract @Nullable URL find(String file);
     
 }

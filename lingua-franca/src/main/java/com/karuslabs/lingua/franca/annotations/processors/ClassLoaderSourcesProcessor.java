@@ -23,47 +23,36 @@
  */
 package com.karuslabs.lingua.franca.annotations.processors;
 
+import com.karuslabs.lingua.franca.annotations.ClassLoaderSources;
+
 import java.net.URL;
-import java.util.*;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
 
-import static javax.tools.Diagnostic.Kind.*;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import static javax.lang.model.SourceVersion.RELEASE_10;
 
 
-public abstract class SourcesProcessor extends AnnotationProcessor {
-    
-    private String annotation;
-    
-    
-    public SourcesProcessor(String annotation) {
-        this.annotation = annotation;
+@SupportedSourceVersion(RELEASE_10)
+@SupportedAnnotationTypes({
+    "com.karuslabs.lingua.franca.annotations.ClassLoaderSources"
+})
+public class ClassLoaderSourcesProcessor extends SourcesProcessor {
+
+    public ClassLoaderSourcesProcessor() {
+        super("ClassLoaderSources");
     }
-    
+
     
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment environment) {
-        for (var element : types(annotations, environment))  {
-            process(directories(element), element);
-        }
-        return false;
+    protected String[] directories(Element element) {
+        return element.getAnnotation(ClassLoaderSources.class).value();
     }
-    
-    protected void process(String[] directories, Element element) {
-        if (directories.length == 0) {
-            messager.printMessage(ERROR, "Empty @" + annotation + " annotated type, " + element.asType().toString() + ", sources cannot be empty", element);
-        }
-        
-        for (var directory : directories) {
-            if (find(directory) == null) {
-                messager.printMessage(ERROR, "Invalid directory, " + directory + " for @" + annotation + " annotated type, " + element.asType().toString() + ", directory must exist and be a directory", element);
-            }
-        }
+
+    @Override
+    protected URL find(String file) {
+        var url = getClass().getClassLoader().getResource(getClass().getName().replace('.', '/') + ".class");
+        System.out.println(url);
+        return url;
     }
-    
-    protected abstract String[] directories(Element element);
-    
-    protected abstract @Nullable URL find(String file);
     
 }
