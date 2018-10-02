@@ -21,51 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.template.annotations.processors;
+package com.karuslabs.lingua.maven.plugin.lint.processors;
 
 import com.karuslabs.lingua.franca.template.annotations.*;
+import com.karuslabs.lingua.maven.plugin.TemplateProcessor;
+import java.io.File;
 
-import java.util.*;
-import javax.annotation.processing.*;
-import javax.lang.model.element.*;
+import java.util.Collection;
 
-import static javax.lang.model.SourceVersion.RELEASE_10;
-import static javax.tools.Diagnostic.Kind.*;
+import org.apache.maven.plugin.logging.Log;
 
 
-@SupportedSourceVersion(RELEASE_10)
-@SupportedAnnotationTypes({
-    "com.karuslabs.lingua.franca.template.annotations.Platform",
-    "com.karuslabs.lingua.franca.template.annotations.Platforms"
-})
 public class PlatformProcessor extends TemplateProcessor {
 
-    @Override
-    public synchronized void init(ProcessingEnvironment environment) {
-        super.init(environment);
-    }
-
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment environment) {
-        for (var element : types(annotations, environment))  {
-            for (var annotation : element.getAnnotationsByType(Platform.class)) {
-                processPlatform(annotation.template(), element);
-                processLocales("Platform", annotation.locales(), element);
-            }
-        }
-        return false;
+    public PlatformProcessor(File resources) {
+        super(resources);
     }
     
-    protected void processPlatform(In annotation, Element element) {
+    
+    @Override
+    public boolean process(Collection<Class<?>> classes, Log logger) {
+        boolean success = true;
+        
+        for (var type : classes)  {
+            for (var annotation : type.getAnnotationsByType(Platform.class)) {
+                success &= processPlatform(logger, type, annotation.template());
+                success &= processLocales(logger, type, "Platform", annotation.locales());
+            }
+        }
+        
+        return success;
+    }
+    
+    protected boolean processPlatform(Log logger, Class<?> type, In annotation) {
         if (annotation.embedded().isEmpty() && annotation.system().isEmpty()) {
-            messager.printMessage(ERROR, "Invalid @Platform annotated type, " + element.asType().toString() + ", either an embedded or system template must be specified", element);
-            
+            logger.error("Invalid @Plaform annotation for " + type.getName() + ", @" + annotation + " must contain either an embeded or system template");
+            return false;
+                
         } else if (!annotation.embedded().isEmpty() && !annotation.system().isEmpty()) {
-            messager.printMessage(ERROR, "Invalid @Platform annotated type, " + element.asType().toString() + ", only a single template can be specified", element);
+            logger.error("Invalid @Platform annotated for " + type.getName() + ", @" + annotation + " must contain only a single template");
+            return false;
             
         } else {
-            processEmbedded("Platform", "template", annotation.embedded(), element);
-        }
+            return processEmbedded(logger, type, "Plaform", annotation.embedded());
+        }       
     }
     
 }

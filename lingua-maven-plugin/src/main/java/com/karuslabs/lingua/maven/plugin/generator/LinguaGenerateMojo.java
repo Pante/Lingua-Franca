@@ -21,35 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations.processors;
+package com.karuslabs.lingua.maven.plugin.generator;
 
-import java.io.File;
-import java.util.*;
-import javax.annotation.processing.*;
-import javax.lang.model.element.*;
-import javax.lang.model.util.Types;
+import com.karuslabs.lingua.franca.template.annotations.Embedded;
+import com.karuslabs.lingua.maven.plugin.LinguaMojo;
+import com.karuslabs.lingua.maven.plugin.generator.processors.EmbeddedProcessor;
 
-import static java.util.stream.Collectors.toSet;
+import org.apache.maven.plugin.*;
+import org.apache.maven.plugins.annotations.Mojo;
+
+import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSES;
 
 
-public abstract class AnnotationProcessor extends AbstractProcessor {
-    
-    protected static final File RESOURCES = new File("./src/main/resources");
-    
-    protected Messager messager;
-    protected Types types;
-    
+@Mojo(name = "generate", defaultPhase = PROCESS_CLASSES, threadSafe = false)
+public class LinguaGenerateMojo extends LinguaMojo {
     
     @Override
-    public synchronized void init(ProcessingEnvironment environment) {
-        super.init(environment);
-        messager = environment.getMessager();
-        types = environment.getTypeUtils();
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        var reflection = reflection();
+        
+        getLog().info("Compile classpaths for project detected - generating locale files");
+        
+        if (processor().process(reflection.getTypesAnnotatedWith(Embedded.class), getLog())) {
+            getLog().info("Generation completed successfully");
+            
+        } else {
+            throw new MojoFailureException("Generation completed - failed to generate files.");
+        }
     }
     
-        
-    public Set<Element> types(Set<? extends TypeElement> annotations, RoundEnvironment environment) {
-        return annotations.stream().map(environment::getElementsAnnotatedWith).flatMap(Collection::stream).collect(toSet());
+    protected EmbeddedProcessor processor() {
+        return new EmbeddedProcessor();
     }
     
 }

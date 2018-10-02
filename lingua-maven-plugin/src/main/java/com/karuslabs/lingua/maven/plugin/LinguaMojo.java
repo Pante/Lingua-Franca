@@ -21,24 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations.processors;
+package com.karuslabs.lingua.maven.plugin;
 
-import com.karuslabs.lingua.franca.spi.annotations.processors.ProvidesProcessor;
+import java.io.File;
+import java.net.*;
+import java.util.List;
 
-import javax.annotation.processing.*;
+import org.apache.maven.plugin.*;
+import org.apache.maven.plugins.annotations.Parameter;
 
-import static javax.lang.model.SourceVersion.RELEASE_10;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.reflections.Reflections;
 
 
-public class AssertProcessor {
+public abstract class LinguaMojo extends AbstractMojo {
     
-    public static void annotations(Class<?> processor) throws ClassNotFoundException {
-        assertEquals(RELEASE_10, processor.getAnnotation(SupportedSourceVersion.class).value());
+    @Parameter(defaultValue = "${project.compileClasspathElements}", readonly = true, required = true)
+    public List<String> elements;
+            
+    @Parameter(defaultValue = "${project.basedir}/src/main/resources")
+    public File resources;
+    
         
-        var annotations = ProvidesProcessor.class.getAnnotation(SupportedAnnotationTypes.class);
-        for (var annotation : annotations.value()) {
-            Class.forName(annotation);
+    public Reflections reflection() throws MojoExecutionException {
+        var urls = new URL[elements.size()];
+        try {
+            for (int i = 0; i < elements.size(); i++) {
+                urls[i] = new File(elements.get(i)).toURI().toURL();
+            }
+            return new Reflections(new URLClassLoader(urls, getClass().getClassLoader()));
+            
+        } catch (MalformedURLException e) {
+            throw new MojoExecutionException("Failed to load compile classpaths", e);
         }
     }
     

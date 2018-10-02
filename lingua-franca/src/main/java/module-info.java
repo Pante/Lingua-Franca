@@ -33,7 +33,6 @@ open module com.karuslabs.lingua.franca {
     exports com.karuslabs.lingua.franca.template;
     exports com.karuslabs.lingua.franca.template.annotations;
     
-    requires java.compiler;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.dataformat.javaprop;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-module com.karuslabs.lingua.franca.examples {
+module com.karuslabs.lingua.franca.example {
     
     provides com.karuslabs.lingua.franca.spi.BundleProvider with com.karuslabs.example.CustomBundleProvider;
         

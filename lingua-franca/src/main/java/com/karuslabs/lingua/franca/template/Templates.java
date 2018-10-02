@@ -36,34 +36,6 @@ public class Templates {
     
     private static final ResourceBundle.Control CONTROL = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
     private static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
-
-    
-    public static boolean fromEmbedded(Object annotated) {
-        return fromEmbedded(annotated.getClass(), STACK.getCallerClass());
-    } 
-     
-    public static boolean fromEmbedded(Class<?> annotated) {
-        return fromEmbedded(annotated, STACK.getCallerClass());
-    }
-    
-    public static boolean fromEmbedded(Class<?> annotated, Class<?> caller) {
-        var success = true;
-        
-        for (var embedded : annotated.getAnnotationsByType(Embedded.class)) {
-            success &= fromEmbedded(embedded, caller);
-        }
-        
-        return success;
-    }
-    
-    public static boolean fromEmbedded(Embedded embedded, Class<?> caller) {
-        var locales = new ArrayList<Locale>(embedded.locales().length);
-            for (var locale : embedded.locales()) {
-                locales.add(Locales.of(locale));
-            }
-            
-        return fromClassLoader(embedded.template(), caller.getClassLoader(), locales, embedded.destination());
-    }
     
     
     public static boolean fromPlatforms(Object annotated) {

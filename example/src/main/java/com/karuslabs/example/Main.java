@@ -95,7 +95,7 @@ public class Main {
 @ClassLoaderSources({"puns/classloader"})
 @ModuleSources({"puns/module"})
 @SystemSources({"./"})
-@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"fr_FR", "ja_JP"}, destination = "./")
+@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./")
 class Puns {
     
     private Bundler bundler = Bundler.bundler();

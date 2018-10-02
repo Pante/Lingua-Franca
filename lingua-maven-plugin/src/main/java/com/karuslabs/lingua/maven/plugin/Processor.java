@@ -21,40 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations.processors;
+package com.karuslabs.lingua.maven.plugin;
 
-import com.karuslabs.lingua.franca.annotations.ModuleSources;
+import java.util.Collection;
 
-import java.net.URL;
-import java.util.*;
-import javax.annotation.processing.*;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
-import javax.lang.model.type.TypeMirror;
-
-import static javax.lang.model.SourceVersion.RELEASE_10;
-import static javax.tools.Diagnostic.Kind.*;
+import org.apache.maven.plugin.logging.Log;
 
 
-@SupportedSourceVersion(RELEASE_10)
-@SupportedAnnotationTypes({
-    "com.karuslabs.lingua.franca.annotations.ModuleSources"
-})
-public class ModuleSourcesProcessor extends SourcesProcessor {
-
-    public ModuleSourcesProcessor() {
-        super("ModuleSources");
-    }
-
-
-    @Override
-    protected String[] directories(Element element) {
-        return element.getAnnotation(ModuleSources.class).value();
-    }
-
-    @Override
-    protected URL find(String file) {
-        return getClass().getClassLoader().getResource(file);
-    }
+public interface Processor {
+    
+    public boolean process(Collection<Class<?>> classes, Log logger);
     
 }

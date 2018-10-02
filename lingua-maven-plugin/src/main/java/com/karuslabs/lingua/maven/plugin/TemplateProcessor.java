@@ -21,50 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.template.annotations.processors;
+package com.karuslabs.lingua.maven.plugin;
 
 import com.karuslabs.lingua.franca.Locales;
-import com.karuslabs.lingua.franca.annotations.processors.AnnotationProcessor;
 
 import java.io.File;
-import java.io.IOException;
-
 import java.util.*;
-import javax.lang.model.element.*;
 
-import static javax.tools.Diagnostic.Kind.*;
+import org.apache.maven.plugin.logging.Log;
 
 
-public abstract class TemplateProcessor extends AnnotationProcessor {
-
-    protected static final List<Locale> LOCALES = List.of(Locale.getAvailableLocales());
+public abstract class TemplateProcessor implements Processor {
+    
+    protected static final Set<Locale> LOCALES = Set.of(Locale.getAvailableLocales());
+    
+    protected File resources;
     
     
-    protected boolean processLocales(String annotation, String[] locales, Element element) {
+    public TemplateProcessor(File resources) {
+        this.resources = resources;
+    }
+    
+    
+    protected boolean processLocales(Log logger, Class<?> type, String annotation, String[] locales) {
         if (locales.length == 0) {
-            messager.printMessage(ERROR, "Invalid locales for @" + annotation + " annotated type, " + element.asType().toString() + ", locales cannot be empty", element);
+            logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", @" + annotation + " must contain at least one locale");
             return false;
-            
-        } else {
-            for (var locale : locales) {
-                if (!LOCALES.contains(Locales.of(locale))) {
-                    messager.printMessage(WARNING, "Unknown locale, " + locale + " for @" + annotation + " annotated type, " + element.asType().toString(), element);
-                }
-            }
-            
-            return true;
         }
+        
+        for (var locale : locales) {
+            if (!LOCALES.contains(Locales.of(locale))) {
+                logger.warn("Unknown locale, " + locale + " found in @" + annotation + " annotation for " + type.getName());
+            }
+        }
+            
+        return true;
     }
 
-    protected boolean processEmbedded(String annotation, String type, String template, Element element) {
-        var file = new File(RESOURCES, template);
+    protected boolean processEmbedded(Log logger, Class<?> type, String annotation, String template) {
+        var file = new File(resources, template);
         var valid = !template.isEmpty() && file.exists() && file.isFile();
         if (!valid) {
-            messager.printMessage(ERROR, "Invalid " + type + " specified for @" + annotation + " annotated type, " + element.asType().toString() + ", " + template + " must exist and be a file", element);
+            logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", '" + template + "' either does not exist or is not a file");
         }
         
         return valid;
     }
-
-    
 }

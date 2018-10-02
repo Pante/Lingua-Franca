@@ -1,5 +1,0 @@
-com.karuslabs.lingua.franca.annotations.processors.ClassLoaderSourcesProcessor
-com.karuslabs.lingua.franca.annotations.processors.ModuleSourcesProcessor
-com.karuslabs.lingua.franca.spi.annotations.processors.ProvidesProcessor
-com.karuslabs.lingua.franca.template.annotations.processors.EmbeddedProcessor
-com.karuslabs.lingua.franca.template.annotations.processors.PlatformProcessor

@@ -21,38 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations.processors;
 
-import com.karuslabs.lingua.franca.annotations.ClassLoaderSources;
+package com.karuslabs.lingua.maven.plugin;
 
-import java.net.URL;
-import javax.annotation.processing.*;
-import javax.lang.model.element.*;
+import java.util.List;
 
-import static javax.lang.model.SourceVersion.RELEASE_10;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
-@SupportedSourceVersion(RELEASE_10)
-@SupportedAnnotationTypes({
-    "com.karuslabs.lingua.franca.annotations.ClassLoaderSources"
-})
-public class ClassLoaderSourcesProcessor extends SourcesProcessor {
-
-    public ClassLoaderSourcesProcessor() {
-        super("ClassLoaderSources");
-    }
-
+@ExtendWith(MockitoExtension.class)
+class LinguaMojoTest {
     
-    @Override
-    protected String[] directories(Element element) {
-        return element.getAnnotation(ClassLoaderSources.class).value();
-    }
-
-    @Override
-    protected URL find(String file) {
-        var url = getClass().getClassLoader().getResource(getClass().getName().replace('.', '/') + ".class");
-        System.out.println(url);
-        return url;
+    LinguaMojo mojo = new LinguaMojo() {
+        @Override
+        public void execute() throws MojoExecutionException, MojoFailureException {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    };
+    
+    
+    @Test
+    void reflection() throws MojoExecutionException {
+        mojo.elements = List.of("./");
+        
+        var reflection = mojo.reflection();
+        var classes = reflection.getTypesAnnotatedWith(Mojo.class);
+        
+        assertEquals(2, classes.size());
     }
     
 }

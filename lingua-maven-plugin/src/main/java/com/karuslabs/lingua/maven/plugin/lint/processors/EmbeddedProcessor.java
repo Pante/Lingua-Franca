@@ -21,20 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.maven.plugin;
+package com.karuslabs.lingua.maven.plugin.lint.processors;
 
-import org.apache.maven.plugin.*;
-import org.apache.maven.plugins.annotations.Mojo;
+import com.karuslabs.lingua.franca.template.annotations.Embedded;
 
-import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_RESOURCES;
+import com.karuslabs.lingua.maven.plugin.TemplateProcessor;
+import java.io.File;
+import java.util.Collection;
+import org.apache.maven.plugin.logging.Log;
 
 
-@Mojo(name = "lingua-generate", defaultPhase = GENERATE_RESOURCES, threadSafe = false)
-public class LinguaGeneratMojo extends AbstractMojo {
+public class EmbeddedProcessor extends TemplateProcessor {
 
+    public EmbeddedProcessor(File resources) {
+        super(resources);
+    }
+
+    
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-
+    public boolean process(Collection<Class<?>> classes, Log logger) {
+        boolean success = true;
+        
+        for (var type : classes)  {
+            for (var annotation : type.getAnnotationsByType(Embedded.class)) {
+                success &= processEmbedded(logger, type, "Embedded",  annotation.template());
+                success &= processLocales(logger, type, "Platform", annotation.locales());
+                success &= processEmbedded(logger, type, "Embedded",  annotation.destination());
+            }
+        }
+        
+        return success;
     }
     
 }

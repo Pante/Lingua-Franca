@@ -22,50 +22,54 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.franca.annotations.processors;
+package com.karuslabs.lingua.maven.plugin.generator.processors;
+
+import com.karuslabs.lingua.franca.template.annotations.Embedded;
 
 import java.util.Set;
-import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.TypeElement;
+import java.util.stream.Stream;
+
+import org.apache.maven.plugin.logging.Log;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
+
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class AnnotationProcessorTest {
+@Embedded(template = "folder/file.yml", locales = {"en_GB"}, destination = "folder")
+class EmbededProcessorTest {
     
-    AnnotationProcessor processor = new AnnotationProcessor() {
-        @Override
-        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-            return false;
-        }
-    };
-    
-    TypeElement a = mock(TypeElement.class);
-    TypeElement b = mock(TypeElement.class);
+    EmbeddedProcessor processor = new EmbeddedProcessor();
+    Log logger = mock(Log.class);
     
     
-    @Test
-    void init() {
-        processor.init(new Environment());
+    @Embedded(template = "folder/.a", locales = {}, destination = "folder")
+    static class Invalid {
         
-        assertNotNull(processor.messager);
-        assertNotNull(processor.types);
     }
     
     
     @Test
-    void types() {
-        var environment = new Environment();
-        environment.annotated.put(a, Set.of(a));
-        environment.annotated.put(b, Set.of(b));
-        
-        assertEquals(Set.of(a, b), processor.types(Set.of(a, b), environment));
+    void process() {
+        processor.process(Set.of(getClass()), logger);
+        verify(logger).error("a");
+        verify(logger).info("Files already exist for folder/file.yml in @Embedded annotation for " + getClass().getName());
+    }
+    
+    
+    @Test
+    void process_exception() {
+        assertFalse(processor.process(Set.of(Invalid.class), logger));
+        verify(logger).error("Exception occured while generating file(s) for template: folder/.a in @Embeded annotation for " + Invalid.class.getName() + ": Invalid file name, file name is either blank or missing an extension");
     }
     
 }
