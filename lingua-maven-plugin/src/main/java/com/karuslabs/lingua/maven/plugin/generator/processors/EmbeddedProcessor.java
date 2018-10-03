@@ -23,17 +23,23 @@
  */
 package com.karuslabs.lingua.maven.plugin.generator.processors;
 
+import com.karuslabs.lingua.franca.Locales;
 import com.karuslabs.lingua.franca.template.Templates;
 import com.karuslabs.lingua.franca.template.annotations.Embedded;
-import com.karuslabs.lingua.maven.plugin.Processor;
+import com.karuslabs.lingua.maven.plugin.TemplateProcessor;
 
 import java.io.*;
-import java.util.Collection;
+import java.util.*;
 
 import org.apache.maven.plugin.logging.Log;
 
 
-public class EmbeddedProcessor implements Processor {
+public class EmbeddedProcessor extends TemplateProcessor {
+
+    public EmbeddedProcessor(File resources) {
+        super(resources);
+    }
+    
     
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
@@ -48,17 +54,21 @@ public class EmbeddedProcessor implements Processor {
     }
     
     protected boolean generate(Log logger, Class<?> type, Embedded annotation) {
-//        try {
-            if (!Templates.fromEmbedded(annotation, getClass())) {
-                logger.info("Files already exist for " + annotation.template() + " in @Embedded annotation for " + type.getName());
+        try {
+            var locales = new ArrayList<Locale>(annotation.locales().length);
+            for (var locale : annotation.locales()) {
+                locales.add(Locales.of(locale));
+            }
+            if (!Templates.fromClassLoader(annotation.template(), getClass().getClassLoader(), locales, new File(resources, annotation.destination()).getPath())) {
+                logger.info("Files already exist for template, " + annotation.template() + " in @Embedded annotation for " + type.getName());
             }
             return true;
-            
-//        } catch (IllegalArgumentException | UncheckedIOException e) {
-//            logger.error("Exception occured while generating file(s) for template: " + annotation.template()
-//                       + " in @Embeded annotation for " + type.getName() + ": " + e.getMessage());
-//            return false;
-//        }
+
+        } catch (IllegalArgumentException | UncheckedIOException e) {
+            logger.error("Exception occured while generating file(s) for template: " + annotation.template()
+                    + " in @Embeded annotation for " + type.getName() + ": " + e.getMessage());
+            return false;
+        }
     }
-    
+
 }

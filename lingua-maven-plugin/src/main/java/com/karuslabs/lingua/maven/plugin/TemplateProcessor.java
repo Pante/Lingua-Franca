@@ -43,7 +43,7 @@ public abstract class TemplateProcessor implements Processor {
     }
     
     
-    protected boolean processLocales(Log logger, Class<?> type, String annotation, String[] locales) {
+    public boolean processLocales(Log logger, Class<?> type, String annotation, String[] locales) {
         if (locales.length == 0) {
             logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", @" + annotation + " must contain at least one locale");
             return false;
@@ -58,7 +58,7 @@ public abstract class TemplateProcessor implements Processor {
         return true;
     }
 
-    protected boolean processEmbedded(Log logger, Class<?> type, String annotation, String template) {
+    public boolean processEmbedded(Log logger, Class<?> type, String annotation, String template) {
         var file = new File(resources, template);
         var valid = !template.isEmpty() && file.exists() && file.isFile();
         if (!valid) {

@@ -22,56 +22,68 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.maven.plugin.generator.processors;
+package com.karuslabs.lingua.maven.plugin.lint.processors;
 
-import com.karuslabs.lingua.franca.template.annotations.Embedded;
-
+import com.karuslabs.lingua.franca.annotations.*;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Set;
-
+import java.util.stream.Stream;
 import org.apache.maven.plugin.logging.Log;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
+
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@Embedded(template = "folder/file.yml", locales = {"en_GB"}, destination = "")
-class EmbededProcessorTest {
+class SourcesProcessorTest {
     
-    EmbeddedProcessor processor;
+    SourcesProcessor processor;
     Log logger = mock(Log.class);
     
     
     @BeforeEach
     void before() throws URISyntaxException {
         var folder = new File(getClass().getClassLoader().getResource("folder/file.yml").toURI());
-        processor = new EmbeddedProcessor(folder.getParentFile());
+        processor = new SourcesProcessor(folder.getParentFile().getParentFile());
     }
     
     
-    @Embedded(template = "folder/.a", locales = {}, destination = "folder")
+    @ClassLoaderSources({"folder"})
+    @ModuleSources({""})
+    static class Valid {
+        
+    }
+    
+    
+    @ClassLoaderSources({})
+    @ModuleSources({"folder/file.yml"})
     static class Invalid {
         
     }
     
     
     @Test
-    void process() {
-        processor.process(Set.of(getClass()), logger);
-        verify(logger).info("Files already exist for template, folder/file.yml in @Embedded annotation for " + getClass().getName());
+    void process_valid() {
+        assertTrue(processor.process(Set.of(Valid.class), logger));
+        verify(logger, times(0)).error(any(CharSequence.class));
     }
     
     
     @Test
-    void process_exception() {
+    void process_invalid() {
         assertFalse(processor.process(Set.of(Invalid.class), logger));
-        verify(logger).error("Exception occured while generating file(s) for template: folder/.a in @Embeded annotation for " + Invalid.class.getName() + ": Invalid file name, file name is either blank or missing an extension");
+        verify(logger).error("Invalid @ClassLoaderSources annotation for " + Invalid.class.getName() + ", @ClassLoaderSources must contain at least one folder");
+        verify(logger).error("Invalid @ModuleSources annotation for " + Invalid.class.getName() + ", 'folder/file.yml' either does not exist or is not a directory");
     }
     
 }

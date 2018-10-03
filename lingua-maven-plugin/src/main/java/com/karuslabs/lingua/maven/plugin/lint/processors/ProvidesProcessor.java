@@ -26,7 +26,6 @@ package com.karuslabs.lingua.maven.plugin.lint.processors;
 import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
 import com.karuslabs.lingua.franca.spi.annotations.Provides;
 import com.karuslabs.lingua.maven.plugin.Processor;
-import java.util.Arrays;
 
 import java.util.Collection;
 
@@ -40,7 +39,6 @@ public class ProvidesProcessor implements Processor {
     
     public ProvidesProcessor() {
         this.expected = AnnotatedBundleProvider.class;
-        
     }
     
     

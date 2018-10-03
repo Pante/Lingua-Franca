@@ -89,33 +89,6 @@ class TemplatesTest {
     
     
     @Test
-    void fromEmbedded_object() {
-        assertTrue(Templates.fromEmbedded(new Success()));
-        
-        assertTrue(GERMANY.exists());
-        assertTrue(JAPAN.exists());
-    }
-    
-    
-    @Test
-    void fromEmbedded_class() {
-        assertTrue(Templates.fromEmbedded(Success.class));
-        
-        assertTrue(GERMANY.exists());
-        assertTrue(JAPAN.exists());
-    }
-        
-    
-    @Test
-    void fromEmbedded_failure() {
-        assertFalse(Templates.fromEmbedded(Failure.class));
-        
-        assertTrue(GERMANY.exists());
-        assertTrue(JAPAN.exists());
-    }
-    
-    
-    @Test
     void fromPlatforms_object() {
         assertTrue(Templates.fromPlatforms(new Success()));
         

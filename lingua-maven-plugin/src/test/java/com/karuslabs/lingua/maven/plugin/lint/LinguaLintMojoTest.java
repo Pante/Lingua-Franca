@@ -22,15 +22,16 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.maven.plugin.generator.processors;
+package com.karuslabs.lingua.maven.plugin.lint;
 
-import com.karuslabs.lingua.franca.template.annotations.Embedded;
+import com.karuslabs.lingua.franca.annotations.ClassLoaderSources;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.Set;
+import java.util.*;
 
+import org.apache.maven.plugin.*;
 import org.apache.maven.plugin.logging.Log;
+
+import org.reflections.Reflections;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,37 +42,37 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@Embedded(template = "folder/file.yml", locales = {"en_GB"}, destination = "")
-class EmbededProcessorTest {
+@ClassLoaderSources({})
+class LinguaLintMojoTest {
     
-    EmbeddedProcessor processor;
+    LinguaLintMojo mojo = spy(new LinguaLintMojo());
     Log logger = mock(Log.class);
     
     
     @BeforeEach
-    void before() throws URISyntaxException {
-        var folder = new File(getClass().getClassLoader().getResource("folder/file.yml").toURI());
-        processor = new EmbeddedProcessor(folder.getParentFile());
+    void before() {
+        mojo.elements = List.of("");
+        doReturn(logger).when(mojo).getLog();
     }
     
     
-    @Embedded(template = "folder/.a", locales = {}, destination = "folder")
-    static class Invalid {
+    
+    @Test
+    void execute() throws MojoExecutionException, MojoFailureException {
+        Reflections reflection = when(mock(Reflections.class).getTypesAnnotatedWith(any(Class.class))).thenReturn(new HashSet<>()).getMock();
+        doReturn(reflection).when(mojo).reflection();
         
+        mojo.execute();
+        
+        verify(logger).info("Compile classpaths for project detected - analyzing project");
+        verify(logger).info("Analysis completed successfully");
     }
     
     
     @Test
-    void process() {
-        processor.process(Set.of(getClass()), logger);
-        verify(logger).info("Files already exist for template, folder/file.yml in @Embedded annotation for " + getClass().getName());
-    }
-    
-    
-    @Test
-    void process_exception() {
-        assertFalse(processor.process(Set.of(Invalid.class), logger));
-        verify(logger).error("Exception occured while generating file(s) for template: folder/.a in @Embeded annotation for " + Invalid.class.getName() + ": Invalid file name, file name is either blank or missing an extension");
+    void execute_exception() throws MojoExecutionException, MojoFailureException {
+        assertEquals("Analysis completed - detected potential issues", assertThrows(MojoFailureException.class, mojo::execute).getMessage());
+        verify(logger).info("Compile classpaths for project detected - analyzing project");
     }
     
 }

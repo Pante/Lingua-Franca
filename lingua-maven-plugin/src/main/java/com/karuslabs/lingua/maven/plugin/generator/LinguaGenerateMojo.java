@@ -51,7 +51,7 @@ public class LinguaGenerateMojo extends LinguaMojo {
     }
     
     protected EmbeddedProcessor processor() {
-        return new EmbeddedProcessor();
+        return new EmbeddedProcessor(resources);
     }
     
 }

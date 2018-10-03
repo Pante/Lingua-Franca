@@ -25,8 +25,8 @@ package com.karuslabs.lingua.maven.plugin.lint.processors;
 
 import com.karuslabs.lingua.franca.template.annotations.*;
 import com.karuslabs.lingua.maven.plugin.TemplateProcessor;
-import java.io.File;
 
+import java.io.File;
 import java.util.Collection;
 
 import org.apache.maven.plugin.logging.Log;

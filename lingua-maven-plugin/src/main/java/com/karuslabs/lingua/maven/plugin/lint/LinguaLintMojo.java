@@ -30,9 +30,6 @@ import com.karuslabs.lingua.franca.template.annotations.*;
 
 import com.karuslabs.lingua.maven.plugin.LinguaMojo;
 import com.karuslabs.lingua.maven.plugin.lint.processors.*;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -45,31 +42,25 @@ public class LinguaLintMojo extends LinguaMojo {
     
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        try {
-            var reflection = reflection();
-            var success = true;
-            
-            getLog().info(resources.getCanonicalPath());
-            
-            getLog().info("Compile classpaths for project detected - analyzing project");
-            
-            success &= new EmbeddedProcessor(resources).process(reflection.getTypesAnnotatedWith(Embedded.class), getLog());
-            success &= new PlatformProcessor(resources).process(reflection.getTypesAnnotatedWith(Platform.class), getLog());
-            success &= new ProvidesProcessor().process(reflection.getTypesAnnotatedWith(Provides.class), getLog());
-            
-            var sources = reflection.getTypesAnnotatedWith(ClassLoaderSources.class);
-            sources.addAll(reflection.getTypesAnnotatedWith(ModuleSources.class));
-            
-            success &= new SourcesProcessor(resources).process(sources, getLog());
-            
-            if (success) {
-                getLog().info("Analysis completed successfully");
-                
-            } else {
-                throw new MojoExecutionException("Analysis completed - detected potential issues");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(LinguaLintMojo.class.getName()).log(Level.SEVERE, null, ex);
+        var reflection = reflection();
+        var success = true;
+
+        getLog().info("Compile classpaths for project detected - analyzing project");
+
+        success &= new EmbeddedProcessor(resources).process(reflection.getTypesAnnotatedWith(Embedded.class), getLog());
+        success &= new PlatformProcessor(resources).process(reflection.getTypesAnnotatedWith(Platform.class), getLog());
+        success &= new ProvidesProcessor().process(reflection.getTypesAnnotatedWith(Provides.class), getLog());
+
+        var sources = reflection.getTypesAnnotatedWith(ClassLoaderSources.class);
+        sources.addAll(reflection.getTypesAnnotatedWith(ModuleSources.class));
+
+        success &= new SourcesProcessor(resources).process(sources, getLog());
+
+        if (success) {
+            getLog().info("Analysis completed successfully");
+
+        } else {
+            throw new MojoFailureException("Analysis completed - detected potential issues");
         }
     }
     

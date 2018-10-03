@@ -37,8 +37,8 @@ public class SourcesProcessor implements Processor {
     protected File resources;
     
     
-    public SourcesProcessor(File reources) {
-        this.resources = reources;
+    public SourcesProcessor(File resources) {
+        this.resources = resources;
     }
     
     
@@ -54,7 +54,7 @@ public class SourcesProcessor implements Processor {
             
             var module = type.getAnnotation(ModuleSources.class);
             if (module != null) {
-                success &= process(logger, "ModuleSources", type, classloader.value());
+                success &= process(logger, "ModuleSources", type, module.value());
             }
         }
         
@@ -72,7 +72,7 @@ public class SourcesProcessor implements Processor {
         for (var destination : folders) {
             var folder = new File(resources, destination);
             if (!folder.exists() || !folder.isDirectory()) {
-                logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", " + destination + " either does not exist or is not a directory");
+                logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", '" + destination + "' either does not exist or is not a directory");
                 success = false;
             }
         }

@@ -22,17 +22,15 @@
  * THE SOFTWARE.
  */
 
-package com.karuslabs.lingua.maven.plugin.generator.processors;
+package com.karuslabs.lingua.maven.plugin.lint.processors;
 
 import com.karuslabs.lingua.franca.template.annotations.Embedded;
 
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.apache.maven.plugin.logging.Log;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -41,37 +39,21 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@Embedded(template = "folder/file.yml", locales = {"en_GB"}, destination = "")
-class EmbededProcessorTest {
+@Embedded(template = "", locales = {}, destination = "")
+class EmbeddedProcessorTest {
     
-    EmbeddedProcessor processor;
+    EmbeddedProcessor processor = spy(new EmbeddedProcessor(null));
     Log logger = mock(Log.class);
-    
-    
-    @BeforeEach
-    void before() throws URISyntaxException {
-        var folder = new File(getClass().getClassLoader().getResource("folder/file.yml").toURI());
-        processor = new EmbeddedProcessor(folder.getParentFile());
-    }
-    
-    
-    @Embedded(template = "folder/.a", locales = {}, destination = "folder")
-    static class Invalid {
-        
-    }
     
     
     @Test
     void process() {
-        processor.process(Set.of(getClass()), logger);
-        verify(logger).info("Files already exist for template, folder/file.yml in @Embedded annotation for " + getClass().getName());
-    }
-    
-    
-    @Test
-    void process_exception() {
-        assertFalse(processor.process(Set.of(Invalid.class), logger));
-        verify(logger).error("Exception occured while generating file(s) for template: folder/.a in @Embeded annotation for " + Invalid.class.getName() + ": Invalid file name, file name is either blank or missing an extension");
+        doReturn(false).when(processor).processEmbedded(any(), any(), any(), any());
+        doReturn(false).when(processor).processLocales(any(), any(), any(), any());
+        
+        assertFalse(processor.process(Set.of(EmbeddedProcessorTest.class), logger));
+        verify(processor, times(2)).processEmbedded(any(), any(), any(), any());
+        verify(processor, times(1)).processLocales(any(), any(), any(), any());
     }
     
 }

@@ -13,7 +13,6 @@
     <name>Lingua Franca Example</name>
     <description>Examples and code snippets for Lingua Franca. This artifact is not for use in production.</description>
     
-    
     <dependencies>
         <dependency>
             <groupId>com.karuslabs</groupId>
@@ -22,14 +21,18 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
- 
     
     <build>
+        <finalName>lingua-franca-example</finalName>
         <defaultGoal>clean package install</defaultGoal>
         <plugins>  
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
             </plugin>
             
             <plugin>
@@ -77,8 +80,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        
-        <finalName>lingua-franca-example</finalName>
     </build>
     
 </project>
