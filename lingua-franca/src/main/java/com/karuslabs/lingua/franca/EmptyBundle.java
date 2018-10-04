@@ -76,7 +76,7 @@ public class EmptyBundle extends Bundle {
     
     @Override
     public Set<String> keys() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
     
 }

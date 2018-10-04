@@ -48,9 +48,9 @@ public class BundleLoader {
     private static final Control CONTROL = ResourceBundle.Control.getControl(Control.FORMAT_DEFAULT);
     private static final Source[] SOURCE = new Source[] {};
 
-    protected String[] formats;
-    protected ConcurrentMap<String, Set<Source>> namespaces;
-    protected Set<Source> global;
+    protected final String[] formats;
+    protected final ConcurrentMap<String, Set<Source>> namespaces;
+    protected final Set<Source> global;
 
     
     public BundleLoader() {
@@ -78,7 +78,7 @@ public class BundleLoader {
             messages = load(global, bundleName);
         }
         
-        return messages == null ? EmptyBundle.empty(locale, parent) : new Bundle(messages, locale, parent);
+        return messages == null ? Bundle.empty(locale, parent) : new Bundle(messages, locale, parent);
     }
     
     protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {
@@ -89,7 +89,7 @@ public class BundleLoader {
                         return Stringifier.stringify().from(stream, format);
                     }
                     
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                     return null;
                 }
             }

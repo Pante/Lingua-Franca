@@ -30,10 +30,10 @@ import java.util.*;
 
 public abstract class AnnotatedBundleProvider implements BundleProvider {
     
-    private Set<String> bundles;
+    private final Set<String> bundles;
     
     
-    public AnnotatedBundleProvider() {
+    protected AnnotatedBundleProvider() {
         var provided = getClass().getAnnotation(Provides.class);
         bundles = provided == null ? Set.of() : Set.of(provided.value());
     }

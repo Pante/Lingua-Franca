@@ -48,7 +48,7 @@ public class SystemSource extends FileSource {
         try {
             return new BufferedInputStream(new FileInputStream(file));
             
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
             return null;
         }
     }

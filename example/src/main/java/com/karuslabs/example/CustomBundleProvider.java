@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-@Provides({"custom_bundle"})
+@Provides("custom_bundle")
 public class CustomBundleProvider extends AnnotatedBundleProvider {
 
     @Override

@@ -36,54 +36,54 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class EmptyBundleTest {
     
-    static Bundle empty = Bundle.EMPTY;
+    static final Bundle EMPTY = Bundle.EMPTY;
     
     
     @Test
     void find() {
-        assertNull(empty.find(""));
+        assertNull(EMPTY.find(""));
     }
     
     
     @Test
     void find_arguments() {
-        assertNull(empty.find("", ""));
+        assertNull(EMPTY.find("", ""));
     }
     
     
     @Test
     void get() {
-        assertSame(Optional.empty(), empty.get(""));
+        assertSame(Optional.empty(), EMPTY.get(""));
     }
     
     
     @Test
     void get_arguments() {
-        assertSame(Optional.empty(), empty.get("", ""));
+        assertSame(Optional.empty(), EMPTY.get("", ""));
     }
     
     
     @Test
     void messages() {
-        assertSame(Optional.empty(), empty.messages(""));
+        assertSame(Optional.empty(), EMPTY.messages(""));
     }
     
     
     @Test
     void messagesIfPresent() {
-        assertNull(empty.messagesIfPresent(""));
+        assertNull(EMPTY.messagesIfPresent(""));
     }
     
     
     @Test
     void retrieve() {
-        assertNull(empty.retrieve(""));
+        assertNull(EMPTY.retrieve(""));
     }
     
     
     @Test
     void keys() {
-        assertEquals(Collections.EMPTY_SET, empty.keys());
+        assertEquals(Collections.emptySet(), EMPTY.keys());
     }
     
 }

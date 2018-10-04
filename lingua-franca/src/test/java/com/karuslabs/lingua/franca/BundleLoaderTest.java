@@ -40,37 +40,37 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class BundleLoaderTest {
     
-    static BundleLoader cached = BundleLoader.loader();
-    static Source named1 = new ClassLoaderSource("named1");
-    static Source named2 = new ClassLoaderSource("named2");
-    static Source unnamed1 = new ClassLoaderSource("unnamed3");
-    static Source unnamed2 = new ClassLoaderSource("unnamed4");
-    static Control control = Control.getControl(Control.FORMAT_DEFAULT);
+    static final BundleLoader CACHED = BundleLoader.loader();
+    static final Source named1 = new ClassLoaderSource("named1");
+    static final Source named2 = new ClassLoaderSource("named2");
+    static final Source unnamed1 = new ClassLoaderSource("unnamed3");
+    static final Source unnamed2 = new ClassLoaderSource("unnamed4");
+    static final Control CONTROL = Control.getControl(Control.FORMAT_DEFAULT);
 
     static {
-        cached.add("named", named1, named2);
-        cached.add(unnamed1, unnamed2);
+        CACHED.add("named", named1, named2);
+        CACHED.add(unnamed1, unnamed2);
     }
     
     
     @Bundled("named")
-    @ClassLoaderSources({"a"})
-    @ModuleSources({"b"})
-    @SystemSources({"c"})
+    @ClassLoaderSources("a")
+    @ModuleSources("b")
+    @SystemSources("c")
     static class AnnotatedNamespace {
         
     }
     
     
-    @ClassLoaderSources({"a"})
-    @ModuleSources({"b"})
-    @SystemSources({"c"})
+    @ClassLoaderSources("a")
+    @ModuleSources("b")
+    @SystemSources("c")
     static class AnnotatedGlobal {
         
     }
     
     
-    BundleLoader loader = new BundleLoader();
+    final BundleLoader loader = new BundleLoader();
     
     
     @Test
@@ -87,7 +87,7 @@ class BundleLoaderTest {
     
     @Test
     void parents() {
-        assertEquals(control.getCandidateLocales("", Locale.SIMPLIFIED_CHINESE), loader.parents("", Locale.SIMPLIFIED_CHINESE));
+        assertEquals(CONTROL.getCandidateLocales("", Locale.SIMPLIFIED_CHINESE), loader.parents("", Locale.SIMPLIFIED_CHINESE));
     }
     
     
@@ -137,14 +137,14 @@ class BundleLoaderTest {
     
     @Test
     void add_global() {
-        assertFalse(cached.add(unnamed1));
+        assertFalse(CACHED.add(unnamed1));
         assertTrue(loader.add(unnamed1));
     }
     
     
     @Test     
     void add_globals_array() {
-        assertFalse(cached.add(unnamed1, unnamed2));
+        assertFalse(CACHED.add(unnamed1, unnamed2));
         
         loader.add(unnamed1);
         assertTrue(loader.add(unnamed1, unnamed2));
@@ -153,7 +153,7 @@ class BundleLoaderTest {
     
     @Test
     void add_globals_collection() {
-        assertFalse(cached.add(List.of(unnamed1, unnamed2)));
+        assertFalse(CACHED.add(List.of(unnamed1, unnamed2)));
         
         loader.add(unnamed1);
         assertTrue(loader.add(List.of(unnamed1, unnamed2)));
@@ -162,36 +162,36 @@ class BundleLoaderTest {
     
     @Test
     void contains_name() {
-        assertFalse(cached.contains("nAmed"));
-        assertTrue(cached.contains("named"));
+        assertFalse(CACHED.contains("nAmed"));
+        assertTrue(CACHED.contains("named"));
     }
     
     
     @Test
     void contains_namespace() {
-        assertFalse(cached.contains("named", unnamed1));
-        assertTrue(cached.contains("named", named1));
+        assertFalse(CACHED.contains("named", unnamed1));
+        assertTrue(CACHED.contains("named", named1));
     }
     
     
     @Test
     void contains_namespaces() {
-        assertFalse(cached.contains("named", named1, unnamed1));
-        assertTrue(cached.contains("named", named1, named2));
+        assertFalse(CACHED.contains("named", named1, unnamed1));
+        assertTrue(CACHED.contains("named", named1, named2));
     }
     
     
     @Test
     void contains_global() {
-        assertFalse(cached.contains(named1));
-        assertTrue(cached.contains(unnamed1));
+        assertFalse(CACHED.contains(named1));
+        assertTrue(CACHED.contains(unnamed1));
     }
         
     
     @Test
     void contains_globals() {
-        assertFalse(cached.contains(named1, unnamed1));
-        assertTrue(cached.contains(unnamed1, unnamed2));
+        assertFalse(CACHED.contains(named1, unnamed1));
+        assertTrue(CACHED.contains(unnamed1, unnamed2));
     }
     
     

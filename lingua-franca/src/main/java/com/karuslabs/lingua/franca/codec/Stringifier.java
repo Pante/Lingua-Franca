@@ -60,7 +60,7 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
         try (stream) {
             return visit("", mapper(format).readTree(stream), new HashMap<>());
 
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             return null;
         }
     }

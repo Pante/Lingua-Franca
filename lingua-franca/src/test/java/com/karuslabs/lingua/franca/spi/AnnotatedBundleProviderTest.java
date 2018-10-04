@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class AnnotatedBundleProviderTest {
     
-    AnnotatedBundleProvider provider = new Provider();
+    final AnnotatedBundleProvider provider = new Provider();
     
     
     @Test

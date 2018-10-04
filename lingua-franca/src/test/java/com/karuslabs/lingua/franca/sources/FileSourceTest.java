@@ -39,26 +39,26 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 @ExtendWith(MockitoExtension.class)
 class FileSourceTest {
     
-    static FileSource source = new SystemSource("folder");
+    static final FileSource SOURCE = new SystemSource("folder");
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+	@MethodSource("equality_provider")
     void equals(FileSource other, boolean expected) {
-        assertEquals(expected, source.equals(other));
+        assertEquals(expected, SOURCE.equals(other));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+	@MethodSource("equality_provider")
     void hashCode(FileSource other, boolean expected) {
-        assertEquals(expected, source.hashCode() == other.hashCode());
+        assertEquals(expected, SOURCE.hashCode() == other.hashCode());
     }
     
     
     static Stream<Arguments> equality_provider() {
         return Stream.of(
-            of(source, true),
+            of(SOURCE, true),
             of(new SystemSource("folder"), true),
             of(new SystemSource("folder/"), true),
             of(new SystemSource("foLder"), false),
@@ -68,7 +68,7 @@ class FileSourceTest {
     
     
     @ParameterizedTest
-    @MethodSource({"toString_provider"})
+	@MethodSource("toString_provider")
     void source_toString(String folder, String expected) {
         assertEquals(expected, new SystemSource(folder).toString());
     }

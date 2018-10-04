@@ -33,7 +33,7 @@ public class ClassLoaderSource extends FileSource {
     public static final ClassLoaderSource ROOT = new ClassLoaderSource("");
     
     
-    private ClassLoader loader;
+    private final ClassLoader loader;
     
     
     public ClassLoaderSource(String folder) {

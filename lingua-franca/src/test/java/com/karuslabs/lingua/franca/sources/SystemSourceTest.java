@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class SystemSourceTest {
     
-    SystemSource source = new SystemSource(getClass().getClassLoader().getResource("sources").getPath());
+    final SystemSource source = new SystemSource(getClass().getClassLoader().getResource("sources").getPath());
     
     @Test
     void relative_root() {

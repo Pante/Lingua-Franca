@@ -43,16 +43,16 @@ import java.util.Scanner;
 
 public class Main {
     
-    private static Scanner scanner = new Scanner(System.in);
-    private static Puns puns = new Puns();
+    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final Puns PUNS = new Puns();
     private static boolean reload = false;
     
     
     public static void main(String... args) {
-        Bundler.bundler().loader().add(puns);
+        Bundler.bundler().loader().add(PUNS);
         Bundler.bundler().loader().add(new ClassLoaderSource(""), new ModuleSource(""));
         
-        Templates.fromPlatforms(puns);
+        Templates.fromPlatforms(PUNS);
         
         while (true) {
             System.out.println("\nEnter the locale to view puns. (en_GB, es, fr_FR, ja-JP, zh)");
@@ -60,7 +60,7 @@ public class Main {
             System.out.println("Enter 'reload' to force reloading.");
             System.out.println("Enter 'exit' to exit.");
             
-            var entered = scanner.nextLine();
+            var entered = SCANNER.nextLine();
             
             System.out.println("\n");
             
@@ -78,7 +78,7 @@ public class Main {
                     return;
                     
                 default:
-                    puns.make(entered, reload);
+                    PUNS.make(entered, reload);
             }
         }
     }
@@ -92,25 +92,19 @@ public class Main {
 
 
 @Bundled("puns")
-@ClassLoaderSources({"puns/classloader"})
-@ModuleSources({"puns/module"})
-@SystemSources({"./"})
+@ClassLoaderSources("puns/classloader")
+@ModuleSources("puns/module")
+@SystemSources("./")
 @Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./")
 class Puns {
     
-    private Bundler bundler = Bundler.bundler();
+    private final Bundler bundler = Bundler.bundler();
     
     
     public void make(String tag, boolean reload) {
         Locale locale = Locales.of(tag);
-        Bundle bundle = null;
-        
-        if (reload) {
-            bundle = bundler.reload(this, locale);
-            
-        } else {
-            bundle = bundler.load(this, locale);
-        }
+        Bundle bundle = reload ? bundler.reload(this, locale)
+                : bundler.load(this, locale);
         
         Optional<String> title = bundle.get("title", locale.toLanguageTag());
         System.out.println(title.orElse("Terrible Puns"));

@@ -33,7 +33,7 @@ public class ModuleSource extends FileSource {
     public static final ModuleSource ROOT = new ModuleSource("");
     
     
-    private Module module;
+    private final Module module;
     
     
     public ModuleSource(String folder) {
@@ -51,7 +51,7 @@ public class ModuleSource extends FileSource {
         try {
             return module.getResourceAsStream(folder + resource);
             
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             return null;
         }
     }

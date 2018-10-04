@@ -52,23 +52,24 @@ import static org.mockito.Mockito.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BundlerTest {
     
-    static Bundler cached = Bundler.bundler();
-    static String name = "loaded";
+    static final Bundler CACHED = Bundler.bundler();
+    static final String NAME = "loaded";
             
     
     static {
-        cached.loader().add(ClassLoaderSource.ROOT);
+        CACHED.loader().add(ClassLoaderSource.ROOT);
     }
     
     
-    Bundler bundler = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
-    Bundle chained = new Bundle(Map.of(), Locale.UK, new Bundle(Map.of(), Locale.ENGLISH, new Bundle(Map.of(), Locale.ROOT)));
+    final Bundler bundler = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
+    final Bundle chained = new Bundle(Map.of(), Locale.UK, new Bundle(Map.of(), Locale.ENGLISH, new Bundle(Map.of(), Locale.ROOT)));
     ServiceLoader<BundleProvider> service;
     
         
-    ServiceLoader mock_service() {     
+    ServiceLoader<BundleProvider> mock_service() {
         BundleProvider provider = when(mock(BundleProvider.class).get("loaded", Locale.UK)).thenReturn(chained).getMock();
-        service = when(mock(ServiceLoader.class).iterator()).thenReturn(List.of(provider).iterator()).getMock();
+        service = (ServiceLoader<BundleProvider>) when(mock(ServiceLoader.class).iterator())
+                .thenReturn(List.of(provider).iterator()).getMock();
         return service;
     }
     
@@ -87,7 +88,7 @@ class BundlerTest {
     
     
     @ParameterizedTest
-    @MethodSource({"reload_provider"})
+    @MethodSource("reload_provider")
     void reload(Function<Bundler, Bundle> function) {
         bundler.loader().add(ClassLoaderSource.ROOT);
         
@@ -101,13 +102,13 @@ class BundlerTest {
         return Stream.of(
             bundler -> bundler.reload(new Annotated(), Locale.UK),
             bundler -> bundler.reload(Annotated.class, Locale.UK),
-            bundler -> bundler.reload(name, Locale.UK)
+            bundler -> bundler.reload(NAME, Locale.UK)
         );
     }
     
     
     @ParameterizedTest
-    @MethodSource({"load_provider"})
+    @MethodSource("load_provider")
     void load(Function<Bundler, Bundle> function) {
         bundler.loader().add(ClassLoaderSource.ROOT);
         assertEquals(Locale.UK, function.apply(bundler).locale());
@@ -118,7 +119,7 @@ class BundlerTest {
         return Stream.of(
             bundler -> bundler.load(new Annotated(), Locale.UK),
             bundler -> bundler.load(Annotated.class, Locale.UK),
-            bundler -> bundler.load(name, Locale.UK)
+            bundler -> bundler.load(NAME, Locale.UK)
         );
     }
     
@@ -129,7 +130,7 @@ class BundlerTest {
     
     
     @ParameterizedTest
-    @MethodSource({"load_empty_provider"})
+    @MethodSource("load_empty_provider")
     void load_empty(Function<Bundler, Bundle> function) {
         bundler.loader().add(ClassLoaderSource.ROOT);
         assertSame(Bundle.EMPTY, function.apply(bundler));
@@ -203,8 +204,8 @@ class BundlerTest {
     
     @Test
     void loadFromBundleLoader() {
-        var parent = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.ENGLISH)), bundler.loader(), false);
-        var bundle = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.UK)), bundler.loader(), false);
+        var parent = bundler.loadFromBundleLoader(NAME, Lists.reverse(BundleLoader.loader().parents(NAME, Locale.ENGLISH)), bundler.loader(), false);
+        var bundle = bundler.loadFromBundleLoader(NAME, Lists.reverse(BundleLoader.loader().parents(NAME, Locale.UK)), bundler.loader(), false);
         
         assertEquals("Morning", bundle.find("hello"));
         assertEquals("Hey", bundle.parent().find("hello"));
@@ -217,7 +218,7 @@ class BundlerTest {
     
     @Test
     void loadFromBundleLoader_empty() {
-        var bundle = bundler.loadFromBundleLoader(name, Lists.reverse(BundleLoader.loader().parents(name, Locale.FRANCE)), bundler.loader(), false);
+        var bundle = bundler.loadFromBundleLoader(NAME, Lists.reverse(BundleLoader.loader().parents(NAME, Locale.FRANCE)), bundler.loader(), false);
         
         assertEquals(Locale.FRANCE, bundle.locale());
         assertEquals(Locale.FRENCH, bundle.parent().locale());
@@ -227,7 +228,7 @@ class BundlerTest {
     
     @Test
     void loader() {
-        assertSame(BundleLoader.loader(), cached.loader());
+        assertSame(BundleLoader.loader(), CACHED.loader());
     }
     
 }

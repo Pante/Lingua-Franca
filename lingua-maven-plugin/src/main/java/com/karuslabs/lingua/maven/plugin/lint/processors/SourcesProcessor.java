@@ -34,7 +34,7 @@ import org.apache.maven.plugin.logging.Log;
 
 public class SourcesProcessor implements Processor {
     
-    protected File resources;
+    protected final File resources;
     
     
     public SourcesProcessor(File resources) {

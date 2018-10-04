@@ -32,13 +32,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Repeatable(Platforms.class)
-@Target({TYPE})
+@Target(TYPE)
 public @interface Platform {
     
-    public In template();
+    In template();
     
-    public String destination();
+    String destination();
     
-    public String[] locales();
+    String[] locales();
     
 }

@@ -34,7 +34,7 @@ import org.apache.maven.plugin.logging.Log;
 
 public class ProvidesProcessor implements Processor {
     
-    private Class<?> expected;
+    private final Class<?> expected;
     
     
     public ProvidesProcessor() {

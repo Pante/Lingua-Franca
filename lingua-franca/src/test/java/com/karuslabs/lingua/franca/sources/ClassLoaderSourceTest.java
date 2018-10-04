@@ -41,8 +41,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ClassLoaderSourceTest {
     
-    static ClassLoaderSource source = new ClassLoaderSource("sources");
-    static String file = "source.yml";
+    static final ClassLoaderSource SOURCE = new ClassLoaderSource("sources");
+    static final String FILE = "source.yml";
     
     
     @Test
@@ -53,27 +53,27 @@ class ClassLoaderSourceTest {
     
     @Test
     void load() {
-        assertNotNull(new ClassLoaderSource("sources").load(file));
+        assertNotNull(new ClassLoaderSource("sources").load(FILE));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+	@MethodSource("equality_provider")
     void equals(FileSource other, boolean expected) {
-        assertEquals(expected, source.equals(other));
+        assertEquals(expected, SOURCE.equals(other));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+	@MethodSource("equality_provider")
     void hashCode(FileSource other, boolean expected) {
-        assertEquals(expected, source.hashCode() == other.hashCode());
+        assertEquals(expected, SOURCE.hashCode() == other.hashCode());
     }
     
     
     static Stream<Arguments> equality_provider() {
         return Stream.of(
-            of(source, true),
+            of(SOURCE, true),
             of(new ClassLoaderSource("sources"), true),
             of(new ClassLoaderSource(mock(ClassLoader.class), "sources"), false)
         );

@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class LinguaMojoTest {
     
-    LinguaMojo mojo = new LinguaMojo() {
+    final LinguaMojo mojo = new LinguaMojo() {
         @Override
         public void execute() throws MojoExecutionException, MojoFailureException {
             throw new UnsupportedOperationException("Not supported yet.");

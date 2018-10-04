@@ -45,8 +45,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class LinguaGenerateMojoTest {
     
-    LinguaGenerateMojo mojo = spy(new LinguaGenerateMojo());
-    Log logger = mock(Log.class);
+    final LinguaGenerateMojo mojo = spy(new LinguaGenerateMojo());
+    final Log logger = mock(Log.class);
     
     
     @BeforeEach

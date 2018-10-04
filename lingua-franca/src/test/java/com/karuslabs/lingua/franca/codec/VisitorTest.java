@@ -51,7 +51,7 @@ class VisitorTest {
     
     
     @ParameterizedTest
-    @MethodSource({"visit_provider"})
+	@MethodSource("visit_provider")
     void visit(JsonNode node) {
         visitor.visit(null, node, null);
         

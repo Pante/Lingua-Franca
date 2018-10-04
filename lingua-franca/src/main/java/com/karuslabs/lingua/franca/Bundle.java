@@ -50,13 +50,13 @@ public class Bundle {
         }
     };
         
-    static final Optional<String> EMPTY_STRING = Optional.empty();
-    static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
+    protected static final Optional<String> EMPTY_STRING = Optional.empty();
+    protected static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
     
     
     Map<String, Object> messages;
     private volatile @Nullable Set<String> keys;
-    private Locale locale;
+    private final Locale locale;
     protected Bundle parent;
     private volatile int hash;
     
@@ -155,11 +155,7 @@ public class Bundle {
     
     @Override
     public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        
-        return other instanceof Bundle && locale.equals(((Bundle) other).locale);
+        return this == other || other instanceof Bundle && locale.equals(((Bundle) other).locale);
     }
 
     @Override

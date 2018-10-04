@@ -30,11 +30,11 @@ public abstract class FileSource implements Source {
     
     static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
     
-    protected String folder;
+    protected final String folder;
     private volatile int hash;
     
     
-    public FileSource(String folder) {
+    protected FileSource(String folder) {
         this.folder = folder.isEmpty() || folder.charAt(folder.length() - 1) == '/' ? folder : folder + "/";
         this.hash = 0;
     }
@@ -42,15 +42,8 @@ public abstract class FileSource implements Source {
     
     @Override
     public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        
-        if (other == null || getClass() != other.getClass()) {
-            return false;
-        }
-        
-        return folder.equals(((FileSource) other).folder);
+        return this == other || other != null && getClass() == other.getClass()
+                && folder.equals(((FileSource) other).folder);
     }
 
     @Override

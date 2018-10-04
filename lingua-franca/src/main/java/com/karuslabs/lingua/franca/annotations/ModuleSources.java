@@ -31,9 +31,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Retention(RUNTIME)
-@Target({TYPE})
+@Target(TYPE)
 public @interface ModuleSources {
     
-    public String[] value();
+    String[] value();
     
 }

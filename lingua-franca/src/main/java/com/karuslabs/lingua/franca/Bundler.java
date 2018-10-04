@@ -38,7 +38,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class Bundler {    
     
-    private static Bundler BUNDLER = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
+    private static final Bundler BUNDLER = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
     private static final ResourceBundle.Control CONTROL = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
     
     public static Bundler bundler() {
@@ -54,8 +54,8 @@ public class Bundler {
     };
     
     
-    private Cache<String, Bundle> cache;
-    private BundleLoader loader;
+    private final Cache<String, Bundle> cache;
+    private final BundleLoader loader;
     
     
     protected Bundler(Cache<String, Bundle> cache, BundleLoader loader) {
@@ -160,7 +160,7 @@ public class Bundler {
                 }
             }
             
-        } catch (ServiceConfigurationError e) {
+        } catch (ServiceConfigurationError ignored) {
             // Ignore error
         }
         

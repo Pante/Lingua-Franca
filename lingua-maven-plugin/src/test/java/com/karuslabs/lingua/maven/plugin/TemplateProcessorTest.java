@@ -47,13 +47,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TemplateProcessorTest {
     
-    TemplateProcessor processor = new TemplateProcessor(null) {
+    final TemplateProcessor processor = new TemplateProcessor(null) {
         @Override
         public boolean process(Collection<Class<?>> classes, Log logger) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     };
-    Log logger = mock(Log.class);
+    final Log logger = mock(Log.class);
     
     
     @BeforeEach

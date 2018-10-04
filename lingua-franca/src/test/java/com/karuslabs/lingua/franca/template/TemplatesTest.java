@@ -61,8 +61,8 @@ class TemplatesTest {
     
     
     @Embedded(template = LOADED, locales = {"de_DE", "ja_JP"}, destination = DESTINATION)
-    @Platform(template = @In(embedded = LOADED), locales = {"de_DE"}, destination = DESTINATION)
-    @Platform(template = @In(system = DESTINATION + "loaded.yml"), locales = {"ja_JP"}, destination = DESTINATION)
+	@Platform(template = @In(embedded = LOADED), locales = "de_DE", destination = DESTINATION)
+	@Platform(template = @In(system = DESTINATION + "loaded.yml"), locales = "ja_JP", destination = DESTINATION)
     static class Success {
         
     }
@@ -75,7 +75,7 @@ class TemplatesTest {
     }
     
     
-    @Platform(template = @In(), locales = {"de_DE", "ja_JP"}, destination = DESTINATION)
+    @Platform(template = @In, locales = {"de_DE", "ja_JP"}, destination = DESTINATION)
     static class Invalid {
         
     }

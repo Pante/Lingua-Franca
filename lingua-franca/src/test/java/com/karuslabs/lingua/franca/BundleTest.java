@@ -44,70 +44,70 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 @ExtendWith(MockitoExtension.class)
 class BundleTest {
     
-    static Bundle bundle = new Bundle(Stringifier.stringify().from(BundleTest.class.getClassLoader().getResourceAsStream("bundle.yml"), "yml"), Locale.ENGLISH);
-    static Bundle chained = new Bundle(Map.of("array", new String[] {"a"}, "array[0]", "a"), Locale.ENGLISH, new Bundle(Map.of("key", "value"), Locale.ROOT));
-    static final String value = "?";
-    static final String[] empty = new String[] {};
+    static final Bundle BUNDLE = new Bundle(Stringifier.stringify().from(BundleTest.class.getClassLoader().getResourceAsStream("bundle.yml"), "yml"), Locale.ENGLISH);
+    static final Bundle CHAINED = new Bundle(Map.of("array", new String[] {"a"}, "array[0]", "a"), Locale.ENGLISH, new Bundle(Map.of("key", "value"), Locale.ROOT));
+    static final String VALUE = "?";
+    static final String[] EMPTY = new String[] {};
     
     
     @Test
     void empty() {
-        assertSame(Bundle.EMPTY, EmptyBundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
-        assertEquals(Locale.CHINESE, EmptyBundle.empty(Locale.CHINESE, Bundle.EMPTY).locale());
+        assertSame(Bundle.EMPTY, Bundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
+        assertEquals(Locale.CHINESE, Bundle.empty(Locale.CHINESE, Bundle.EMPTY).locale());
     }
     
     
     @Test
     void get() {
-        assertEquals("a {0}", bundle.get("key[0]").orElse(value));
-        assertEquals(value, bundle.get("key").orElse(value));
+        assertEquals("a {0}", BUNDLE.get("key[0]").orElse(VALUE));
+        assertEquals(VALUE, BUNDLE.get("key").orElse(VALUE));
     }
     
     
     @Test
     void get_arguments() {
-        assertEquals("a ?", bundle.get("key[0]", value).orElse(value));
-        assertEquals(value, bundle.get("key", value).orElse(value));
+        assertEquals("a ?", BUNDLE.get("key[0]", VALUE).orElse(VALUE));
+        assertEquals(VALUE, BUNDLE.get("key", VALUE).orElse(VALUE));
     }
     
     
     @Test
     void find() {
-        assertEquals("b {0}", bundle.find("key[1]"));
-        assertNull(bundle.find("key"));
+        assertEquals("b {0}", BUNDLE.find("key[1]"));
+        assertNull(BUNDLE.find("key"));
     }
     
     
     @Test
     void find_arguments() {
-        assertEquals("b ?", bundle.find("key[1]", value));
-        assertNull(bundle.find("key"));
+        assertEquals("b ?", BUNDLE.find("key[1]", VALUE));
+        assertNull(BUNDLE.find("key"));
     }
     
     
     @Test
     void messages() {
-        assertArrayEquals(new String[]{"a {0}", "b {0}"}, bundle.messages("key").orElse(empty));
-        assertArrayEquals(empty, bundle.messages("other").orElse(empty));
+        assertArrayEquals(new String[]{"a {0}", "b {0}"}, BUNDLE.messages("key").orElse(EMPTY));
+        assertArrayEquals(EMPTY, BUNDLE.messages("other").orElse(EMPTY));
     }
     
     
     @Test
     void messagesIfPresent() {
-        assertArrayEquals(new String[]{"a {0}", "b {0}"}, bundle.messagesIfPresent("key"));
-        assertNull(bundle.messagesIfPresent("other"));
+        assertArrayEquals(new String[]{"a {0}", "b {0}"}, BUNDLE.messagesIfPresent("key"));
+        assertNull(BUNDLE.messagesIfPresent("other"));
     }
     
     
     @Test
     void retrieve() {
-        assertEquals("value", chained.retrieve("key"));
+        assertEquals("value", CHAINED.retrieve("key"));
     }
     
     
     @Test
     void retrieve_null() {
-        assertNull(bundle.retrieve("something"));
+        assertNull(BUNDLE.retrieve("something"));
     }
     
     
@@ -120,13 +120,13 @@ class BundleTest {
         var first = executor.submit(() -> {
             start.countDown();
             start.await();
-            return bundle.find("key[0]", "first");
+            return BUNDLE.find("key[0]", "first");
         });
         
         var second = executor.submit(() -> {
             start.countDown();
             start.await();
-            return bundle.find("key[1]", "second");
+            return BUNDLE.find("key[1]", "second");
         });
         
         assertEquals("a first", first.get());
@@ -136,7 +136,7 @@ class BundleTest {
     
     @Test
     void keys() {
-        var keys = chained.keys();
+        var keys = CHAINED.keys();
         assertEquals(2, keys.size());
         
         assertTrue(keys.containsAll(Set.of("array[0]", "key")));
@@ -145,28 +145,28 @@ class BundleTest {
     
     @Test
     void getters() {
-        assertEquals(Locale.ENGLISH, bundle.locale());
-        assertSame(Bundle.EMPTY, bundle.parent());
+        assertEquals(Locale.ENGLISH, BUNDLE.locale());
+        assertSame(Bundle.EMPTY, BUNDLE.parent());
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+    @MethodSource("equality_provider")
     void equals(Bundle other, boolean expected) {
-        assertEquals(expected, bundle.equals(other));
+        assertEquals(expected, BUNDLE.equals(other));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+    @MethodSource("equality_provider")
     void hashCode(Bundle other, boolean expected) {
-        assertEquals(expected, bundle.hashCode() == other.hashCode());
+        assertEquals(expected, BUNDLE.hashCode() == other.hashCode());
     }
     
     
     static Stream<Arguments> equality_provider() {
         return Stream.of(
-            of(bundle, true),
+            of(BUNDLE, true),
             of(new Bundle(Map.of(), Locale.ENGLISH), true),
             of(Bundle.EMPTY, false)
         );
@@ -175,8 +175,8 @@ class BundleTest {
     
     @Test
     void bundle_toString() {
-        var message = String.format(bundle.getClass().getName() + "[locale = %s, parent locale = %s]", bundle.locale().toString(), bundle.parent().locale().toString());
-        assertEquals(message, bundle.toString());
+        var message = String.format(BUNDLE.getClass().getName() + "[locale = %s, parent locale = %s]", BUNDLE.locale().toString(), BUNDLE.parent().locale().toString());
+        assertEquals(message, BUNDLE.toString());
     }
     
 }

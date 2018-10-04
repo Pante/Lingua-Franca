@@ -42,39 +42,39 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ModuleSourceTest {
     
-    static ModuleSource source = new ModuleSource("sources");
-    static String file = "source.yml";
+    static final ModuleSource SOURCE = new ModuleSource("sources");
+    static final String FILE = "source.yml";
     
     
     @Test
     void load() {
-        assertNotNull(new ModuleSource("sources").load(file));
+        assertNotNull(new ModuleSource("sources").load(FILE));
     }
     
     @Test
     void load_exception() throws IOException {
         Module module = when(mock(Module.class).getResourceAsStream(any())).thenThrow(IOException.class).getMock();
-        assertNull(new ModuleSource(module, "sources").load(file));
+        assertNull(new ModuleSource(module, "sources").load(FILE));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+	@MethodSource("equality_provider")
     void equals(FileSource other, boolean expected) {
-        assertEquals(expected, source.equals(other));
+        assertEquals(expected, SOURCE.equals(other));
     }
     
     
     @ParameterizedTest
-    @MethodSource({"equality_provider"})
+	@MethodSource("equality_provider")
     void hashCode(FileSource other, boolean expected) {
-        assertEquals(expected, source.hashCode() == other.hashCode());
+        assertEquals(expected, SOURCE.hashCode() == other.hashCode());
     }
     
     
     static Stream<Arguments> equality_provider() {
         return Stream.of(
-            of(source, true),
+            of(SOURCE, true),
             of(new ModuleSource("sources"), true),
             of(new ModuleSource(mock(Module.class), "sources"), false)
         );

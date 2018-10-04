@@ -41,7 +41,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@Embedded(template = "folder/file.yml", locales = {"en_GB"}, destination = "")
+@Embedded(template = "folder/file.yml", locales = "en_GB", destination = "")
 class EmbededProcessorTest {
     
     EmbeddedProcessor processor;

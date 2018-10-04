@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class Visitor<T, R> {
     
-    protected R value;
+    protected final R value;
 
     
     Visitor(R value) {

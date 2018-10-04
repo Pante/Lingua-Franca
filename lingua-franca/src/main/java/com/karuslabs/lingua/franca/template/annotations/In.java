@@ -33,8 +33,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({})
 public @interface In {
     
-    public String embedded() default "";
+    String embedded() default "";
     
-    public String system() default "";
+    String system() default "";
     
 }

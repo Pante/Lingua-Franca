@@ -45,7 +45,7 @@ class LocalesTest {
     
     
     @ParameterizedTest
-    @MethodSource({"locales_provider"})
+	@MethodSource("locales_provider")
     void of_locale(String tag, Locale locale) {
         var preloaded = Locales.of(LOCALE);
         
@@ -54,7 +54,7 @@ class LocalesTest {
     
     
     @ParameterizedTest
-    @MethodSource({"locales_provider"}) 
+	@MethodSource("locales_provider")
     void of_tag(String tag, Locale locale) {
         var preloaded = Locales.of(TAG);
         

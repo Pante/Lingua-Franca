@@ -38,7 +38,7 @@ public abstract class TemplateProcessor implements Processor {
     protected File resources;
     
     
-    public TemplateProcessor(File resources) {
+    protected TemplateProcessor(File resources) {
         this.resources = resources;
     }
     

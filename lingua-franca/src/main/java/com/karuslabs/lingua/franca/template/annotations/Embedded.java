@@ -32,13 +32,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Repeatable(Embeddings.class)
-@Target({TYPE})
+@Target(TYPE)
 public @interface Embedded {
     
-    public String template();
+    String template();
     
-    public String destination();
+    String destination();
     
-    public String[] locales();
+    String[] locales();
     
 }

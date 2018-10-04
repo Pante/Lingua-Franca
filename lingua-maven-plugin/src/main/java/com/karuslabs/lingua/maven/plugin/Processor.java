@@ -30,6 +30,6 @@ import org.apache.maven.plugin.logging.Log;
 
 public interface Processor {
     
-    public boolean process(Collection<Class<?>> classes, Log logger);
+    boolean process(Collection<Class<?>> classes, Log logger);
     
 }
