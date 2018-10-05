@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.maven.plugin.generator.processors;
 
 import com.karuslabs.lingua.franca.template.annotations.Embedded;

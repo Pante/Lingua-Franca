@@ -54,7 +54,7 @@ public class Bundle {
     protected static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
     
     
-    Map<String, Object> messages;
+    protected Map<String, Object> messages;
     private volatile @Nullable Set<String> keys;
     private final Locale locale;
     protected Bundle parent;
@@ -160,20 +160,20 @@ public class Bundle {
 
     @Override
     public int hashCode() {
-        if (hash == 0) {
-            int calculated = 5;
-            calculated = 53 * calculated + getClass().hashCode();
-            calculated = 53 * calculated + locale.hashCode();
-            hash = calculated;
+        int value = hash;
+        if (value == 0) {
+            value = 5;
+            value = 53 * value + getClass().hashCode();
+            value = 53 * value + locale.hashCode();
+            hash = value;
         }
-        
-        return hash;
+        return value;
     }
     
     
     @Override
     public String toString() {
-        return String.format(getClass().getName() + "[locale = %s, parent locale = %s]", locale().toString(), parent.locale().toString());
+        return String.format("%s[locale = %s, parent locale = %s]", getClass().getName(), locale().toString(), parent.locale().toString());
     }
     
 }

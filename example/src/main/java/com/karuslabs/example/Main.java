@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 
 public class Main {
     
@@ -92,9 +94,9 @@ public class Main {
 
 
 @Bundled("puns")
-@ClassLoaderSources("puns/classloader")
-@ModuleSources("puns/module")
-@SystemSources("./")
+@ClassLoaderSources({"puns/classloader"})
+@ModuleSources({"puns/module"})
+@SystemSources({"./"})
 @Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./")
 class Puns {
     
@@ -103,32 +105,38 @@ class Puns {
     
     public void make(String tag, boolean reload) {
         Locale locale = Locales.of(tag);
-        Bundle bundle = reload ? bundler.reload(this, locale)
-                : bundler.load(this, locale);
+        
+        Bundle bundle = null;
+        if (reload) {
+            bundle = bundler.reload(this, locale);
+            
+        } else {
+            bundle = bundler.load(this, locale);
+        }
         
         Optional<String> title = bundle.get("title", locale.toLanguageTag());
         System.out.println(title.orElse("Terrible Puns"));
         
-        String question = bundle.find("first.question");
+        @Nullable String question = bundle.find("first.question");
         Optional<String> answer = bundle.get("first.answer");
         
-        ask(question, answer.orElse("I forgot the answer!"));
+        monologue(question, answer.orElse("I forgot the answer!"));
         
         
         question = bundle.find("second.question");
         answer = bundle.get("second.answer");
         
-        ask(question, answer.orElse("I forgot the answer!"));
+        monologue(question, answer.orElse("I forgot the answer!"));
         
         
-        String response = bundle.find("responses[0]", System.getProperty("user.name"));
+        @Nullable String response = bundle.find("responses[0]", System.getProperty("user.name"));
         System.out.println(response);
         
-        String[] responses = bundle.messagesIfPresent("responses");
+        @Nullable String[] responses = bundle.messagesIfPresent("responses");
         System.out.println(responses[1]);
     }
     
-    private void ask(String question, String answer) {
+    private void monologue(String question, String answer) {
         System.out.println(question);
         System.out.println(answer);
         System.out.println("\n");

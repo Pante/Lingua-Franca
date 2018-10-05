@@ -105,7 +105,7 @@ public class BundleLoader {
     
     public boolean add(Object annotated) {
         return add(annotated.getClass());
-}
+    }
     
     public boolean add(Class<?> annotated) {
         var bundled = annotated.getAnnotation(Bundled.class);

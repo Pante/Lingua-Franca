@@ -69,7 +69,7 @@ public class ModuleSource extends FileSource {
     
     @Override
     public String toString() {
-        return String.format(getClass().getName() + "[module = %s, folder = %s]", module.toString(), folder);
+        return String.format("%s[module = %s, folder = %s]", getClass().getName(), module, folder);
     }
     
 }

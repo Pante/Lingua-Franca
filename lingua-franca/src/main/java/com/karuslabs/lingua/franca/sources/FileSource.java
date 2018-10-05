@@ -48,14 +48,15 @@ public abstract class FileSource implements Source {
 
     @Override
     public int hashCode() {
-        if (hash == 0) {
-            int calculated = 5;
-            calculated = 53 * calculated + getClass().hashCode();
-            calculated = 53 * calculated + folder.hashCode();
-            hash = calculated;
+        int value = hash;
+        if (value == 0) {
+            value = 5;
+            value = 53 * value + getClass().hashCode();
+            value = 53 * value + folder.hashCode();
+            hash = value;
         }
         
-        return hash;
+        return value;
     }
     
     @Override

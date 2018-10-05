@@ -21,15 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.maven.plugin.lint.processors;
 
 import com.karuslabs.lingua.franca.Bundle;
 import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
 import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.maven.plugin.logging.Log;
 

@@ -21,13 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.maven.plugin;
 
 import java.util.List;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import org.junit.jupiter.api.Test;
@@ -40,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class LinguaMojoTest {
     
-    final LinguaMojo mojo = new LinguaMojo() {
+    LinguaMojo mojo = new LinguaMojo() {
         @Override
         public void execute() throws MojoExecutionException, MojoFailureException {
             throw new UnsupportedOperationException("Not supported yet.");

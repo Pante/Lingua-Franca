@@ -30,12 +30,14 @@ import com.karuslabs.lingua.franca.spi.annotations.Provides;
 import java.util.Locale;
 import java.util.Map;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 
 @Provides("custom_bundle")
 public class CustomBundleProvider extends AnnotatedBundleProvider {
 
     @Override
-    public Bundle get(String name, Locale locale) {
+    public @Nullable Bundle get(String name, Locale locale) {
         if (provides(name)) {
             return new Bundle(Map.of("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward."), locale);
             

@@ -27,8 +27,6 @@ import java.util.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import static com.karuslabs.lingua.franca.Bundle.EMPTY_STRING;
-
 
 public class EmptyBundle extends Bundle {    
     
