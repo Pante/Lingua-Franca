@@ -13,7 +13,7 @@
 
 Java internationalisation that doesn't suck. Lingua-Franca is an annotation-driven internationalisation library that features semi-automated locale file(s) generation. In addition, the library supports properties, JSON and YAML files.
 
-The master branch contains the bleeding edge, unreleased version of the project, please view the stable branch for the latest stable release. For more information, please see the [example project](https://github.com/Pante/Lingua-Franca/tree/stable/example/) and [wiki](https://github.com/Pante/Lingua-Franca/wiki/).
+The master branch contains the bleeding edge, unreleased version of the project. Please view the stable branch for the latest stable release. For more information, please see the [example project](https://github.com/Pante/Lingua-Franca/tree/stable/example/) and [wiki](https://github.com/Pante/Lingua-Franca/wiki/).
 
 ***
 #### Java 10/11 Maven Artifact:
