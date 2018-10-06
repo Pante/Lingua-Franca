@@ -23,25 +23,6 @@
  */
 
 /**
- * Defines the foundational packages of the Lingua Franca library.
+ * Contains classes and utilities for manipulating and retrieving {@code Bundle}s and locales.
  */
-open module com.karuslabs.lingua.franca {
-    uses com.karuslabs.lingua.franca.spi.BundleProvider;
-    
-    exports com.karuslabs.lingua.franca;
-    exports com.karuslabs.lingua.franca.annotations;
-    exports com.karuslabs.lingua.franca.codec;
-    exports com.karuslabs.lingua.franca.sources;
-    exports com.karuslabs.lingua.franca.spi;
-    exports com.karuslabs.lingua.franca.spi.annotations;
-    exports com.karuslabs.lingua.franca.template;
-    exports com.karuslabs.lingua.franca.template.annotations;
-    
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.dataformat.javaprop;
-    requires com.fasterxml.jackson.dataformat.yaml;
-    requires com.google.common;
-    requires org.checkerframework.checker.qual;
-    requires java.base;
-}
+package com.karuslabs.lingua.franca;
