@@ -46,13 +46,21 @@ public class Assert {
     
     public static boolean subset(Map<String, Object> parent, Map<String, Object> child) {
         for (var entry : child.entrySet()) {
-            var value = parent.get(entry.getKey());
-            if (value == null || (value instanceof String && !(entry.getValue() instanceof String))) {
+            if (!subset(parent.get(entry.getKey()), entry.getValue())) {
                 return false;
             }
         }
         
         return true;
+    }
+    
+    private static boolean subset(Object parent, Object child) {
+        if (parent instanceof String[] && child instanceof String[]) {
+            return ((String[]) child).length <= ((String[]) parent).length;
+            
+        } else {
+            return parent instanceof String && child instanceof String;
+        }
     }
     
 }

@@ -64,7 +64,7 @@ public class ClassLoaderSource extends FileSource {
     
     @Override
     public String toString() {
-        return String.format(getClass().getName() + "[classloader = %s, folder = %s]", loader, folder);
+        return String.format("%s[classloader = %s, folder = %s]", getClass().getName(), loader, folder);
     }
     
 }

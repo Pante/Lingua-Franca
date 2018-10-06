@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.franca;
 
 import java.util.Locale;
@@ -40,12 +39,12 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 @ExtendWith(MockitoExtension.class)
 class LocalesTest {
     
-    private static final String TAG = "en_UD";
-    private static final Locale LOCALE = new Locale("en", "UD");
+    static final String TAG = "en_UD";
+    static final Locale LOCALE = new Locale("en", "UD");
     
     
     @ParameterizedTest
-	@MethodSource("locales_provider")
+    @MethodSource("locales_provider")
     void of_locale(String tag, Locale locale) {
         var preloaded = Locales.of(LOCALE);
         
@@ -54,7 +53,7 @@ class LocalesTest {
     
     
     @ParameterizedTest
-	@MethodSource("locales_provider")
+    @MethodSource("locales_provider")
     void of_tag(String tag, Locale locale) {
         var preloaded = Locales.of(TAG);
         

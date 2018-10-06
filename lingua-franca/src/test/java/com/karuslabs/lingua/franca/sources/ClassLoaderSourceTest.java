@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.franca.sources;
 
 import java.util.stream.Stream;
@@ -58,14 +57,14 @@ class ClassLoaderSourceTest {
     
     
     @ParameterizedTest
-	@MethodSource("equality_provider")
+    @MethodSource("equality_provider")
     void equals(FileSource other, boolean expected) {
         assertEquals(expected, SOURCE.equals(other));
     }
     
     
     @ParameterizedTest
-	@MethodSource("equality_provider")
+    @MethodSource("equality_provider")
     void hashCode(FileSource other, boolean expected) {
         assertEquals(expected, SOURCE.hashCode() == other.hashCode());
     }

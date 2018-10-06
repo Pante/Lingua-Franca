@@ -24,9 +24,10 @@
 package com.karuslabs.lingua.franca.spi;
 
 import com.karuslabs.lingua.franca.Bundle;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Locale;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public interface BundleProvider {

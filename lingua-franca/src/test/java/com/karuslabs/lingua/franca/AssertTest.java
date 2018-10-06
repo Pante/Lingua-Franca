@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.franca;
 
 import com.google.common.cache.CacheBuilder;
@@ -30,7 +29,7 @@ import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 
 import java.util.Locale;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -41,10 +40,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class AssertTest {
     
-    final Bundler bundler = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
+    Bundler bundler = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
     
     
-    AssertTest() {
+    @BeforeEach
+    void before() {
         bundler.loader().add(ClassLoaderSource.ROOT);
         bundler.loader().add(new ClassLoaderSource("assertion"));
     }

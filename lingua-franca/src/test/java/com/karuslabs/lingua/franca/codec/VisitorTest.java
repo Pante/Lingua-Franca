@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.franca.codec;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
-import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +45,7 @@ class VisitorTest {
     static final JsonNodeFactory factory = JsonNodeFactory.instance;
     
     
-    @Spy Visitor<Object, Object> visitor = new Visitor<>(null){};
+    Visitor<Object, Object> visitor = spy(new Visitor<Object, Object>(null){});
     
     
     @ParameterizedTest

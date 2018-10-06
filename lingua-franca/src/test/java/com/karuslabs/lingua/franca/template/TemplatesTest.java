@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.karuslabs.lingua.franca.template;
 
 import com.karuslabs.lingua.franca.codec.Stringifier;
@@ -61,8 +60,8 @@ class TemplatesTest {
     
     
     @Embedded(template = LOADED, locales = {"de_DE", "ja_JP"}, destination = DESTINATION)
-	@Platform(template = @In(embedded = LOADED), locales = "de_DE", destination = DESTINATION)
-	@Platform(template = @In(system = DESTINATION + "loaded.yml"), locales = "ja_JP", destination = DESTINATION)
+    @Platform(template = @In(embedded = LOADED), locales = "de_DE", destination = DESTINATION)
+    @Platform(template = @In(system = DESTINATION + "loaded.yml"), locales = "ja_JP", destination = DESTINATION)
     static class Success {
         
     }

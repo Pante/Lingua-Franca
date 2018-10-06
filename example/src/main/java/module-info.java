@@ -22,11 +22,10 @@
  * THE SOFTWARE.
  */
 module com.karuslabs.lingua.franca.example {
-    
     provides com.karuslabs.lingua.franca.spi.BundleProvider with com.karuslabs.example.CustomBundleProvider;
         
     exports com.karuslabs.example;
     
     requires com.karuslabs.lingua.franca;
-    
+    requires org.checkerframework.checker.qual;
 }

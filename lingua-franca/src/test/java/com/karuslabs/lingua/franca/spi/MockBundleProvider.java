@@ -27,8 +27,6 @@ import com.karuslabs.lingua.franca.Bundle;
 
 import java.util.*;
 
-import static org.mockito.Mockito.mock;
-
 
 public class MockBundleProvider implements BundleProvider {
     
@@ -40,7 +38,7 @@ public class MockBundleProvider implements BundleProvider {
 
     @Override
     public boolean provides(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
