@@ -146,15 +146,15 @@ public class BundleLoader {
     }
 
     
-    public @Nullable boolean add(String name, Source source) {
+    public boolean add(String name, Source source) {
         return get(name, 1).add(source);
     }
     
-    public @Nullable boolean add(String name, Source... sources) {
+    public boolean add(String name, Source... sources) {
         return Collections.addAll(get(name, sources.length), sources);
     }
     
-    public @Nullable boolean add(String name, Collection<? extends Source> sources) {
+    public boolean add(String name, Collection<? extends Source> sources) {
         return get(name, sources.size()).addAll(sources);
     }
     
