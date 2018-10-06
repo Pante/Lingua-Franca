@@ -11,7 +11,7 @@
 [![javadoc](https://img.shields.io/badge/javadoc-1.0.0--SNAPSHOT-brightgreen.svg)](https://repo.karuslabs.com/repository/lingua-franca-project/1.0.0-SNAPSHOT/commons/apidocs/overview-summary.html)
 [![Discord](https://img.shields.io/discord/140273735772012544.svg?logo=discord)](https://discord.gg/uE4C9NQ)
 
-Java internationalisation that doesn't suck. Lingua-Franca is an annotation-driven internationalisation library that features semi-automated locale file(s) generation. In addition, the library supports properties, JSON and YAML files.
+Lingua-Franca is an annotation-driven internationalisation library that features semi-automated locale file(s) generation. In addition, the library supports properties, JSON and YAML files.
 
 The master branch contains the bleeding edge, unreleased version of the project. Please view the stable branch for the latest stable release. For more information, please see the [example project](https://github.com/Pante/Lingua-Franca/tree/stable/example/) and [wiki](https://github.com/Pante/Lingua-Franca/wiki/).
 
