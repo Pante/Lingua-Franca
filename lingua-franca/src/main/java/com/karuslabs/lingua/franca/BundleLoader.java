@@ -35,11 +35,32 @@ import java.util.concurrent.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
+/**
+ * {@code BundleLoader}s contains a global and namespace registry from which a {@code Bundle} is 
+ * retrieved and loaded. Each member in a family of {@code Bundle}s share a base name and 
+ * hence, a common namespace. 
+ * 
+ * In addition to retrieving bundles from the registry, the default implementation of 
+ * {@code BundleLoader} supports retrieval of {@code Bundle}s from a {@link BundleProvider}
+ * service provided via the JDK's SPI mechanism.
+ * 
+ * The default implementation first retrieves a bundle from a {@code BundleProvider}.
+ * If unavailable, the implementation then retrieves the bundle from the namespace registry
+ * and subsequently the global registry. In the event a bundle could not be retrieved, an
+ * empty bundle is returned. The entire retrieval and loading is thread-safe.
+ * 
+ * The default implementation has support for properties, JSON and YAML file formats.
+ */
 public class BundleLoader {
     
     private static final BundleLoader LOADER = new BundleLoader();
     
     
+    /**
+     * Returns a global {@code BundleLoader}.
+     * 
+     * @return a global BundleLoader
+     */
     public static BundleLoader loader() {
         return LOADER;
     }
@@ -53,10 +74,20 @@ public class BundleLoader {
     protected final Set<Source> global;
 
     
+    /**
+     * Creates a {@BundleLoader} with empty registries and default supported formats.
+     */
     public BundleLoader() {
         this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet(), "json", "properties", "yml", "yaml");
     }
     
+    /**
+     * Creates a {@code BundleLoader} with the specified registries and supported formats.
+     * 
+     * @param namespaces the namespace registry
+     * @param global the global registry
+     * @param formats the supported formats
+     */
     public BundleLoader(ConcurrentMap<String, Set<Source>> namespaces, Set<Source> global, String... formats) {
         this.namespaces = namespaces;
         this.global = global;
@@ -64,6 +95,14 @@ public class BundleLoader {
     }
 
     
+    /**
+     * Retrieves a {@code Bundle} with the specified name, locale and parent bundle.
+     * 
+     * @param name the bundle name
+     * @param locale the bundle locale
+     * @param parent the parent of the bundle to be retrieved
+     * @return the retrieved bundle, or an empty bundle if unavailable
+     */
     public Bundle load(String name, Locale locale, Bundle parent) {
         var sources = namespaces.getOrDefault(name, global);
         var bundleName = CONTROL.toBundleName(name, locale);
@@ -81,6 +120,14 @@ public class BundleLoader {
         return messages == null ? Bundle.empty(locale, parent) : new Bundle(messages, locale, parent);
     }
     
+    /**
+     * Retrieves the contents of a bundle with the specified transformed bundle name, 
+     * i.e. "name_en_GB" from the specified sources.
+     * 
+     * @param sources the sources from which the bundle is retrieved
+     * @param bundle the transformed bundle name, i.e. "name_en_GB"
+     * @return the retrieved contents of a bundle
+     */
     protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {
         for (var source : sources) {
             for (var format : formats) {
@@ -97,16 +144,39 @@ public class BundleLoader {
         
         return null;
     }
-
+    
+    /**
+     * Returns a list of locales for the specified base name and locale which includes itself.
+     * The default implementation forwards to {@link ResourceBundle.Control#getCandidateLocales(String, Locale)}.
+     * 
+     * @param name the base name
+     * @param locale the locale
+     * @return a list of parent locales which includes itself
+     */
     public List<Locale> parents(String name, Locale locale) {
         return CONTROL.getCandidateLocales(name, locale);
     }
     
-    
+    /**
+     * Registers the sources specified in the {@link ClassLoaderSources}, {@link ModuleSources} 
+     * and {@link SystemSources} annotations to the namespace specified in the {@link Bundled}
+     * annotation if present, else the global registry.
+     * 
+     * @param annotated the annotated object
+     * @return true if the registry did not already contain the specified sources
+     */
     public boolean add(Object annotated) {
         return add(annotated.getClass());
     }
     
+    /**
+     * Registers the sources specified in the {@link ClassLoaderSources}, {@link ModuleSources} 
+     * and {@link SystemSources} annotations to the namespace specified in the {@link Bundled}
+     * annotation if present, else the global registry.
+     * 
+     * @param annotated the annotated class
+     * @return true if the registry did not already contain the specified sources
+     */
     public boolean add(Class<?> annotated) {
         var bundled = annotated.getAnnotation(Bundled.class);
         var sources = parse(annotated).toArray(SOURCE);
@@ -114,6 +184,12 @@ public class BundleLoader {
         return bundled == null ? add(sources) : add(bundled.value(), sources);
     }
     
+    /**
+     * Creates a list of sources from the annotations in the specified class.
+     * 
+     * @param annotated the annotated class
+     * @return the sources created from the specified annotated class
+     */
     protected List<Source> parse(Class<?> annotated) {
         var sources = new ArrayList<Source>();
         
