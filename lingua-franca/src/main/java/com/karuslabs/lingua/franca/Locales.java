@@ -32,6 +32,12 @@ import static java.util.Locale.ENGLISH;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 
+/**
+ * This class consists exclusively of static methods which operate on or return {@code Locale}s.
+ * 
+ * Language tags used in the static methods of this class which accept language tags
+ * can be separated by either '_' or '-', i.e. 'en_GB' or 'en-GB'. 
+ */
 public class Locales {
     
     private static final BiMap<String, Locale> LOCALES;
@@ -53,6 +59,12 @@ public class Locales {
     }
 
     
+    /**
+     * Creates a {@code Locale} which best represents the specified language tag.
+     * 
+     * @param tag the language tag
+     * @return a locale which best represents the specified language tag
+     */
     public static Locale of(String tag) {
         tag = tag.replace('_', '-');
         var locale = LOCALES.get(tag);
@@ -70,10 +82,23 @@ public class Locales {
     }
     
     
+    /**
+     * Creates a language tag delimited by '-' for the specified locale.
+     * 
+     * @param locale the locale
+     * @return the language tag
+     */
     public static String of(Locale locale) {
         return of(locale, '-');
     }
     
+    /**
+     * Creates a language tag delimited by the specified delimiter for the specified locale.
+     * 
+     * @param locale the locale
+     * @param delimiter the delimiter
+     * @return the language tag
+     */
     public static String of(Locale locale, char delimiter) {
         var tag = LOCALES.inverse().get(locale);
         
@@ -90,10 +115,22 @@ public class Locales {
     }
     
     
+    /**
+     * Returns true if the specified language is an ISO 3166 alpha-2 language i.e. {@code EN}.
+     * 
+     * @param language the language
+     * @return true if the specified country is an ISO 3166 alpha-2 language
+     */
     public static boolean isISOLanguage(String language) {
         return language.length() == 2 && LANGUAGES.contains(language.toLowerCase(ENGLISH));
     }
     
+    /**
+     * Returns true if the specified country is an ISO 639 alpha-2 country i.e. {@code UK}.
+     * 
+     * @param country the country
+     * @return true if the specified country is an ISO 639 alpha-2 country country
+     */
     public static boolean isISOCountry(String country) {
         return country.length() == 2 && COUNTRIES.contains(country.toUpperCase(ENGLISH));
     }

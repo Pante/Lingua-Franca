@@ -40,12 +40,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * retrieved and loaded. Each member in a family of {@code Bundle}s share a base name and 
  * hence, a common namespace. 
  * 
- * In addition to retrieving bundles from the registry, the default implementation of 
- * {@code BundleLoader} supports retrieval of {@code Bundle}s from a {@link BundleProvider}
- * service provided via the JDK's SPI mechanism.
- * 
- * The default implementation first retrieves a bundle from a {@code BundleProvider}.
- * If unavailable, the implementation then retrieves the bundle from the namespace registry
+ * The default implementation first retrieves a bundle from the namespace registry
  * and subsequently the global registry. In the event a bundle could not be retrieved, an
  * empty bundle is returned. The entire retrieval and loading is thread-safe.
  * 
@@ -57,9 +52,9 @@ public class BundleLoader {
     
     
     /**
-     * Returns a global {@code BundleLoader}.
+     * Returns the global {@code BundleLoader}.
      * 
-     * @return a global BundleLoader
+     * @return the global BundleLoader
      */
     public static BundleLoader loader() {
         return LOADER;
@@ -222,18 +217,47 @@ public class BundleLoader {
     }
 
     
+    /**
+     * Adds the specified source to the specified namespace.
+     * 
+     * @param name the namespace
+     * @param source the source
+     * @return true if the namespace did not already contain the specified source
+     */
     public boolean add(String name, Source source) {
         return get(name, 1).add(source);
     }
     
+    /**
+     * Adds the specified sources to the specified namespace.
+     * 
+     * @param name the namespace
+     * @param sources the sources
+     * @return true if the namespace did not already contain any of the specified sources
+     */
     public boolean add(String name, Source... sources) {
         return Collections.addAll(get(name, sources.length), sources);
     }
     
+    /**
+     * Adds the specified sources to the specified namespace.
+     * 
+     * @param name the namespace
+     * @param sources the sources
+     * @return true if the namespace did not already contain any of the specified sources
+     */
     public boolean add(String name, Collection<? extends Source> sources) {
         return get(name, sources.size()).addAll(sources);
     }
     
+    /**
+     * Returns a set of sources associated with the specified namespace, creating
+     * the set if necessary.
+     * 
+     * @param name the namespace
+     * @param length the initial capacity of the set 
+     * @return the sources associated with the specified namespace
+     */
     protected Set<Source> get(String name, int length) {
         var set = namespaces.get(name);
         if (set == null) {
@@ -244,77 +268,182 @@ public class BundleLoader {
         return set;
     }
      
-    
+    /**
+     * Adds the specified source to the global registry.
+     * 
+     * @param source the source
+     * @return true if the global registry did not already contain the source
+     */
     public boolean add(Source source) {
         return global.add(source);
     }
     
+    /**
+     * Adds the specified sources to the global registry.
+     * 
+     * @param sources the sources
+     * @return true if the global registry did not already contain any of the sources
+     */
     public boolean add(Source... sources) {
         return Collections.addAll(global, sources);
     }
     
+    /**
+     * Adds the specified sources to the global registry.
+     * 
+     * @param sources the sources
+     * @return true if the global registry did not already contain any of the sources
+     */
     public boolean add(Collection<? extends Source> sources) {
         return global.addAll(sources);
     }
     
-        
+    /**
+     * Returns true if the namespace registry contains the specified namespace.
+     * 
+     * @param name the namespace
+     * @return true if the namespace contains the specified namespace
+     */
     public boolean contains(String name) {
         return namespaces.containsKey(name);
     }
     
+    /**
+     * Returns true if the namespace registry contains the specified namespace and source.
+     * 
+     * @param name the namespace
+     * @param source the source
+     * @return true if the namespace contains the specified namespace and source
+     */
     public boolean contains(String name, Source source) {
         var bundle = namespaces.get(name);
         return bundle != null && bundle.contains(source);
     }
     
+    /**
+     * Returns true if the namespace registry contains the specified namespace and sources.
+     * 
+     * @param name the namespace
+     * @param sources the sources
+     * @return true if the namespace contains the specified namespace and sources
+     */
     public boolean contains(String name, Source... sources) {
         return contains(name, List.of(sources));
     }
     
+    /**
+     * Returns true if the namespace registry contains the specified namespace and sources.
+     * 
+     * @param name the namespace
+     * @param sources the sources
+     * @return true if the namespace contains the specified namespace and sources
+     */
     public boolean contains(String name, Collection<? extends Source> sources) {
         var bundle = namespaces.get(name);
         return bundle != null && bundle.containsAll(sources);
     }
     
+    /**
+     * Returns true if the global registry contains the specified source.
+     * 
+     * @param source the source
+     * @return true if the global registry contains the specified source
+     */
     public boolean contains(Source source) {
         return global.contains(source);
     }
-        
+    
+    /**
+     * Returns true if the global registry contains the specified sources.
+     * 
+     * @param sources the sources
+     * @return true if the global registry contains the specified sources
+     */
     public boolean contains(Source... sources) {
         return contains(List.of(sources));
     }
     
+    /**
+     * Returns true if the global registry contains the specified sources.
+     * 
+     * @param sources the sources
+     * @return true if the global registry contains the specified sources
+     */
     public boolean contains(Collection<? extends Source> sources) {
         return global.containsAll(sources);
     }
 
-    
+    /**
+     * Removes the specified namespace from the namespace registry.
+     * 
+     * @param name the namespace
+     * @return the sources associated with the specified namespace, or null if the registry did not contain the namespace
+     */
     public @Nullable Set<Source> remove(String name) {
         return namespaces.remove(name);
     }
     
+    /**
+     * Removes the specified source from the specified namespace.
+     * 
+     * @param name the namespace
+     * @param source the source
+     * @return true if the namespace registry contained the namespace and the namespace contained the source
+     */
     public boolean remove(String name, Source source) {
         var set = namespaces.get(name);
         return set != null && set.remove(source);
     }
     
+    /**
+     * Removes the specified sources from the specified namespace.
+     * 
+     * @param name the namespace
+     * @param sources the sources
+     * @return true if the namespace registry contained the namespace and the namespace contained any of the sources
+     */
     public boolean remove(String name, Source... sources) {
         return remove(name, List.of(sources));
     }
     
+    /**
+     * Removes the specified sources from the specified namespace.
+     * 
+     * @param name the namespace
+     * @param sources the sources
+     * @return true if the namespace registry contained the namespace and the namespace contained any of the sources
+     */
     public boolean remove(String name, Collection<? extends Source> sources) {
         var set = namespaces.get(name);
         return set != null && set.removeAll(sources);
     }
-        
+    
+    /**
+     * Removes the specified source from the global registry.
+     * 
+     * @param source the source
+     * @return true if the global registry contained the source
+     */
     public boolean remove(Source source) {
         return global.remove(source);
     }
     
+    /**
+     * Removes the specified source from the global registry.
+     * 
+     * @param sources the sources
+     * @return true if the global registry contained any of the sources
+     */
     public boolean remove(Source... sources) {
         return remove(List.of(sources));
     }
     
+    /**
+     * Removes the specified source from the global registry.
+     * 
+     * @param sources the sources
+     * @return true if the global registry contained any of the sources
+     */
     public boolean remove(Collection<? extends Source> sources) {
         return global.removeAll(sources);
     }

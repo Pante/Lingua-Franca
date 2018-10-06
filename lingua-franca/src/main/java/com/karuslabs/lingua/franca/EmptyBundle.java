@@ -28,50 +28,108 @@ import java.util.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
+/**
+ * Represents an empty {@code Bundle}.
+ */
 public class EmptyBundle extends Bundle {    
     
+    /**
+     * Creates an {@code EmptyBundle} with the specified locale and parent locale.
+     * 
+     * @param locale
+     * @param parent 
+     */
     public EmptyBundle(Locale locale, Bundle parent) {
         super(Map.of(), locale, parent);
     }
     
-        
+    
+    /**
+     * Always returns {@code null}.
+     * 
+     * @param key the key
+     * @return null
+     */
     @Override
     public @Nullable String find(String key) {
         return null;
     }
  
+    /**
+     * Always returns {@code null}.
+     * 
+     * @param key the key
+     * @param arguments the arguments
+     * @return null
+     */
     @Override
     public @Nullable String find(String key, Object... arguments) {
         return null;
     }
     
     
+    /**
+     * Always returns an empty optional.
+     * 
+     * @param key the key
+     * @return an empty optional
+     */
     @Override
     public Optional<String> get(String key) {
         return EMPTY_STRING;
     }
     
+    /**
+     * Always returns an empty optional.
+     * 
+     * @param key the key
+     * @param arguments the arguments
+     * @return an empty optional
+     */
     @Override
     public Optional<String> get(String key, Object... arguments) {
         return EMPTY_STRING;
     }
     
     
+    /**
+     * Always returns an empty optional.
+     * 
+     * @param key the key
+     * @return an empty optional
+     */
     @Override
     public Optional<String[]> messages(String key) {
         return EMPTY_ARRAY;
     }
     
+    /**
+     * Always returns null.
+     * 
+     * @param key the key
+     * @return null
+     */
     @Override
     public @Nullable String[] messagesIfPresent(String key) {
         return null;
     }
     
+    /**
+     * Always returns null.
+     * 
+     * @param key the key
+     * @return null
+     */
     @Override
     protected @Nullable Object retrieve(String key) {
         return null;
     }
     
+    /**
+     * Always returns an immutable empty set.
+     * 
+     * @return an immutable empty set
+     */
     @Override
     public Set<String> keys() {
         return Collections.emptySet();
