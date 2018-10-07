@@ -51,10 +51,11 @@ public class Main {
     
     
     public static void main(String... args) {
-        Bundler.bundler().loader().add(PUNS);
+        // Registers sources to the global bundler
+        Bundler.bundler().loader().add(PUNS); 
         Bundler.bundler().loader().add(new ClassLoaderSource(""), new ModuleSource(""));
         
-        Templates.fromPlatforms(PUNS);
+        Templates.fromPlatforms(PUNS); // Creates the default locale files in the folder which contains this JAR
         
         while (true) {
             System.out.println("\nEnter the locale to view puns. (en_GB, es, fr_FR, ja-JP, zh)");
@@ -93,11 +94,11 @@ public class Main {
 }
 
 
-@Bundled("puns")
-@ClassLoaderSources({"puns/classloader"})
-@ModuleSources({"puns/module"})
-@SystemSources({"./"})
-@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./")
+@Bundled("puns") // base name of bundle
+@ClassLoaderSources({"puns/classloader"}) // location of bundles, relative to the resources folder
+@ModuleSources({"puns/module"}) // location of bundles, relative to the resources folder
+@SystemSources({"./"}) // location of bundles, relative to this JAR
+@Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./") // Used by Templates#fromPlatforms(...) to generate default locale files
 class Puns {
     
     private final Bundler bundler = Bundler.bundler();
@@ -108,10 +109,10 @@ class Puns {
         
         Bundle bundle = null;
         if (reload) {
-            bundle = bundler.reload(this, locale);
+            bundle = bundler.reload(this, locale); // reloads the bundles, replacing the cached bundles
             
         } else {
-            bundle = bundler.load(this, locale);
+            bundle = bundler.load(this, locale); // Performs a cache look-up when loading the bundles
         }
         
         Optional<String> title = bundle.get("title", locale.toLanguageTag());
