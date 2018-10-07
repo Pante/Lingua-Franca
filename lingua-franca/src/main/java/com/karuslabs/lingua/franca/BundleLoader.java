@@ -39,12 +39,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@code BundleLoader}s contains a global and namespace registry from which a {@code Bundle} is 
  * retrieved and loaded. Each member in a family of {@code Bundle}s share a base name and 
  * hence, a common namespace. 
- * 
+ * <p>
  * The default implementation first retrieves a bundle from the namespace registry
  * and subsequently the global registry. In the event a bundle could not be retrieved, an
  * empty bundle is returned. The entire retrieval and loading is thread-safe.
- * 
- * The default implementation has support for properties, JSON and YAML file formats.
+ * Support is provided for for properties, JSON and YAML file formats.
  */
 public class BundleLoader {
     
@@ -70,7 +69,7 @@ public class BundleLoader {
 
     
     /**
-     * Creates a {@BundleLoader} with empty registries and default supported formats.
+     * Creates a {@code BundleLoader} with empty registries and default supported formats.
      */
     public BundleLoader() {
         this(new ConcurrentHashMap<>(), ConcurrentHashMap.newKeySet(), "json", "properties", "yml", "yaml");

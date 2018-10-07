@@ -29,16 +29,38 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * Indicates the generation of locale files in the runtime environment from a template
+ * during runtime.
+ */
 @Documented
 @Retention(RUNTIME)
 @Repeatable(Platforms.class)
 @Target(TYPE)
 public @interface Platform {
     
+    /**
+     * The template file which is either embedded or located in the runtime environment.
+     * 
+     * Processors of this annotation should raise an exception if both an embedded
+     * and system template file is specified.
+     * 
+     * @return the template file
+     */
     In template();
     
+    /**
+     * The destination folder in the runtime environment.
+     * 
+     * @return the destination folder
+     */
     String destination();
     
+    /**
+     * The locales for which default files are generated.
+     * 
+     * @return the locales
+     */
     String[] locales();
     
 }

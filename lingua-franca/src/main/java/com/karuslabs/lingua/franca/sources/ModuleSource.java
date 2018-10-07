@@ -28,24 +28,53 @@ import java.io.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
+/**
+ * A {@code Source} implementation from which file resources relative to a {@code Module}
+ * can be retrieved using the {@code Module}.
+ * <p>
+ * {@code ModuleSource}s can be used to retrieve embedded resources.
+ */
 public class ModuleSource extends FileSource {
     
+    /**
+     * The source for the root directory relative to the {@code Module}.
+     */
     public static final ModuleSource ROOT = new ModuleSource("");
     
     
     private final Module module;
     
     
+    /**
+     * Creates a {@code ModuleSource} with the specified folder using the {@code Module}
+     * of the calling class.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param folder the folder
+     */
     public ModuleSource(String folder) {
         this(STACK.getCallerClass().getModule(), folder);
     }
     
+    /**
+     * Creates a {@code ModuleSource} with the specified {@code Module} and folder.
+     * 
+     * @param module the module
+     * @param folder the folder
+     */
     public ModuleSource(Module module, String folder) {
         super(folder);
         this.module = module;
     }
 
     
+    /**
+     * Creates a stream for the specified resource relative to the {@code Module}.
+     * 
+     * @param resource the resource
+     * @return a stream for the specified resource, or null if a stream could not be created
+     */
     @Override
     public @Nullable InputStream load(String resource) {
         try {

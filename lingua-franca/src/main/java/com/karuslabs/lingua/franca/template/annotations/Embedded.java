@@ -29,16 +29,39 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * Indicates the generation of locale files from a template to be embedded in the 
+ * JAR during compilation.
+ * <p>
+ * This annotation is to be used in conjunction with a build tool plugin to detect
+ * and generate the locale files during compilation. Generation of the locale files
+ * using Maven is supported via the Lingua Maven Plugin using the {@code lingua-maven-plugin:generate} goal.
+ */
 @Documented
 @Retention(RUNTIME)
 @Repeatable(Embeddings.class)
 @Target(TYPE)
 public @interface Embedded {
     
+    /**
+     * The template file.
+     * 
+     * @return the template file
+     */
     String template();
     
+    /**
+     * The destination folder to be embedded.
+     * 
+     * @return the destination folder
+     */
     String destination();
     
+    /**
+     * The locales for which default files are generated.
+     * 
+     * @return the locales
+     */
     String[] locales();
     
 }

@@ -28,24 +28,54 @@ import java.io.InputStream;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
+/**
+ * A {@code Source} implementation from which file resources relative to a {@code ClassLoader}
+ * can be retrieved using the {@code ClassLoader}.
+ * <p>
+ * {@code ClassLoaderSource}s can be used to retrieve embedded resources.
+ */
 public class ClassLoaderSource extends FileSource {
     
+    /**
+     * The source for the root directory relative to the {@code ClassLoader}.
+     */
     public static final ClassLoaderSource ROOT = new ClassLoaderSource("");
     
     
     private final ClassLoader loader;
     
     
+    /**
+     * Creates a {@code ClassLoaderSource} with the specified folder using the {@code ClassLoader}
+     * of the calling class.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param folder the folder
+     */
     public ClassLoaderSource(String folder) {
         this(STACK.getCallerClass().getClassLoader(), folder);
     }
     
+    /**
+     * Creates a {@code ClassLoaderSource} with the specified {@code ClassLoader}
+     * and folder.
+     * 
+     * @param loader the ClassLoader
+     * @param folder the folder
+     */
     public ClassLoaderSource(ClassLoader loader, String folder) {
         super(folder);
         this.loader = loader;
     }
 
     
+    /**
+     * Creates a stream for the specified resource relative to the {@code ClassLoader}.
+     * 
+     * @param resource the resource
+     * @return a stream for the specified resource, or null if a stream could not be created
+     */
     @Override
     public @Nullable InputStream load(String resource) {
         return loader.getResourceAsStream(folder + resource);

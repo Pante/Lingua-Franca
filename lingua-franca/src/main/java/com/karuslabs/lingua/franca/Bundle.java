@@ -34,10 +34,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Similar to JDK's {@code ResourceBundle}s, {@code Bundle}s belong to families whose members share
  * a common base name. Instances of {@code Bundle} should not be created directly but rather,
  * obtained through a {@link Bundler}.
- * 
- * The default implementation of {@code Bundle} is thread-safe and non-blocking. In addition, messages in
- * an array can be accessed via enclosing the index of the message in square brackets, i.e. {@code `path.to.array[i]`}.
- * 
+ * <p>
+ * The default implementation of {@code Bundle} is thread-safe and non-blocking. 
+ * Messages in each hierarchy level are delimited by ".", i.e. {@code "path.to.value"}.
+ * In addition, messages in an array can be accessed via enclosing the index of the 
+ * message in square brackets, i.e. {@code `path.to.array[i]`}.
+ * <p>
  * The default implementation of the retrieval operations retrieves a message from this {@code Bundle} and 
  * if unavailable, recursively from the parent of the bundle until the root bundle has been reached.
  * If a message is still unavailable, either {@code null} or a empty {@code Optional} is returned.
@@ -151,6 +153,7 @@ public class Bundle {
      * Retrieves and formats the message associated with the specified key, or {@code null} if unavailable.
      * 
      * @param key the key whose associated message is to be returned
+     * @param arguments the arguments used to format the messages
      * @return the formatted message to which the specified key is map, or null if unavailable
      */
     public @Nullable String find(String key, Object... arguments) {

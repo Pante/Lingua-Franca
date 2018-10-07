@@ -34,7 +34,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * This class consists exclusively of static methods which operate on or return {@code Locale}s.
- * 
+ * <p>
  * Language tags used in the static methods of this class which accept language tags
  * can be separated by either '_' or '-', i.e. 'en_GB' or 'en-GB'. 
  */

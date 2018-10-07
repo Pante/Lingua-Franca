@@ -38,22 +38,21 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * {@code Bundler}s contains a cache and facilities from which a {@code Bundle} is obtained.
- * 
+ * <p>
  * Time-based and size cache eviction is enabled for the global {@code Bundler}. 
- * Entries expire either 10 minutes after access or the cache exceeds 512 entries. 
+ * Entries expire either 10 minutes after access or if the cache exceeds 512 entries. 
  * By default, the global {@code Bundler} uses the global {@code BundleLoader}.
- * 
+ * <p>
  * In addition to retrieving bundles using a {@code BundeLoader}, the default implementation 
  * supports retrieval of {@code Bundle}s from a {@link BundleProvider} service provided 
  * via the JDK's SPI mechanism.
- * 
+ * <p>
  * The default implementation first retrieves a bundle from the cache. If unavailable 
  * or cache look-up is disabled, the implementation then retrieves the bundle from a 
  * {@code BundleProvider} and subsequently the given {@code BundleLoader}. This process 
  * is continued recursively until the bundle and its parents are retrieved and linked.
  * In the event a bundle could not be retrieved, an empty bundle is created and linked.
- * 
- * The default implementation is thread-safe and non-blocking.
+ * This implementation is thread-safe and non-blocking.
  */
 public class Bundler {    
     
@@ -124,7 +123,7 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the default {@code BundleLoader},
-     * specified locale and @{link Bundled} annotation, invalidating prior cached entries. 
+     * specified locale and {@link Bundled} annotation, invalidating prior cached entries. 
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated class
@@ -137,7 +136,7 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and @{link Bundled} annotation, invalidating prior cached entries. 
+     * locale and {@link Bundled} annotation, invalidating prior cached entries. 
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated class
@@ -178,7 +177,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the default {@code BundleLoader} and 
-     * specified locale and @{link Bundled} annotation. 
+     * specified locale and {@link Bundled} annotation. 
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated object
@@ -191,7 +190,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and @{link Bundled} annotation. 
+     * locale and {@link Bundled} annotation. 
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated object
@@ -206,7 +205,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the default {@code BundleLoader} and 
-     * specified locale and @{link Bundled} annotation. 
+     * specified locale and {@link Bundled} annotation. 
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated class
@@ -219,7 +218,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and @{link Bundled} annotation. 
+     * locale and {@link Bundled} annotation. 
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated class
@@ -234,7 +233,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * locale, @{link Bundled} annotation and reload flag.
+     * locale, {@link Bundled} annotation and reload flag.
      * An empty bundle is returned if no annotation is available.
      * 
      * @param annotated the annotated class

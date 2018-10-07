@@ -23,6 +23,6 @@
  */
 
 /**
- * Contains classes and utilities for manipulating and retrieving {@code Bundle}s and locales.
+ * Classes and utilities for manipulating and retrieving {@code Bundle}s and locales.
  */
 package com.karuslabs.lingua.franca;

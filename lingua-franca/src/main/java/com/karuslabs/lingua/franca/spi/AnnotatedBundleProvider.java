@@ -28,6 +28,11 @@ import com.karuslabs.lingua.franca.spi.annotations.Provides;
 import java.util.*;
 
 
+/**
+ * {@code AnnotatedBundleProvider} implementations can be annotated with the 
+ * {@link com.karuslabs.lingua.franca.spi.annotations.Provides Provides} annotation
+ * to specify the names of bundles supported by this {@code AnnotatedBundleProvider}.
+ */
 public abstract class AnnotatedBundleProvider implements BundleProvider {
     
     private final Set<String> bundles;
@@ -38,7 +43,16 @@ public abstract class AnnotatedBundleProvider implements BundleProvider {
         bundles = provided == null ? Set.of() : Set.of(provided.value());
     }
     
-
+    
+    /**
+     * Determines if the {@code Provides} annotation on this {@code AnnotatedBundleProvider}
+     * contains the specified name.
+     * 
+     * @param name the base name
+     * @return true if the Provides annotation on this AnnotatedBundleProvider contains the specified base name
+     * 
+     * @see com.karuslabs.lingua.franca.spi.annotations.Provides
+     */
     @Override
     public boolean provides(String name) {
         return bundles.contains(name);

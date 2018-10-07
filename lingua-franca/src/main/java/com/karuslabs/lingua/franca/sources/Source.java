@@ -28,9 +28,18 @@ import java.io.InputStream;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
+/**
+ * Represents a source from which a resource can be retrieved.
+ */
 @FunctionalInterface
 public interface Source {
     
+    /**
+     * Creates a stream for the specified resource.
+     * 
+     * @param resource the resource
+     * @return a stream for the specified resource, or null if a stream could not be created
+     */
     @Nullable InputStream load(String resource);
     
 }

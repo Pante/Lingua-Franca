@@ -28,16 +28,34 @@ import java.io.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
+/**
+ * A {@code Source} implementation from which file resources on the system can be 
+ * retrieved during runtime.
+ */
 public class SystemSource extends FileSource {
     
+    /**
+     * The source for the directory relative to the application during runtime.
+     */
     public static final SystemSource RELATIVE_ROOT = new SystemSource("./");
     
     
+    /**
+     * Creates a {@code SystemSource} with the specified folder.
+     * 
+     * @param folder the folder
+     */
     public SystemSource(String folder) {
         super(folder);
     }
 
     
+    /**
+     * Creates a stream for the specified resource in the system during runtime.
+     * 
+     * @param resource the resource
+     * @return a stream for the specified resource, or null if a stream could not be created
+     */
     @Override
     public @Nullable InputStream load(String resource) {
         var file = new File(folder, resource);

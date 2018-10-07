@@ -21,38 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.spi;
-
-import com.karuslabs.lingua.franca.Bundle;
-
-import java.util.Locale;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 
 /**
- * {@code BundleProvier} is a service provider interface for bundles. It is used by
- * {@link com.karuslabs.lingua.franca.Bundler Bundler} to retrieve and load the service
- * providers that are deployed.
+ * Low level facilities for parsing and manipulating local files.
  */
-public interface BundleProvider {
-    
-    /**
-     * Retrieves a bundle for the specified base name and locale.
-     * 
-     * @param name the base name of the bundle
-     * @param locale the locale of the bundle
-     * @return the retrieved bundle, or null if the bundle could not be retrieved
-     */
-    @Nullable Bundle get(String name, Locale locale);
-    
-    /**
-     * Determines if this {@code BundleProvider} can provide bundles with the specified
-     * name.
-     * 
-     * @param name the base name
-     * @return true if this BundleProvider can provide bundles with the specified name
-     */
-    boolean provides(String name);
-    
-}
+package com.karuslabs.lingua.franca.codec;

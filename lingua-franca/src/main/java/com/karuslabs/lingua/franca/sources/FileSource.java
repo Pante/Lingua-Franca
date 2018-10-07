@@ -26,14 +26,25 @@ package com.karuslabs.lingua.franca.sources;
 import java.lang.StackWalker.Option;
 
 
+/**
+ * A {@code Source} implementation from which file resources can be retrieved.
+ */
 public abstract class FileSource implements Source {
     
     static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
     
+    /**
+     * The folder from which a resource is retrieved.
+     */
     protected final String folder;
     private volatile int hash;
     
     
+    /**
+     * Creates a {@code FileSource} with the specified folder.
+     * 
+     * @param folder the folder
+     */
     protected FileSource(String folder) {
         this.folder = folder.isEmpty() || folder.charAt(folder.length() - 1) == '/' ? folder : folder + "/";
         this.hash = 0;

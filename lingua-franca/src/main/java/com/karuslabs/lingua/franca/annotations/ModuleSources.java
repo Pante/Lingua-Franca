@@ -29,11 +29,22 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * Signifies the folder(s) in which locale files can be located, relative to a {@code Module}.
+ * <p>
+ * Declared in conjunction with the {@link Bundled} annotation to signify the namespace
+ * to which the sources in this annotation are registered.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface ModuleSources {
     
+    /**
+     * The folder(s) in which locale files can be located, relative to a {@code Module}.
+     * 
+     * @return the folders
+     */
     String[] value();
     
 }

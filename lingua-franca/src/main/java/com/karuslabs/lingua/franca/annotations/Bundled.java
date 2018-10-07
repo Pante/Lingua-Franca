@@ -29,11 +29,27 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * Signifies the base name of a {@code Bundle}.
+ * <p>
+ * Usages
+ * <ul>
+ * <li>Denotes the {@code BundleLoader} namespace to which sources declared using
+ *     the {@link ClassLoaderSources}, {@link ModuleSources} and {@link SystemSources} 
+ *     annotations on the same class are registered.
+ * <li>Denotes the base name of the bundle to be loaded via a {@code BundleLoader}.
+ * </ul>
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Bundled {
     
+    /**
+     * The base name of a bundle.
+     * 
+     * @return the base name.
+     */
     String value();
     
 }

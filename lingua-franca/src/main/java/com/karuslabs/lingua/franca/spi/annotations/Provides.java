@@ -29,11 +29,21 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * An annotation used to indicate the names of bundles supported by a 
+ * {@link com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider AnnotatedBundleProvider}
+ * implementation.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Provides {
     
+    /**
+     * The base names of the bundles supported by a {@code AnnotatedBundleProvider}.
+     * 
+     * @return the base names
+     */
     String[] value();
     
 }

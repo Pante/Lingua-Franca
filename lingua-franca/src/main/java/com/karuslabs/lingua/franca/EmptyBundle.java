@@ -36,8 +36,8 @@ public class EmptyBundle extends Bundle {
     /**
      * Creates an {@code EmptyBundle} with the specified locale and parent locale.
      * 
-     * @param locale
-     * @param parent 
+     * @param locale the locale
+     * @param parent the parent bundle
      */
     public EmptyBundle(Locale locale, Bundle parent) {
         super(Map.of(), locale, parent);

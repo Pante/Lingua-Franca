@@ -29,11 +29,19 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * This annotation is a container for {@link Platform} annotations.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Platforms {
     
+    /**
+     * The {@link Platform} annotations.
+     * 
+     * @return the Platform annotations
+     */
     Platform[] value();
     
 }

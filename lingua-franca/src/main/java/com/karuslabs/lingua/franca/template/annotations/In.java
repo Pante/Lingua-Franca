@@ -28,13 +28,29 @@ import java.lang.annotation.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * Indicates the location of the template file.
+ * <p>
+ * Processors of this annotation should raise an exception if both an embedded
+ * and system template file is specified.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target({})
 public @interface In {
     
+    /**
+     * The embedded template file.
+     * 
+     * @return the embedded template file
+     */
     String embedded() default "";
     
+    /**
+     * The template file located in the runtime environment.
+     * 
+     * @return the template file
+     */
     String system() default "";
     
 }

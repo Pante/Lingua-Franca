@@ -32,20 +32,70 @@ import java.nio.file.*;
 import java.util.*;
 
 
+/**
+ * This class consists exclusively of static methods which generate default locale files
+ * using a template.
+ * <p>
+ * Templates used in the generation of locale files must share the same base name
+ * as the locale files. In addition, a template must be the root (no locale) locale file.
+ * Usage of other locale files as a template is not supported.
+ * <p>
+ * Methods in this class are not thread-safe and must be synchronized externally.
+ */
 public class Templates {
     
     private static final ResourceBundle.Control CONTROL = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
     private static final StackWalker STACK = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE);
     
     
+    /**
+     * Generates the locale files in the destination from the template in each of the 
+     * specified {@link Platform} annotations using the ClassLoader of the calling class.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param annotated the annotated object
+     * 
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if either the specified Platform annotation contains an invalid template or 
+     *                                  the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromPlatforms(Object annotated) {
         return fromPlatforms(annotated.getClass(), STACK.getCallerClass());
     }
      
+    /**
+     * Generates the locale files in the destination from the template in each of the 
+     * specified {@link Platform} annotations using the ClassLoader of the calling class.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param annotated the annotated class
+     * 
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if either the specified Platform annotation contains an invalid template or 
+     *                                  the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromPlatforms(Class<?> annotated) {
         return fromPlatforms(annotated, STACK.getCallerClass());
     }
     
+    /**
+     * Generates the locale files in the destination from the template in each of the 
+     * specified {@link Platform} annotations using the ClassLoader of the specified caller.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param annotated the annotated class
+     * @param caller the calling class
+     * 
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if either the specified Platform annotation contains an invalid template or 
+     *                                  the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromPlatforms(Class<?> annotated, Class<?> caller) {
         var success = true;
         
@@ -56,6 +106,20 @@ public class Templates {
         return success;
     }
     
+    /**
+     * Generates the locale files in the destination from the template in the specified
+     * {@link Platform} annotation using the ClassLoader of the specified caller.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param platform the platform annotation
+     * @param caller the calling class
+     * 
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if either the specified Platform annotation contains an invalid template or 
+     *                                  the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromPlatforms(Platform platform, Class<?> caller) {
         var locales = new ArrayList<Locale>(platform.locales().length);
         for (var locale : platform.locales()) {
@@ -75,19 +139,69 @@ public class Templates {
     }
 
     
+    /**
+     * Generates the locale files in the specified destination from the template file 
+     * relative to the caller class's ClassLoader with the specified base name and locales.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param source the template file
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromClassLoader(String source, Collection<Locale> locales, String destination) {
         return fromClassLoader(source, STACK.getCallerClass().getClassLoader(), locales, destination);
     }
     
+    /**
+     * Generates the locale files in the specified destination from the template file 
+     * relative to the specified ClassLoader with the specified base name and locales.
+     * 
+     * @param source the template file
+     * @param loader the ClassLoader from which the template file is located
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromClassLoader(String source, ClassLoader loader, Collection<Locale> locales, String destination) {
         return from(new File(source), loader.getResourceAsStream(source), locales, destination);
     }
     
     
+    /**
+     * Generates the locale files in the specified destination from the template file 
+     * in module of the caller's class with the specified base name and locales.
+     * 
+     * This method is caller sensitive.
+     * 
+     * @param source the template file
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromModule(String source, Collection<Locale> locales, String destination) {
         return fromModule(source, STACK.getCallerClass().getModule(), locales, destination);
     }
     
+    /**
+     * Generates the locale files in the specified destination from the template file 
+     * in specified module the with the specified base name and locales.
+     * 
+     * @param source the template file
+     * @param module the module in which the template file is located
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean fromModule(String source, Module module, Collection<Locale> locales, String destination) {
         try {
             return from(new File(source), module.getResourceAsStream(source), locales, destination);
@@ -98,6 +212,17 @@ public class Templates {
     }
 
     
+    /**
+     * Generates the locale files in the specified destination from the specified template 
+     * file with the specified base name and locales.
+     * 
+     * @param source the template file
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean from(File source, Collection<Locale> locales, String destination) {
         try {
             return from(source, new FileInputStream(source), locales, destination);
@@ -108,6 +233,18 @@ public class Templates {
     }
     
     
+    /**
+     * Generates the locale files in the specified destination from the specified source 
+     * with the specified base name and locales.
+     * 
+     * @param source the template file
+     * @param stream the stream for a template
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws IllegalArgumentException if the name of the template file is invalid
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean from(File source, InputStream stream, Collection<Locale> locales, String destination) {
         var name = source.getName();
         int index = name.lastIndexOf('.');
@@ -118,6 +255,18 @@ public class Templates {
         return from(name.substring(0, index), name.substring(index + 1), stream, locales, destination);
     }
     
+    /**
+     * Generates the locale files in the specified destination from the specified stream 
+     * with the specified base name, format and locales.
+     * 
+     * @param name the base name of the locale files
+     * @param format the format of the generated locale files
+     * @param stream the stream for a template
+     * @param locales the locales of the generated files
+     * @param destination the destination folder in which the locales files are generated
+     * @return true if all locale files were successfully generated
+     * @throws UncheckedIOException if an IOException was thrown
+     */
     public static boolean from(String name, String format, InputStream stream, Collection<Locale> locales, String destination) {
         try (var in = stream.markSupported() ? stream : new BufferedInputStream(stream)) {
             boolean success = true;

@@ -29,11 +29,19 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
+/**
+ * This annotation is a container for {@link Embedded} annotations.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface Embeddings {
     
+    /**
+     * The {@link Embedded} annotations.
+     * 
+     * @return the Embedded annotations
+     */
     Embedded[] value();
     
 }
