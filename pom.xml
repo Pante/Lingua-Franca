@@ -9,6 +9,7 @@
     
     <name>Lingua Franca Project</name>
     <description>Java internationalisation that doesn't suck</description>
+    <url>https://github.com/Pante/Lingua-Franca</url>
     
     <modules>
         <module>lingua-franca</module>
@@ -21,6 +22,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+    
+    <repositories>
+        <repository>
+            <id>karus-releases</id>
+            <url>https://repo.karuslabs.com/repository/lingua-franca-releases</url>
+        </repository>
+        
+        <repository>
+            <id>karus-nightly</id>
+            <url>https://repo.karuslabs.com/repository/lingua-franca-nightly</url>
+        </repository>
+    </repositories>
     
     <distributionManagement>
         <repository>
