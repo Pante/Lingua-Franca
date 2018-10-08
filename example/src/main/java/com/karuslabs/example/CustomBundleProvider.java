@@ -32,13 +32,14 @@ import java.util.Map;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-
-@Provides("custom_bundle") // Used by AnnotatedBundleProvider#provides(..) to check if the provider supports a bundle
+// Used by AnnotatedBundleProvider#provides(..) to check if the provider supports a bundle
+@Provides("custom_bundle") 
 public class CustomBundleProvider extends AnnotatedBundleProvider {
 
     @Override
     public @Nullable Bundle get(String name, Locale locale) {
-        if (provides(name)) { // true if name is "custom_bundle"
+        // true if the name is "custom_bundle"
+        if (provides(name)) {
             return new Bundle(Map.of("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward."), locale);
             
         } else {

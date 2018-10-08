@@ -112,6 +112,13 @@
                     </links>
                 </configuration>
                 <executions> 
+                    <execution>
+                        <id>generate-javadoc</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
                     <execution> 
                         <id>attach-javadocs</id>
                         <phase>deploy</phase>

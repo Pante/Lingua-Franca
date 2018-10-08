@@ -138,8 +138,15 @@
                         <link>https://docs.oracle.com/javase/10/docs/api/</link>
                     </links>
                 </configuration>
-                <executions> 
-                    <execution> 
+                <executions>
+                    <execution>
+                        <id>generate-javadoc</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>attach-javadocs</id>
                         <phase>deploy</phase>
                         <goals>
