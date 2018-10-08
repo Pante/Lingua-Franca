@@ -8,7 +8,7 @@
 [![Stable Source Code](https://img.shields.io/badge/stable-branch-blue.svg)](https://github.com/Pante/Lingua-Franca/tree/stable)
 [![releases-maven](https://img.shields.io/maven-metadata/v/https/repo.karuslabs.com/repository/lingua-franca-releases/com/karuslabs/lingua-franca/maven-metadata.xml.svg)](https://repo.karuslabs.com/service/rest/repository/browse/lingua-franca-releases/)
 [![snapshots-maven](https://img.shields.io/maven-metadata/v/https/repo.karuslabs.com/repository/lingua-franca-nightly/com/karuslabs/lingua-franca/maven-metadata.xml.svg)](https://repo.karuslabs.com/service/rest/repository/browse/lingua-franca-nightly/)
-[![javadoc](https://img.shields.io/badge/javadoc-1.0.0--SNAPSHOT-brightgreen.svg)](https://repo.karuslabs.com/repository/lingua-franca-project/1.0.0-SNAPSHOT/apidocs/overview-summary.html)
+[![javadoc](https://img.shields.io/badge/javadoc-1.0.0--SNAPSHOT-brightgreen.svg)](https://repo.karuslabs.com/repository/lingua-franca-project/1.0.0-SNAPSHOT/lingua-franca/apidocs/overview-summary.html)
 [![Discord](https://img.shields.io/discord/140273735772012544.svg?logo=discord)](https://discord.gg/uE4C9NQ)
 
 Lingua-Franca is an annotation-driven internationalisation library that features semi-automated locale file(s) generation. In addition, the library supports properties, JSON and YAML files.
