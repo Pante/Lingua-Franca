@@ -33,13 +33,30 @@ import java.util.Collection;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * Determines if an {@link com.karuslabs.lingua.franca.template.annotations.Embedded Embedded} annotation
+ * contains a valid template, non-empty locales and a valid destination.
+ */
 public class EmbeddedProcessor extends TemplateProcessor {
-
+    
+    /**
+     * Creates a {@code EmbeddedProcessor} with the specified resources folder.
+     * 
+     * @param resources the resources folder
+     */
     public EmbeddedProcessor(File resources) {
         super(resources);
     }
 
     
+    /**
+     * Determines if the annotated classes contain valid templates, non-empty locales
+     * and valid destinations.
+     * 
+     * @param classes the annotated classes
+     * @param logger the logger
+     * @return true if the annotated classes contain valid templates, non-empty locales and valid destinations
+     */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
         boolean success = true;

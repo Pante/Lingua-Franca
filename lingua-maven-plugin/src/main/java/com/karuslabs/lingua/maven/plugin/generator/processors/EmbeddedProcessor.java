@@ -34,13 +34,30 @@ import java.util.*;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * Processes {@link com.karuslabs.lingua.franca.template.annotations.Embedded Embedded} annotations
+ * and generates default locale files from the template specified by the annotation.
+ */
 public class EmbeddedProcessor extends TemplateProcessor {
-
+    
+    /**
+     * Creates an {@code EmbeddedProcessor} with the specified resources folder.
+     * 
+     * @param resources the resources folder
+     */
     public EmbeddedProcessor(File resources) {
         super(resources);
     }
     
     
+    /**
+     * Processes the annotated classes and generates locale files from the template
+     * specified by the annotation.
+     * 
+     * @param classes the annotated classes
+     * @param logger the logger
+     * @return true if the locale files for all annotated classes were generated sucessfully
+     */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
         var success = true;
@@ -53,6 +70,14 @@ public class EmbeddedProcessor extends TemplateProcessor {
         return success;
     }
     
+    /**
+     * Generates the locale files using the specified annotation.
+     * 
+     * @param logger the logger
+     * @param type the annotated type
+     * @param annotation the annotation
+     * @return true if no errors were emitted during generation
+     */
     protected boolean generate(Log logger, Class<?> type, Embedded annotation) {
         try {
             var locales = new ArrayList<Locale>(annotation.locales().length);

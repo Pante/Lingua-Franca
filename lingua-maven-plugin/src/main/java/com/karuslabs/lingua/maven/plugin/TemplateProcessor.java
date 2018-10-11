@@ -31,18 +31,43 @@ import java.util.*;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * This class provides a skeletal implementation of a processor for annotations which
+ * contain locales and embedded templates.
+ */
 public abstract class TemplateProcessor implements Processor {
     
+    /**
+     * The available locales.
+     */
     protected static final Set<Locale> LOCALES = Set.of(Locale.getAvailableLocales());
     
+    /**
+     * The resources folder which contains embedded locale files.
+     */
     protected File resources;
     
     
+    /**
+     * Creates a {@code TemplateProcessor} with the specified resources folder.
+     * 
+     * @param resources the resources folder
+     */
     protected TemplateProcessor(File resources) {
         this.resources = resources;
     }
     
     
+    /**
+     * Compares the specified locales against the available locales, emitting an error
+     * and warning if the specified array is empty or not available respectively.  
+     * 
+     * @param logger the logger
+     * @param type the annotated class
+     * @param annotation the annotation name
+     * @param locales the locales
+     * @return true if no errors or warning were emitted
+     */
     public boolean processLocales(Log logger, Class<?> type, String annotation, String[] locales) {
         if (locales.length == 0) {
             logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", @" + annotation + " must contain at least one locale");
@@ -57,7 +82,17 @@ public abstract class TemplateProcessor implements Processor {
             
         return true;
     }
-
+    
+    /**
+     * Determines if the specified template can be found relative to the resources folder,
+     * emitting an error if the file cannot be found.
+     * 
+     * @param logger the logger
+     * @param type the annotated class
+     * @param annotation the annotation name
+     * @param template the template
+     * @return true if no errors were emitted
+     */
     public boolean processEmbedded(Log logger, Class<?> type, String annotation, String template) {
         var file = new File(resources, template);
         var valid = !template.isEmpty() && file.exists() && file.isFile();

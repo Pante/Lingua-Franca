@@ -33,15 +33,30 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.reflections.Reflections;
 
 
+/**
+ * This class provides a skeletal implementation of a Mojo for the Lingua Maven Plugin.
+ */
 public abstract class LinguaMojo extends AbstractMojo {
     
+    /**
+     * The compile classpaths.
+     */
     @Parameter(defaultValue = "${project.compileClasspathElements}", readonly = true, required = true)
     public List<String> elements;
-            
+    
+    /**
+     * The folder in which embedded resources are located.
+     */
     @Parameter(defaultValue = "${project.basedir}/src/main/resources")
     public File resources;
     
-        
+    
+    /**
+     * Creates a {@code Reflections} instance using the classpaths specified by {@link #elements}.
+     * 
+     * @return a Reflections instance
+     * @throws MojoExecutionException if a malformed classpath was specified
+     */
     public Reflections reflection() throws MojoExecutionException {
         var urls = new URL[elements.size()];
         try {

@@ -37,9 +37,20 @@ import org.apache.maven.plugins.annotations.Mojo;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSES;
 
 
+/**
+ * This Mojo determines the correctness of the Lingua Franca annotations in a project
+ * and emits errors and warnings for encountered issues at compile-time.
+ */
 @Mojo(name = "lint", defaultPhase = PROCESS_CLASSES, threadSafe = false)
 public class LinguaLintMojo extends LinguaMojo {
     
+    /**
+     * Scans the classpath(s) for classes annotated with Lingua Franca annotations
+     * and determines the correctness of the annotation.
+     * 
+     * @throws MojoExecutionException if an unexpected error occurs when linting
+     * @throws MojoFailureException if an encountered annotation was malformed or incorrect
+     */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         var reflection = reflection();

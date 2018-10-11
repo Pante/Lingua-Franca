@@ -31,8 +31,19 @@ import java.util.Collection;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * Determines if a {@link com.karuslabs.lingua.franca.annotations.Bundled Bundled} annotation
+ * contains a non-empty bundle name.
+ */
 public class BundledProcessor implements Processor {
-
+    
+    /**
+     * Determines if the annotated classes contain non-empty bundle names.
+     * 
+     * @param classes the annotated classes
+     * @param logger the logger
+     * @return true if all annotated classes contain a non-empty bundle name
+     */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
         var success = true;

@@ -33,9 +33,20 @@ import org.apache.maven.plugins.annotations.Mojo;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSES;
 
 
+/**
+ * This Mojo generates default locale files to be embedded in the resultant JAR 
+ * from a template in the resources folder at compile-time.
+ */
 @Mojo(name = "generate", defaultPhase = PROCESS_CLASSES, threadSafe = false)
 public class LinguaGenerateMojo extends LinguaMojo {
     
+    /**
+     * Scans the classpath(s) for classes annotated with {@link com.karuslabs.lingua.franca.template.annotations.Embedded Embedded} annotations,
+     * and generates the default locale files from the template specified by the annotation.
+     * 
+     * @throws MojoExecutionException if an unexpected error occurs during generation
+     * @throws MojoFailureException if an expected error occurs during generation
+     */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         var reflection = reflection();
@@ -50,6 +61,11 @@ public class LinguaGenerateMojo extends LinguaMojo {
         }
     }
     
+    /**
+     * Creates an {@code EmbeddedProcessor}.
+     * 
+     * @return an EmbeddedProcessor
+     */
     protected EmbeddedProcessor processor() {
         return new EmbeddedProcessor(resources);
     }

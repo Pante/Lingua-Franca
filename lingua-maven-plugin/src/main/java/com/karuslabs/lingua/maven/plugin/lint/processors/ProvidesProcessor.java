@@ -32,16 +32,31 @@ import java.util.Collection;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * Determines if a {@link com.karuslabs.lingua.franca.spi.annotations.Provides Provides} annotation
+ * contains a non-empty bundle name and is applied on a subclass of {@link com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider AnnotatedBundleProvider}.
+ */
 public class ProvidesProcessor implements Processor {
     
     private final Class<?> expected;
     
     
+    /**
+     * Creates a {@code ProvidesProcessor}.
+     */
     public ProvidesProcessor() {
         this.expected = AnnotatedBundleProvider.class;
     }
     
     
+    /**
+     * Determines if the annotated classes are subclasses of {@code AnnotatedBundleProvider}
+     * and contain non-empty bundle names.
+     * 
+     * @param classes the annotated classes
+     * @param logger the logger
+     * @return true if the classes extend AnnotatedBundleProvider and contain non-empty bundle names
+     */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
         boolean success = true;

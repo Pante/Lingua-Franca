@@ -32,13 +32,29 @@ import java.util.Collection;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * Determines if a {@link com.karuslabs.lingua.franca.template.annotations.Platform Platform} annotation
+ * contains a valid template and non-empty locales.
+ */
 public class PlatformProcessor extends TemplateProcessor {
-
+    
+    /**
+     * Creates a {@code PlatformProcessor}
+     * 
+     * @param resources 
+     */
     public PlatformProcessor(File resources) {
         super(resources);
     }
     
     
+    /**
+     * Determines if the annotated classes contain valid templates and non=empty locales. 
+     * 
+     * @param classes the annotated classes
+     * @param logger the logger
+     * @return true if the annotated classes contain valid template and non-empty locales
+     */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
         boolean success = true;
@@ -53,6 +69,15 @@ public class PlatformProcessor extends TemplateProcessor {
         return success;
     }
     
+    /**
+     * Determines if the nested {@link com.karuslabs.lingua.franca.template.annotations.In In} annotation
+     * contains either a valid embedded or system template, emitting a error if none or both is specified.
+     * 
+     * @param logger the logger
+     * @param type the annotated class
+     * @param annotation the annotated
+     * @return true if the annotation contains a single template
+     */
     protected boolean processPlatform(Log logger, Class<?> type, In annotation) {
         if (annotation.embedded().isEmpty() && annotation.system().isEmpty()) {
             logger.error("Invalid @Plaform annotation for " + type.getName() + ", @" + annotation + " must contain either an embeded or system template");

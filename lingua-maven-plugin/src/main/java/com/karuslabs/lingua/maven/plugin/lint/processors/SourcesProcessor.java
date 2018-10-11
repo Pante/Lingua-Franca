@@ -32,16 +32,36 @@ import java.util.Collection;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * Determines if a {@link com.karuslabs.lingua.franca.annotations.ClassLoaderSources} or
+ * {@link com.karuslabs.lingua.franca.annotations.ModuleSources} annotations contains 
+ * non-empty and valid sources.
+ */
 public class SourcesProcessor implements Processor {
     
+    /**
+     * The resources folder.
+     */
     protected final File resources;
     
     
+    /**
+     * Creates a {@code SourcesProcessor}.
+     * 
+     * @param resources the resources folder
+     */
     public SourcesProcessor(File resources) {
         this.resources = resources;
     }
     
     
+    /**
+     * Determines if the annotated classes contain non-empty and valid sources.
+     * 
+     * @param classes the annotated classes
+     * @param logger the logger
+     * @return true if the annotated classes contain non-empty and valid sources
+     */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {
         boolean success = true;
@@ -61,6 +81,15 @@ public class SourcesProcessor implements Processor {
         return success;
     }
     
+    /**
+     * Determines if the specified folders can be found relative to the resources folder.
+     * 
+     * @param logger the logger
+     * @param annotation the annotation name
+     * @param type the annotated class
+     * @param folders the folders
+     * @return true if the folders can be found relative to the resources folder
+     */
     protected boolean process(Log logger, String annotation, Class<?> type, String[] folders) {
         boolean success = true;
 

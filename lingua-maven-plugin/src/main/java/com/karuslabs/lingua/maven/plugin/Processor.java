@@ -28,8 +28,19 @@ import java.util.Collection;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * A processor which analyzes classes with an annotation to determine if the given
+ * criteria are satisfied, emitting either an error or warning otherwise.
+ */
 public interface Processor {
     
+    /**
+     * Processes the classes with the specified logger.
+     * 
+     * @param classes the classes to be processed
+     * @param logger the logger
+     * @return true if all classes satisfy the criteria
+     */
     boolean process(Collection<Class<?>> classes, Log logger);
     
 }
