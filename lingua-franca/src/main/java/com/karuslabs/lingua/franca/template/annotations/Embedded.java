@@ -31,7 +31,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Indicates the generation of locale files from a template to be embedded in the 
- * JAR during compilation.
+ * JAR at compile-time.
  * <p>
  * This annotation is to be used in conjunction with a build tool plugin to detect
  * and generate the locale files during compilation. Generation of the locale files
@@ -51,14 +51,14 @@ public @interface Embedded {
     String template();
     
     /**
-     * The destination folder to be embedded.
+     * The destination folder in which the locales files are to be embedded.
      * 
      * @return the destination folder
      */
     String destination();
     
     /**
-     * The locales for which default files are generated.
+     * The locales for which locale files are generated.
      * 
      * @return the locales
      */

@@ -30,7 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * Signifies the folder(s) in which locale files can be located, relative to a {@code ClassLoader}.
+ * Signifies the folder(s) relative to a {@code ClassLoader} in which locale files can be found.
  * <p>
  * Declared in conjunction with the {@link Bundled} annotation to signify the namespace
  * to which the sources in this annotation are registered.
@@ -41,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ClassLoaderSources {
     
     /**
-     * The folder(s) in which locale files can be located, relative to a {@code ClassLoader}.
+     * The folder(s) relative to a {@code ClassLoader} in which locale files can be found.
      * 
      * @return the folders
      */

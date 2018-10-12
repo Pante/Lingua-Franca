@@ -33,10 +33,10 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 
 /**
- * This class consists exclusively of static methods which operate on or return {@code Locale}s.
+ * This class consists exclusively of static methods which manipulate locales.
  * <p>
  * Language tags used in the static methods of this class which accept language tags
- * can be separated by either '_' or '-', i.e. 'en_GB' or 'en-GB'. 
+ * can be separated by either hyphens or underscores, i.e. {@code en-GB} or {@code en_GB}. 
  */
 public class Locales {
     
@@ -60,7 +60,7 @@ public class Locales {
 
     
     /**
-     * Creates a {@code Locale} which best represents the specified language tag.
+     * Creates a locale which best represents the specified language tag.
      * 
      * @param tag the language tag
      * @return a locale which best represents the specified language tag
@@ -83,7 +83,7 @@ public class Locales {
     
     
     /**
-     * Creates a language tag delimited by '-' for the specified locale.
+     * Creates a language tag for the specified locale with segments separated by '-'.
      * 
      * @param locale the locale
      * @return the language tag
@@ -93,7 +93,8 @@ public class Locales {
     }
     
     /**
-     * Creates a language tag delimited by the specified delimiter for the specified locale.
+     * Creates a language tag for the specified locale with segments separated by
+     * the specified delimiter.
      * 
      * @param locale the locale
      * @param delimiter the delimiter
@@ -116,7 +117,7 @@ public class Locales {
     
     
     /**
-     * Returns true if the specified language is an ISO 3166 alpha-2 language i.e. {@code EN}.
+     * Returns true if the specified language is an ISO 3166 alpha-2 language, i.e. {@code EN}.
      * 
      * @param language the language
      * @return true if the specified country is an ISO 3166 alpha-2 language
@@ -126,7 +127,7 @@ public class Locales {
     }
     
     /**
-     * Returns true if the specified country is an ISO 639 alpha-2 country i.e. {@code UK}.
+     * Returns true if the specified country is an ISO 639 alpha-2 country, i.e. {@code UK}.
      * 
      * @param country the country
      * @return true if the specified country is an ISO 639 alpha-2 country country

@@ -51,11 +51,11 @@ public class ProvidesProcessor implements Processor {
     
     /**
      * Determines if the annotated classes are subclasses of {@code AnnotatedBundleProvider}
-     * and contain non-empty bundle names.
+     * and contain non-empty bundle base names.
      * 
      * @param classes the annotated classes
      * @param logger the logger
-     * @return true if the classes extend AnnotatedBundleProvider and contain non-empty bundle names
+     * @return true if the classes extend AnnotatedBundleProvider and contain non-empty base names
      */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {

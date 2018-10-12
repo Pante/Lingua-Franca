@@ -32,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A format-independent visitor of trees, in the style of the visitor design pattern.
  * <p>
- * This visitor uses the nodes created by Jackson to traverse the tree of a locale file.
+ * This visitor uses the nodes created by Jackson to traverse the file structure.
  * 
  * @param <T> the type of the additional parameter to the methods of this visitor
  * @param <R> the return type of the methods of this visitor

@@ -35,18 +35,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * A {@code Stringifier} recurisvely flat maps all values as either strings or array 
- * of strings from a given file. 
+ * A {@code Stringifier} recursively flat maps all values from a given file as either 
+ * strings or array of strings. 
  * <p>
- * Nested entries are flatten to improve look-up performance from
- * {@code O(n)} to {@code O(1)}. Keys in each hierarchy level are delimited by ".", i.e.
- * {@code "path.to.value"}. In addition, each value in an array of string is mapped 
- * and can be accessed via specifying the path to the array followed by
- * the index of the value enclosed in square brackets, i.e. {@code "path.to.array[i]}.
- * Alternatively, arrays can be retrieved by specifying only the path to the array, i.e.
- * {@code "path.to.array}.
- * <p>
- * The default implementation has support for properties, JSON and YAML file formats.
+ * Nested entries are flatten to improve look-up performance from {@code O(n)} to 
+ * {@code O(1)}. Keys in subsequent levels are delimited by a full-stop, i.e. {@code path.to.value}. 
+ * In addition, strings in arrays can be accessed via enclosing the string index in 
+ * square brackets, i.e. {@code path.to.array.value[i]}. Entire arrays can be accessed 
+ * similarly to strings, i.e. {@code path.to.array}. Support is provided for properties, 
+ * JSON and YAML files.
  */
 public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object>> {
     
@@ -71,7 +68,7 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
 
     
     /**
-     * Creates a {@code Stringifier} with no default value.
+     * Creates a {@code Stringifier}.
      */
     protected Stringifier() {
         super(null);
@@ -79,12 +76,12 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
 
     
     /**
-     * Flattens and stringifies the entries from the specified stream with the 
-     * specified format.
+     * Flattens and stringifies the entries in the specified stream.
      * 
      * @param stream the stream
      * @param format the format
-     * @return the flatten and stringified map, or null if the file cannot be stringified
+     * @return the flatten and stringified map, or null if the stream is invalid
+     * @throws UnsupportedOperationException if the specified format is not supported
      */
     public @Nullable Map<String, Object> from(InputStream stream, String format) {
         try (stream) {
@@ -96,11 +93,10 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
     }
     
     /**
-     * Returns an appropriate {@code ObjectMapper} for the specified format,
-     * or throws an exception if the specified format is not supported.
+     * Returns a {@code ObjectMapper} for the specified format.
      * 
      * @param format the format
-     * @return the appropriate ObjectMapper
+     * @return an appropriate ObjectMapper
      * @throws UnsupportedOperationException if the specified format is not supported
      */
     protected ObjectMapper mapper(String format) {
@@ -182,7 +178,7 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
     }
     
     /**
-     * Converts the specified {@code ValueNode} to a string and maps it in the specified
+     * Converts the specified {@code ValueNode} to a string and adds it to the specified
      * map.
      * 
      * @param path the path to the ArrayNode

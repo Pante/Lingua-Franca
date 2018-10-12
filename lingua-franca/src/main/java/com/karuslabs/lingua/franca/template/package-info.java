@@ -23,6 +23,6 @@
  */
 
 /**
- * Facilities for generating default locale files from a template.
+ * Facilities for generating locale files from a template.
  */
 package com.karuslabs.lingua.franca.template;

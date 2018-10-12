@@ -37,22 +37,22 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 
 /**
- * {@code Bundler}s contains a cache and facilities from which a {@code Bundle} is obtained.
+ * A {@code Bundler} contains facilities from which a bundle is cached and obtained.
  * <p>
- * Time-based and size cache eviction is enabled for the global {@code Bundler}. 
- * Entries expire either 10 minutes after access or if the cache exceeds 512 entries. 
- * By default, the global {@code Bundler} uses the global {@code BundleLoader}.
+ * Time-based and size eviction is enabled for the global {@code Bundler} cache. 
+ * Entries expire either 10 minutes after access or if the cache exceeds 512 entries.
  * <p>
- * In addition to retrieving bundles using a {@code BundeLoader}, the default implementation 
- * supports retrieval of {@code Bundle}s from a {@link BundleProvider} service provided 
- * via the JDK's SPI mechanism.
+ * By default, the global {@code Bundler} uses the global {@link BundleLoader#loader() BundleLoader}.
+ * In addition to loading bundles using a {@code BundeLoader}, the default implementation 
+ * supports loading of {@code Bundle}s using a {@link BundleProvider} service provided 
+ * via the SPI mechanism.
  * <p>
- * The default implementation first retrieves a bundle from the cache. If unavailable 
- * or cache look-up is disabled, the implementation then retrieves the bundle from a 
- * {@code BundleProvider} and subsequently the given {@code BundleLoader}. This process 
- * is continued recursively until the bundle and its parents are retrieved and linked.
- * In the event a bundle could not be retrieved, an empty bundle is created and linked.
- * This implementation is thread-safe and non-blocking.
+ * The default implementation first attempts to retrieve a bundle from the cache. 
+ * If cache look-up is disabled or the bundle is not cached, the implementation then 
+ * attempts to retrieve the bundle from a {@code BundleProvider} and subsequently a 
+ * given {@code BundleLoader}. This process is repeated recursively until the bundle and its parents 
+ * are loaded and linked. In the event a bundle could not be retrieved, an empty bundle 
+ * is created and linked. This process is thread-safe and non-blocking.
  */
 public class Bundler {    
     
@@ -60,9 +60,9 @@ public class Bundler {
     private static final ResourceBundle.Control CONTROL = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
     
     /**
-     * Returns the global {@code Bundler} which uses the global {@code BundleLoader} by default.
+     * Returns the global {@code Bundler} which uses the global {@code BundleLoader}.
      * 
-     * @return the global bundler
+     * @return the global Bundler
      */
     public static Bundler bundler() {
         return BUNDLER;
@@ -82,10 +82,10 @@ public class Bundler {
     
     
     /**
-     * Creates a {@code Bundler} with the specified cache and default {@code BundleLoader}.
+     * Creates a {@code Bundler} with the specified cache and {@code BundleLoader}.
      * 
      * @param cache the cache
-     * @param loader the BundleLoader
+     * @param loader the default BundleLoader
      */
     protected Bundler(Cache<String, Bundle> cache, BundleLoader loader) {
         this.cache = cache;
@@ -95,12 +95,12 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the default {@code BundleLoader},
-     * specified locale and @{link Bundled} annotation, invalidating prior cached entries. 
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated object and locale, 
+     * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
      * @param locale the locale
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle reload(Object annotated, Locale locale) {
         return reload(annotated, locale, loader);
@@ -108,13 +108,13 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and @{link Bundled} annotation, invalidating prior cached entries. 
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated object and locale,
+     * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
      * @param locale the locale
      * @param loader the BundleLoader
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle reload(Object annotated, Locale locale, BundleLoader loader) {
         return reload(annotated.getClass(), locale, loader);
@@ -123,12 +123,12 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the default {@code BundleLoader},
-     * specified locale and {@link Bundled} annotation, invalidating prior cached entries. 
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated class and locale,
+     * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
      * @param locale the locale
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle reload(Class<?> annotated, Locale locale) {
         return reload(annotated, locale, loader);
@@ -136,13 +136,13 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and {@link Bundled} annotation, invalidating prior cached entries. 
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated class and locale,
+     * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
      * @param locale the locale
      * @param loader the BundleLoader
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle reload(Class<?> annotated, Locale locale, BundleLoader loader) {
         return load(annotated, locale, loader, true);
@@ -150,25 +150,25 @@ public class Bundler {
     
     
     /**
-     * Reloads the bundle and its parents using the default {@code BundleLoader}, 
-     * and specified name and locales, invalidating prior cached entries.
+     * Reloads the bundle and its parents using the default {@code BundleLoader}
+     * and specified name and locales, invalidating cached entries.
      * 
      * @param name the base name
      * @param locale the locale
-     * @return the retrieved bundle
+     * @return the bundle
      */
     public Bundle reload(String name, Locale locale) {
         return reload(name, locale, loader);
     }
     
     /**
-     * Reloads the bundle and its parents using the specified {@code BundleLoader}, 
-     * and specified name and locales, invalidating prior cached entries.
+     * Reloads the bundle and its parents using the specified {@code BundleLoader}
+     * and specified name and locales, invalidating cached entries.
      * 
      * @param name the base name
      * @param locale the locale
      * @param loader the BundleLoader
-     * @return the retrieved bundle
+     * @return the bundle
      */
     public Bundle reload(String name, Locale locale, BundleLoader loader) {
         return load(name, locale, loader, true);
@@ -176,13 +176,13 @@ public class Bundler {
 
     
     /**
-     * Loads the bundle and its parents using the default {@code BundleLoader} and 
-     * specified locale and {@link Bundled} annotation. 
-     * An empty bundle is returned if no annotation is available.
+     * Loads the bundle and its parents using the default {@code BundleLoader}, 
+     * {@link Bundled} annotation on the specified annotated object and locale. 
+     * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
      * @param locale the locale
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle load(Object annotated, Locale locale) {
         return load(annotated, locale, loader);
@@ -190,13 +190,13 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and {@link Bundled} annotation. 
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated object and locale. 
+     * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
      * @param locale the locale
      * @param loader the BundleLoader
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle load(Object annotated, Locale locale, BundleLoader loader) {
         return load(annotated.getClass(), locale, loader);
@@ -204,13 +204,13 @@ public class Bundler {
     
     
     /**
-     * Loads the bundle and its parents using the default {@code BundleLoader} and 
-     * specified locale and {@link Bundled} annotation. 
-     * An empty bundle is returned if no annotation is available.
+     * Loads the bundle and its parents using the default {@code BundleLoader}, 
+     * {@link Bundled} annotation on the specified annotated class and specified locale. 
+     * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
      * @param locale the locale
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle load(Class<?> annotated, Locale locale) {
         return load(annotated, locale, loader);
@@ -218,13 +218,13 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * locale and {@link Bundled} annotation. 
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated class and locale. 
+     * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
      * @param locale the locale
      * @param loader the BundleLoader
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     public Bundle load(Class<?> annotated, Locale locale, BundleLoader loader) {
         return load(annotated, locale, loader, false);
@@ -233,14 +233,14 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * locale, {@link Bundled} annotation and reload flag.
-     * An empty bundle is returned if no annotation is available.
+     * {@link Bundled} annotation on the specified annotated class, locale and reload flag.
+     * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
      * @param locale the locale
      * @param loader the BundleLoader
-     * @param reload the reload flag; true if cache-lookup is disabled
-     * @return the retrieved bundle, or an empty bundle if no annotation is available
+     * @param reload the reload flag; true if cache-lookup is to be disabled
+     * @return the bundle, or an empty bundle if no annotation was found
      */
     protected Bundle load(Class<?> annotated, Locale locale, BundleLoader loader, boolean reload) {
         var bundled = annotated.getAnnotation(Bundled.class);
@@ -254,12 +254,12 @@ public class Bundler {
     
     
     /**
-     * Loads the bundle and its parents using the default {@code BundleLoader} and
+     * Loads the bundle and its parents using the default {@code BundleLoader},
      * specified locale and base name. 
      * 
      * @param name the base name
      * @param locale the locale
-     * @return the retrieved bundle
+     * @return the bundle
      */
     public Bundle load(String name, Locale locale) {
         return load(name, locale, loader);
@@ -272,7 +272,7 @@ public class Bundler {
      * @param name the base name
      * @param locale the locale
      * @param loader the BundleLoader
-     * @return the retrieved bundle
+     * @return the bundle
      */
     public Bundle load(String name, Locale locale, BundleLoader loader) {
        return load(name, locale, loader, false);
@@ -286,8 +286,8 @@ public class Bundler {
      * @param name the base name
      * @param locale the locale
      * @param loader the BundleLoader
-     * @param reload the reload flag; true if cache-lookup is disabled
-     * @return the retrieved bundle
+     * @param reload the reload flag; true if cache-lookup is to be disabled
+     * @return the bundle
      */
     protected Bundle load(String name, Locale locale, BundleLoader loader, boolean reload) {
         var bundleName = CONTROL.toBundleName(name, locale);
@@ -310,12 +310,11 @@ public class Bundler {
     
     
     /**
-     * Retrieves a {@code Bundle} and its parents from a {@code BundleProvider} service,
-     * or null if unavailable.
+     * Loads the bundle and its parents using a {@code BundleProvider} service.
      * 
-     * @param name the base name of the bundle to be retrieved
-     * @param locale the locale of the bundle to be retrieved
-     * @return the retrieved bundle, or null if unavailable
+     * @param name the base name
+     * @param locale the locale
+     * @return the bundle, or null if no BundleProvider for the bundle name was registered
      */
     protected @Nullable Bundle loadFromServices(String name, Locale locale) {
         try {
@@ -336,8 +335,8 @@ public class Bundler {
     }
     
     /**
-     * Caches the specified bundle and its parents using the specified base name
-     * and initial locale.
+     * Caches the specified bundle with the base name and initial locale,
+     * and its parents.
      * 
      * @param name the base name
      * @param locale the initial locale
@@ -353,13 +352,13 @@ public class Bundler {
     
     
     /**
-     * Loads, links and caches the bundles associated with the specified base name
-     * and locales using the specified {@code BundleLoader} and reload flag.
+     * Loads and caches the bundles associated with the specified base name
+     * and locales using the {@code BundleLoader}.
      * 
      * @param name the base name
      * @param locales the locales
      * @param loader the BundleLoader
-     * @param reload the reload flag; true if cache-lookup is disabled
+     * @param reload the reload flag; true if cache-lookup is to be disabled
      * @return the leaf bundle
      */
     protected Bundle loadFromBundleLoader(String name, List<Locale> locales, BundleLoader loader, boolean reload) {
@@ -388,16 +387,16 @@ public class Bundler {
     
     
     /**
-     * Returns the default {@code BundleLoader}.
+     * Returns the {@code BundleLoader}.
      * 
-     * @return the default BundleLoader
+     * @return the BundleLoader
      */
     public BundleLoader loader() {
         return loader;
     }
     
     /**
-     * Returns the cache for {@code Bundle}s.
+     * Returns the cached bundles.
      * 
      * @return the cache
      */

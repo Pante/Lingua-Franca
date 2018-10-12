@@ -60,7 +60,7 @@ public abstract class TemplateProcessor implements Processor {
     
     /**
      * Compares the specified locales against the available locales, emitting an error
-     * and warning if the specified array is empty or not available respectively.  
+     * and warning if the specified array is empty or not ISO compliant respectively.  
      * 
      * @param logger the logger
      * @param type the annotated class

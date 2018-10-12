@@ -23,6 +23,6 @@
  */
 
 /**
- * Implementations of {@code Source} from which bundles can be retrieved.
+ * Sources from which bundles can be loaded.
  */
 package com.karuslabs.lingua.franca.sources;

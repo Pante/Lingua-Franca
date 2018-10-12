@@ -23,7 +23,7 @@
  */
 
 /**
- * Defines the foundational packages of the Lingua Franca library.
+ * Defines the fundamental packages of the Lingua Franca library.
  */
 open module com.karuslabs.lingua.franca {
     uses com.karuslabs.lingua.franca.spi.BundleProvider;

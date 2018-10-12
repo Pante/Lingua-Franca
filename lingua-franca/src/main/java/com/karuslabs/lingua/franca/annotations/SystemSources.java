@@ -30,7 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * Signifies the folder(s) on the system in which locale files can be located.
+ * Signifies the folder(s) in the runtime system from which locale files can be found.
  * <p>
  * Declared in conjunction with the {@link Bundled} annotation to signify the namespace
  * to which the sources in this annotation are registered.
@@ -41,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface SystemSources {
     
     /**
-     * The folder(s) in which locale files can be located, relative to a {@code Module}.
+     * The folder(s) in the runtime system from which locale files can be located.
      * 
      * @return the folders
      */

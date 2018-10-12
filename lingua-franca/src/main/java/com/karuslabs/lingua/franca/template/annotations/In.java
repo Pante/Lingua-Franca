@@ -47,7 +47,7 @@ public @interface In {
     String embedded() default "";
     
     /**
-     * The template file located in the runtime environment.
+     * The template file located in the runtime system.
      * 
      * @return the template file
      */

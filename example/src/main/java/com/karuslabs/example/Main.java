@@ -51,7 +51,7 @@ public class Main {
     
     
     public static void main(String... args) {
-        // Registers sources to the global bundler
+        // Registers the sources to the puns and global namespaces of the global bundler respectively
         Bundler.bundler().loader().add(PUNS); 
         Bundler.bundler().loader().add(new ClassLoaderSource(""), new ModuleSource(""));
         

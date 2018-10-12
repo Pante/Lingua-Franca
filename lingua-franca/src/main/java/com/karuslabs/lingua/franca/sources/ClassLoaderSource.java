@@ -29,15 +29,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * A {@code Source} implementation from which file resources relative to a {@code ClassLoader}
- * can be retrieved using the {@code ClassLoader}.
- * <p>
- * {@code ClassLoaderSource}s can be used to retrieve embedded resources.
+ * A {@code Source} implementation from which file resources relative to a ClassLoader
+ * can be retrieved using the ClassLoader. This class can be used to retrieve 
+ * embedded resources.
  */
 public class ClassLoaderSource extends FileSource {
     
     /**
-     * The source for the root directory relative to the {@code ClassLoader}.
+     * The source for the root folder relative to the {@code ClassLoader}.
      */
     public static final ClassLoaderSource ROOT = new ClassLoaderSource("");
     
@@ -46,9 +45,9 @@ public class ClassLoaderSource extends FileSource {
     
     
     /**
-     * Creates a {@code ClassLoaderSource} with the specified folder using the {@code ClassLoader}
+     * Creates a {@code ClassLoaderSource} with the specified folder using the ClassLoader
      * of the calling class.
-     * 
+     * <p>
      * This method is caller sensitive.
      * 
      * @param folder the folder
@@ -58,7 +57,7 @@ public class ClassLoaderSource extends FileSource {
     }
     
     /**
-     * Creates a {@code ClassLoaderSource} with the specified {@code ClassLoader}
+     * Creates a {@code ClassLoaderSource} with the specified ClassLoader
      * and folder.
      * 
      * @param loader the ClassLoader
@@ -71,7 +70,7 @@ public class ClassLoaderSource extends FileSource {
 
     
     /**
-     * Creates a stream for the specified resource relative to the {@code ClassLoader}.
+     * Creates a stream for the specified resource relative to the ClassLoader.
      * 
      * @param resource the resource
      * @return a stream for the specified resource, or null if a stream could not be created

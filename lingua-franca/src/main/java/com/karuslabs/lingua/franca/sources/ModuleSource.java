@@ -29,15 +29,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * A {@code Source} implementation from which file resources relative to a {@code Module}
- * can be retrieved using the {@code Module}.
- * <p>
- * {@code ModuleSource}s can be used to retrieve embedded resources.
+ * A {@code Source} implementation from which file resources relative to a module
+ * can be retrieved using the module. This class can be used to retrieve 
+ * embedded resources.
  */
 public class ModuleSource extends FileSource {
     
     /**
-     * The source for the root directory relative to the {@code Module}.
+     * The source for the root folder relative to the {@code Module}.
      */
     public static final ModuleSource ROOT = new ModuleSource("");
     
@@ -46,9 +45,9 @@ public class ModuleSource extends FileSource {
     
     
     /**
-     * Creates a {@code ModuleSource} with the specified folder using the {@code Module}
+     * Creates a {@code ModuleSource} with the specified folder using the module
      * of the calling class.
-     * 
+     * <p>
      * This method is caller sensitive.
      * 
      * @param folder the folder
@@ -58,7 +57,7 @@ public class ModuleSource extends FileSource {
     }
     
     /**
-     * Creates a {@code ModuleSource} with the specified {@code Module} and folder.
+     * Creates a {@code ModuleSource} with the specified module and folder.
      * 
      * @param module the module
      * @param folder the folder
@@ -70,7 +69,7 @@ public class ModuleSource extends FileSource {
 
     
     /**
-     * Creates a stream for the specified resource relative to the {@code Module}.
+     * Creates a stream for the specified resource relative to the module.
      * 
      * @param resource the resource
      * @return a stream for the specified resource, or null if a stream could not be created

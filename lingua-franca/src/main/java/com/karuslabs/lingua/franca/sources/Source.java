@@ -29,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * Represents a source from which a resource can be retrieved.
+ * Represents a source from which a resource can be loaded.
  */
 @FunctionalInterface
 public interface Source {

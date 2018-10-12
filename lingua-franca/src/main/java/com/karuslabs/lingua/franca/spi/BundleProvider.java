@@ -31,27 +31,27 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * {@code BundleProvier} is a service provider interface for bundles. It is used by
- * {@link com.karuslabs.lingua.franca.Bundler Bundler} to retrieve and load the service
- * providers that are deployed.
+ * A {@code BundleProvier} is a service provider interface for loading bundles.
+ * {@link com.karuslabs.lingua.franca.Bundler Bundler} uses the deployed {@code BundleProvider}
+ * to load bundles.
  */
 public interface BundleProvider {
     
     /**
-     * Retrieves a bundle for the specified base name and locale.
+     * Loads a bundle with the specified base name and locale.
      * 
      * @param name the base name of the bundle
      * @param locale the locale of the bundle
-     * @return the retrieved bundle, or null if the bundle could not be retrieved
+     * @return the bundle, or null if the bundle could not be loaded
      */
     @Nullable Bundle get(String name, Locale locale);
     
     /**
      * Determines if this {@code BundleProvider} can provide bundles with the specified
-     * name.
+     * base name.
      * 
      * @param name the base name
-     * @return true if this BundleProvider can provide bundles with the specified name
+     * @return true if this BundleProvider can provide bundles with the specified base name
      */
     boolean provides(String name);
     

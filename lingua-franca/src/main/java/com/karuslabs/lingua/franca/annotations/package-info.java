@@ -23,6 +23,6 @@
  */
 
 /**
- * Annotations for registering and retrieving {@code Bundle}s.
+ * Annotations for registering and loading bundles.
  */
 package com.karuslabs.lingua.franca.annotations;

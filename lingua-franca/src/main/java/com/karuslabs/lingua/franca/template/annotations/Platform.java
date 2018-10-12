@@ -30,8 +30,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * Indicates the generation of locale files in the runtime environment from a template
- * during runtime.
+ * Indicates the generation of locale files from a template in a destination folder
+ * in the runtime system.
  */
 @Documented
 @Retention(RUNTIME)
@@ -40,7 +40,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Platform {
     
     /**
-     * The template file which is either embedded or located in the runtime environment.
+     * The template file which is either embedded or located in the runtime system.
      * 
      * Processors of this annotation should raise an exception if both an embedded
      * and system template file is specified.
@@ -50,14 +50,14 @@ public @interface Platform {
     In template();
     
     /**
-     * The destination folder in the runtime environment.
+     * The destination folder in the runtime system.
      * 
      * @return the destination folder
      */
     String destination();
     
     /**
-     * The locales for which default files are generated.
+     * The locales for which locale files are generated.
      * 
      * @return the locales
      */

@@ -29,12 +29,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * Represents an empty {@code Bundle}.
+ * Represents an empty bundle.
  */
 public class EmptyBundle extends Bundle {    
     
     /**
-     * Creates an {@code EmptyBundle} with the specified locale and parent locale.
+     * Creates an {@code EmptyBundle} with the specified locale and parent bundle.
      * 
      * @param locale the locale
      * @param parent the parent bundle

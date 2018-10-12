@@ -30,24 +30,24 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * {@code Bundle}s contain locale-specific messages and facilities for formatting said messages.
- * Similar to JDK's {@code ResourceBundle}s, {@code Bundle}s belong to families whose members share
- * a common base name. Instances of {@code Bundle} should not be created directly but rather,
- * obtained through a {@link Bundler}.
+ * Bundles contain localised messages and facilities for formatting those messages.
+ * Similar to {@code ResourceBundle}s in the JDK, bundles belong to families whose 
+ * members share a common base name. Bundles should be obtained through a {@link Bundler}
+ * and should not be created directly.
  * <p>
- * The default implementation of {@code Bundle} is thread-safe and non-blocking. 
- * Messages in each hierarchy level are delimited by ".", i.e. {@code "path.to.value"}.
- * In addition, messages in an array can be accessed via enclosing the index of the 
- * message in square brackets, i.e. {@code `path.to.array[i]`}.
- * <p>
- * The default implementation of the retrieval operations retrieves a message from this {@code Bundle} and 
- * if unavailable, recursively from the parent of the bundle until the root bundle has been reached.
- * If a message is still unavailable, either {@code null} or a empty {@code Optional} is returned.
+ * The default bundle implementation is thread-safe and non-blocking. Keys in subsequent 
+ * levels are delimited by a full-stop, i.e. {@code path.to.value}. In addition, messages 
+ * in arrays can be accessed via enclosing the message index in square brackets, 
+ * i.e. {@code path.to.array.value[i]}.
+
+ * Retrieval operations attempt to retrieve a message from a bundle and its parents 
+ * recursively until the root bundle is reached. If a message is unable to be retrieved,
+ * either an empty {@code Optional} or {@code null} is returned.
  */
 public class Bundle {
     
     /**
-     * Represents an empty {@code Bundle}.
+     * Represents an empty bundle.
      */
     public static final Bundle EMPTY;
     
@@ -57,11 +57,11 @@ public class Bundle {
     }
     
     /**
-     * Creates an empty {@code Bundle} using the specified locale and parent.
-     * If the specified locale is the root locale, return {@link Bundle#EMPTY}.
+     * Creates an empty bundle with the specified locale and parent.
+     * Returns {@link Bundle#EMPTY} if the specified locale is the root locale.
      * 
-     * @param locale the locale of the bundle to be created
-     * @param parent the parent of the bundle to be created
+     * @param locale the locale of the empty bundle
+     * @param parent the parent of the empty bundle
      * @return an empty bundle
      */
     public static Bundle empty(Locale locale, Bundle parent) {
@@ -88,7 +88,7 @@ public class Bundle {
     
     
     /**
-     * Creates a {@code Bundle} with the specified messages and locale, and no parent {@code Bundle}.
+     * Creates a {@code Bundle} with the specified messages and locale and no parent bundle.
      * 
      * @param messages the messages
      * @param locale the locale
@@ -114,10 +114,11 @@ public class Bundle {
 
     
     /**
-     * Retrieves the message associated with the specified key, or an empty optional if unavailable.
+     * Retrieves the message associated with the specified key.
      * 
-     * @param key the key whose associated message is to be returned
-     * @return the message to which the specified key is mapped, or an empty optional if unavailable
+     * @param key the key whose associated message is to be retrieved
+     * @return the message to which the specified key is mapped, or an empty optional 
+     *         if this bundle contains no mapping for the key
      */
     public Optional<String> get(String key) {
         var message = retrieve(key);
@@ -125,12 +126,12 @@ public class Bundle {
     }
     
     /**
-     * Retrieves and formats the message associated with the specified key using the specified arguments,
-     * or an empty optional if unavailable.
+     * Formats the message associated with the specified key using the specified arguments.
      * 
-     * @param key the key whose associated message is to be returned
-     * @param arguments the arguments used to format the messages
-     * @return the formatted message to which the specified key is map, or an empty optional if unavailable
+     * @param key the key whose associated message is to be formatted
+     * @param arguments the arguments used to format the message
+     * @return the formatted message to which the specified key is map, or an empty 
+     *         optional if this bundle contains no mapping for the key
      */
     public Optional<String> get(String key, Object... arguments) {
         var message = retrieve(key);
@@ -139,10 +140,11 @@ public class Bundle {
     
     
     /**
-     * Retrieves the message associated with the specified key, or {@code null} if unavailable.
+     * Retrieves the message associated with the specified key.
      * 
-     * @param key the key whose associated message is to be returned
-     * @return the message to which the specified key is map, or null if unavailable
+     * @param key the key whose associated message is to be retrieved
+     * @return the message to which the specified key is map, or null if this bundle
+     *         contains no mapping for the key
      */
     public @Nullable String find(String key) {
         var message = retrieve(key);
@@ -150,11 +152,12 @@ public class Bundle {
     }
     
     /**
-     * Retrieves and formats the message associated with the specified key, or {@code null} if unavailable.
+     * Formats the message associated with the specified key.
      * 
-     * @param key the key whose associated message is to be returned
-     * @param arguments the arguments used to format the messages
-     * @return the formatted message to which the specified key is map, or null if unavailable
+     * @param key the key whose associated message is to be formatted
+     * @param arguments the arguments used to format the message
+     * @return the formatted message to which the specified key is map, or null if
+     *         this bundle contains no mapping for the key
      */
     public @Nullable String find(String key, Object... arguments) {
         var message = retrieve(key);
@@ -163,10 +166,11 @@ public class Bundle {
     
     
     /**
-     * Retrieves the messages associated with the specified key, or an empty optional if unavailable.
+     * Retrieves the messages associated with the specified key.
      * 
-     * @param key the key whose associated messages is to be returned
-     * @return the messages to which the specified key is mapped, or an empty optional if unavailable
+     * @param key the key whose associated messages is to be retrieved
+     * @return the messages to which the specified key is mapped, or an empty optional
+     *         if this bundle contains no mapping for the key
      */
     public Optional<String[]> messages(String key) {
         var messages = retrieve(key);
@@ -174,10 +178,11 @@ public class Bundle {
     }
     
     /**
-     * Retrieves the messages associated with the specified key, or {@code null} if unavailable.
+     * Retrieves the messages associated with the specified key.
      * 
-     * @param key the key whose associated messages is to be returned
-     * @return the messages to which the specified key is map, or null if unavailable
+     * @param key the key whose associated messages is to be retrieved
+     * @return the messages to which the specified key is map, or null if this bundle
+     *         contains no mapping for the key
      */
     public @Nullable String[] messagesIfPresent(String key) {
         var messages = retrieve(key);
@@ -186,11 +191,12 @@ public class Bundle {
     
     
     /**
-     * Recursively retrieves the value associated with the specified key from 
-     * this {@code Bundle} and its parents.
+     * Recursively retrieves the value associated with the specified key from this 
+     * bundle and its parents.
      * 
-     * @param key the key whose associated value is to be returned
-     * @return the value to which the specified key is mapped, or null if unavailable
+     * @param key the key whose associated value is to be retrieved
+     * @return the value to which the specified key is mapped, or null if this bundle
+     *         and its parents contains no mapping for the key
      */
     protected @Nullable Object retrieve(String key) {
         var message = messages.get(key);
@@ -202,10 +208,10 @@ public class Bundle {
     }
     
     /**
-     * Formats the specified message using the locale of this {@code Bundle} and the specified arguments.
+     * Formats the message using the specified arguments the locale of this bundle.
      * 
      * @param message the message to be formatted
-     * @param arguments the arguments to format
+     * @param arguments the arguments used to format the message
      * @return the formatted message
      */
     protected String format(String message, Object... arguments) {
@@ -217,7 +223,7 @@ public class Bundle {
     
     
     /**
-     *  Retrieves the keys of this {@code Bundle} and its parents.
+     * Recursively retrieves the keys of this bundle and its parents.
      * 
      * @return the keys of this Bundle and its parents
      */
@@ -242,7 +248,7 @@ public class Bundle {
     }
     
     /**
-     * Returns the locale of this {@code Bundle}.
+     * Returns the locale of this bundle.
      * 
      * @return the locale
      */
@@ -251,7 +257,7 @@ public class Bundle {
     }
     
     /**
-     * Returns the parent of this {@code Bundle}.
+     * Returns the parent of this bundle.
      * 
      * @return the parent of this bundle
      */

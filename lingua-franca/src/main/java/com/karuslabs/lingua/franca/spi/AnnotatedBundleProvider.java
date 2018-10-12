@@ -29,15 +29,18 @@ import java.util.*;
 
 
 /**
- * {@code AnnotatedBundleProvider} implementations can be annotated with the 
+ * A {@code AnnotatedBundleProvider} can be annotated with a 
  * {@link com.karuslabs.lingua.franca.spi.annotations.Provides Provides} annotation
- * to specify the names of bundles supported by this {@code AnnotatedBundleProvider}.
+ * to specify the base names of bundles supported.
  */
 public abstract class AnnotatedBundleProvider implements BundleProvider {
     
     private final Set<String> bundles;
     
     
+    /**
+     * Creates an {@code AnnotatedBundleProvider}.
+     */
     protected AnnotatedBundleProvider() {
         var provided = getClass().getAnnotation(Provides.class);
         bundles = provided == null ? Set.of() : Set.of(provided.value());
@@ -45,11 +48,10 @@ public abstract class AnnotatedBundleProvider implements BundleProvider {
     
     
     /**
-     * Determines if the {@code Provides} annotation on this {@code AnnotatedBundleProvider}
-     * contains the specified name.
+     * Determines if the {@code Provides} annotation contains the specified base name.
      * 
      * @param name the base name
-     * @return true if the Provides annotation on this AnnotatedBundleProvider contains the specified base name
+     * @return true if the Provides annotation contains the specified base name
      * 
      * @see com.karuslabs.lingua.franca.spi.annotations.Provides
      */

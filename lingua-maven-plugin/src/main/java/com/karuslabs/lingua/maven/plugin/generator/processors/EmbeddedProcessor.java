@@ -36,7 +36,7 @@ import org.apache.maven.plugin.logging.Log;
 
 /**
  * Processes {@link com.karuslabs.lingua.franca.template.annotations.Embedded Embedded} annotations
- * and generates default locale files from the template specified by the annotation.
+ * and generates locale files from the template specified by the annotation.
  */
 public class EmbeddedProcessor extends TemplateProcessor {
     
@@ -56,7 +56,7 @@ public class EmbeddedProcessor extends TemplateProcessor {
      * 
      * @param classes the annotated classes
      * @param logger the logger
-     * @return true if the locale files for all annotated classes were generated sucessfully
+     * @return true if the locale files for all annotated classes were successfully generated
      */
     @Override
     public boolean process(Collection<Class<?>> classes, Log logger) {

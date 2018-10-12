@@ -34,8 +34,8 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSE
 
 
 /**
- * This Mojo generates default locale files to be embedded in the resultant JAR 
- * from a template in the resources folder at compile-time.
+ * This Mojo generates locale files from a template to be embedded in the resultant 
+ * JAR in the resources folder at compile-time.
  */
 @Mojo(name = "generate", defaultPhase = PROCESS_CLASSES, threadSafe = false)
 public class LinguaGenerateMojo extends LinguaMojo {

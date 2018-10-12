@@ -23,6 +23,6 @@
  */
 
 /**
- * Service provider classes for retrieving and loading {@code Bundle}s.
+ * Service Provider Interfaces for loading bundles.
  */
 package com.karuslabs.lingua.franca.spi;

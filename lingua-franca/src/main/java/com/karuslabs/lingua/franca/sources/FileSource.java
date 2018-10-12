@@ -27,7 +27,7 @@ import java.lang.StackWalker.Option;
 
 
 /**
- * A {@code Source} implementation from which file resources can be retrieved.
+ * A {@code Source} implementation from which file resources can be loaded.
  */
 public abstract class FileSource implements Source {
     

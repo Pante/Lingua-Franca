@@ -32,7 +32,7 @@ import java.util.Map;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-// Used by AnnotatedBundleProvider#provides(..) to check if the provider supports a bundle
+// Used by AnnotatedBundleProvider.provides(..) to check if the provider supports a bundle
 @Provides("custom_bundle") 
 public class CustomBundleProvider extends AnnotatedBundleProvider {
 

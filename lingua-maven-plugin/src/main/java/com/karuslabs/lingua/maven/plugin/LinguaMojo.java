@@ -34,7 +34,7 @@ import org.reflections.Reflections;
 
 
 /**
- * This class provides a skeletal implementation of a Mojo for the Lingua Maven Plugin.
+ * This class provides a skeletal implementation of a Lingua Maven Plugin Mojo.
  */
 public abstract class LinguaMojo extends AbstractMojo {
     

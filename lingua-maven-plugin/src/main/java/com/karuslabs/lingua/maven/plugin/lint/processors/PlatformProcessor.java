@@ -39,9 +39,9 @@ import org.apache.maven.plugin.logging.Log;
 public class PlatformProcessor extends TemplateProcessor {
     
     /**
-     * Creates a {@code PlatformProcessor}
+     * Creates a {@code PlatformProcessor} with the specified resources folder.
      * 
-     * @param resources 
+     * @param resources the resources folder
      */
     public PlatformProcessor(File resources) {
         super(resources);

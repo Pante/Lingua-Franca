@@ -58,6 +58,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
+                    <source>10</source>
+                    <target>10</target>
                     <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
@@ -134,7 +136,7 @@
                     <docfilessubdirs>true</docfilessubdirs>
                     <additionalOptions>-html5</additionalOptions>
                     <links>
-                        <link>https://google.github.io/guava/releases/26.0-jre/api/docs/package-list</link>
+                        <link>https://google.github.io/guava/releases/26.0-jre/api/docs/</link>
                         <link>https://docs.oracle.com/javase/10/docs/api/</link>
                     </links>
                 </configuration>

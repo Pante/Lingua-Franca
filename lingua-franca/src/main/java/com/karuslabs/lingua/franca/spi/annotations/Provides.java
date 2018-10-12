@@ -30,7 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * An annotation used to indicate the names of bundles supported by a 
+ * An annotation used to indicate the base names of bundles supported by a 
  * {@link com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider AnnotatedBundleProvider}
  * implementation.
  */

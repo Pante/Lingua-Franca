@@ -29,13 +29,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 /**
- * A {@code Source} implementation from which file resources on the system can be 
- * retrieved during runtime.
+ * A {@code Source} implementation from which file resources in the runtime system
+ * can be loaded.
  */
 public class SystemSource extends FileSource {
     
     /**
-     * The source for the directory relative to the application during runtime.
+     * The source for the folder relative to the application at runtime.
      */
     public static final SystemSource RELATIVE_ROOT = new SystemSource("./");
     
@@ -51,7 +51,7 @@ public class SystemSource extends FileSource {
 
     
     /**
-     * Creates a stream for the specified resource in the system during runtime.
+     * Creates a stream for the specified resource in the runtime system.
      * 
      * @param resource the resource
      * @return a stream for the specified resource, or null if a stream could not be created

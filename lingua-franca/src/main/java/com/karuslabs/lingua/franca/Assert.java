@@ -27,16 +27,16 @@ import java.util.*;
 
 
 /**
- * This class consists exclusively of static assertion methods for the contents of a given {@code Bundle}.
+ * This class consists exclusively of static assertions for the contents of a given bundle.
  */
 public class Assert {
     
     /**
-     * Asserts that the root {@code Bundle} of the specified {@code Bundle} contains all 
-     * entries defined in the specified {@code Bundle} and its parents.
+     * Determines if the entries in the specified bundle and its parents are a subset
+     * of those in the root bundle.
      * 
      * @param bundle the bundle to be asserted
-     * @return true if the entries in the specified bundle and its parents are a subset of the entries in the specified bundle; else false
+     * @return true if the root bundle contains all entries in the specified bundle and its parents
      */
     public static boolean subset(Bundle bundle) {
         var root = bundle;
@@ -55,17 +55,17 @@ public class Assert {
     }
     
     /**
-     * Asserts that the entries in the specified child map is a subset of the entries in 
-     * the specified parent map.
+     * Determines if the entries in the specified child are a subset of those in the
+     * specified parent map.
+     * <p>
+     * This method expects the values in the specified parent and child to be either
+     * strings or arrays of strings. If a value of the child is an array and the
+     * array length is less than or equal to that of the parent, the child entry 
+     * is considered a subset.
      * 
-     * This method expects the values of the specified parent and child maps to be either
-     * a string or array of strings. If both the parent and child maps contains an entry with 
-     * an array of strings, the child entry is considered a subset if the array length is 
-     * less than or equal to that of the parent entry.
-     * 
-     * @param parent the parent map; expected to contain only string and array of string values
-     * @param child the child map; expected to contain only string and array of string values
-     * @return true if the specified child entries are a subset of the specified parent; else false
+     * @param parent the parent map which contains string and array of strings
+     * @param child the child map which contains string and array of strings
+     * @return true if the parent map contains all entries in the child map
      */
     public static boolean subset(Map<String, Object> parent, Map<String, Object> child) {
         for (var entry : child.entrySet()) {

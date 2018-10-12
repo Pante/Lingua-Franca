@@ -23,6 +23,6 @@
  */
 
 /**
- * Annotations for the generation of default locale files from a template.
+ * Annotations for the generation of locale files from a template.
  */
 package com.karuslabs.lingua.franca.template.annotations;
