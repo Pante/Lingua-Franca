@@ -23,19 +23,16 @@
  */
 package com.karuslabs.lingua.maven.plugin.lint.processors;
 
+import com.karuslabs.lingua.franca.annotations.Namespace;
+
 import com.karuslabs.lingua.maven.plugin.Processor;
 
 import java.util.Collection;
 
 import org.apache.maven.plugin.logging.Log;
-import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
-/**
- * Determines if a {@link com.karuslabs.lingua.franca.annotations.Namespace Namespace} annotation
- * contains a non-empty bundle name.
- */
-public class BundledProcessor implements Processor {
+public class NamespaceProcessor implements Processor {
     
     /**
      * Determines if the annotated classes contain non-empty bundle names.
@@ -51,7 +48,7 @@ public class BundledProcessor implements Processor {
         for (var type : classes) {
             var annotation = type.getAnnotation(Namespace.class);
             if (annotation.value().isEmpty()) {
-                logger.error("Invalid @Bundled annotation for " + type.getName() + ", @Bundled cannot be empty");
+                logger.error("Invalid @Namespace annotation for " + type.getName() + ", @Namespace cannot be empty");
                 success = false;
             }
         }

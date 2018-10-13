@@ -23,29 +23,24 @@
  */
 package com.karuslabs.lingua.maven.plugin.lint.processors;
 
+import com.karuslabs.lingua.franca.annotations.Namespace;
+
 import java.util.Set;
 
-import java.util.stream.Stream;
 import org.apache.maven.plugin.logging.Log;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
-
-import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
-import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 @ExtendWith(MockitoExtension.class)
-class BundledProcessorTest {
+class NamespaceProcessorTest {
     
-    BundledProcessor processor = spy(new BundledProcessor());
+    NamespaceProcessor processor = spy(new NamespaceProcessor());
     Log logger = mock(Log.class);
     
     
@@ -71,7 +66,7 @@ class BundledProcessorTest {
     @Test
     void process_invalid() {
         assertFalse(processor.process(Set.of(Invalid.class), logger));
-        verify(logger).error("Invalid @Bundled annotation for " + Invalid.class.getName() + ", @Bundled cannot be empty");
+        verify(logger).error("Invalid @Namespace annotation for " + Invalid.class.getName() + ", @Namespace cannot be empty");
     }
     
 }
