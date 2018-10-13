@@ -21,13 +21,13 @@ The master branch contains the bleeding edge, unreleased version of the project.
 
 <!-- Release Builds -->
 <repository>
-  <id>chimera-releases</id>
+  <id>lingua-releases</id>
   <url>https://repo.karuslabs.com/repository/lingua-franca-releases/</url>
 </repository>
 
 <!-- Nightly Builds -->
 <repository>
-  <id>chimera-snapshots</id>
+  <id>lingua-snapshots</id>
   <url>https://repo.karuslabs.com/repository/lingua-franca-snapshots/</url>
 </repository>
 
