@@ -1,0 +1,15 @@
+source: "https://www.rd.com/jokes/bad-puns/"
+
+title: "Puns in {0}"
+
+first:
+    question: "Did you hear about the man who was accidentally buried alive?"
+    answer: "It was a grave mistake."
+
+second:
+    question: "What sound does a sleeping T-Rex make?"
+    answer: "A dino-snore."
+    
+responses:
+    - "*{0} sighs*"
+    - "*Bring out the rotten tomatoes*"

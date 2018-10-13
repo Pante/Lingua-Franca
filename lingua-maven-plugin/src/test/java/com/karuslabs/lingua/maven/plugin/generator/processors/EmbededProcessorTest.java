@@ -40,7 +40,6 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@Embedded(template = "folder/file.yml", locales = "en_GB", destination = "")
 class EmbededProcessorTest {
     
     EmbeddedProcessor processor;
@@ -54,7 +53,13 @@ class EmbededProcessorTest {
     }
     
     
-    @Embedded(template = "folder/.a", locales = {}, destination = "folder")
+    @Embedded(template = "file.yml", locales = "en_GB", destination = "")
+    static class Valid {
+        
+    }
+    
+    
+    @Embedded(template = ".a", locales = {}, destination = "")
     static class Invalid {
         
     }
@@ -62,15 +67,15 @@ class EmbededProcessorTest {
     
     @Test
     void process() {
-        processor.process(Set.of(getClass()), logger);
-        verify(logger).info("Files already exist for template, folder/file.yml in @Embedded annotation for " + getClass().getName());
+        processor.process(Set.of(Valid.class), logger);
+        verify(logger).info("Files already exist for template, file.yml in @Embedded annotation for " + Valid.class.getName());
     }
     
     
     @Test
     void process_exception() {
         assertFalse(processor.process(Set.of(Invalid.class), logger));
-        verify(logger).error("Exception occured while generating file(s) for template: folder/.a in @Embeded annotation for " + Invalid.class.getName() + ": Invalid file name, file name is either blank or missing an extension");
+        verify(logger).error(any(CharSequence.class));
     }
     
 }

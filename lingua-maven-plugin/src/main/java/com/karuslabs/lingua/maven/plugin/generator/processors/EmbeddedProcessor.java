@@ -84,12 +84,12 @@ public class EmbeddedProcessor extends TemplateProcessor {
             for (var locale : annotation.locales()) {
                 locales.add(Locales.of(locale));
             }
-            if (!Templates.fromClassLoader(annotation.template(), getClass().getClassLoader(), locales, new File(resources, annotation.destination()).getPath())) {
+            if (!Templates.from(new File(resources, annotation.template()), locales, new File(resources, annotation.destination()).getPath())) {
                 logger.info("Files already exist for template, " + annotation.template() + " in @Embedded annotation for " + type.getName());
             }
             return true;
 
-        } catch (IllegalArgumentException | UncheckedIOException e) {
+        } catch (UncheckedIOException e) {
             logger.error("Exception occured while generating file(s) for template: " + annotation.template()
                     + " in @Embeded annotation for " + type.getName() + ": " + e.getMessage());
             return false;

@@ -64,12 +64,22 @@ public class EmbeddedProcessor extends TemplateProcessor {
         for (var type : classes)  {
             for (var annotation : type.getAnnotationsByType(Embedded.class)) {
                 success &= processEmbedded(logger, type, "Embedded",  annotation.template());
-                success &= processLocales(logger, type, "Platform", annotation.locales());
-                success &= processEmbedded(logger, type, "Embedded",  annotation.destination());
+                success &= processLocales(logger, type, "Embedded", annotation.locales());
+                success &= processDestination(logger, type, "Embedded",  annotation.destination());
             }
         }
         
         return success;
+    }
+    
+    protected boolean processDestination(Log logger, Class<?> type, String annotation, String destination) {
+        var folder = new File(resources, destination);
+        var valid = folder.exists() && folder.isDirectory();
+        if (!valid) {
+            logger.error("Invalid @" + annotation + " annotation for " + type.getName() + ", '" + destination + "' either does not exist or is not a folder");
+        }
+        
+        return valid;
     }
     
 }

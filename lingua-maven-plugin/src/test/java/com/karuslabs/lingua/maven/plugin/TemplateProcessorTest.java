@@ -71,16 +71,16 @@ class TemplateProcessorTest {
     
     
     @Test
-    void processEmbedded_error() {
-        assertFalse(processor.processEmbedded(logger, TemplateProcessorTest.class, "Test", "invalid.yml"));
-        verify(logger).error("Invalid @Test annotation for " + TemplateProcessorTest.class.getName() + ", 'invalid.yml' either does not exist or is not a file");
-    }
-    
-    
-    @Test
     void processEmbedded() {
         assertTrue(processor.processEmbedded(logger, TemplateProcessorTest.class, "Test", "file.yml"));
         verify(logger, times(0)).error(any(CharSequence.class));
+    }    
+    
+    
+    @Test
+    void processEmbedded_error() {
+        assertFalse(processor.processEmbedded(logger, TemplateProcessorTest.class, "Test", "invalid.yml"));
+        verify(logger).error("Invalid @Test annotation for " + TemplateProcessorTest.class.getName() + ", 'invalid.yml' either does not exist or is not a file");
     }
     
 }
