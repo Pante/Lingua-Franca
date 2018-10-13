@@ -32,7 +32,7 @@ import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 /**
- * Determines if a {@link com.karuslabs.lingua.franca.annotations.Bundled Bundled} annotation
+ * Determines if a {@link com.karuslabs.lingua.franca.annotations.Namespace Namespace} annotation
  * contains a non-empty bundle name.
  */
 public class BundledProcessor implements Processor {

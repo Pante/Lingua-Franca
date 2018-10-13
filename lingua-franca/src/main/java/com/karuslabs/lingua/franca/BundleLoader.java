@@ -156,7 +156,7 @@ public class BundleLoader {
     /**
      * Registers the sources specified in the {@link ClassLoaderSources}, {@link ModuleSources} 
      * and {@link SystemSources} annotations to either the namespace specified in 
-     * the {@link Bundled} annotation or the global namespace if not present.
+     * the {@link Namespace} annotation or the global namespace if not present.
      * 
      * @param annotated the annotated object
      * @return true if the registry did not already contain any of the specified sources
@@ -167,7 +167,7 @@ public class BundleLoader {
     
     /**
      * Registers the sources specified in the {@link ClassLoaderSources}, {@link ModuleSources} 
-     * and {@link SystemSources} annotations to the namespace specified in the {@link Bundled}
+     * and {@link SystemSources} annotations to the namespace specified in the {@link Namespace}
      * annotation if present, else the global registry.
      * 
      * @param annotated the annotated class

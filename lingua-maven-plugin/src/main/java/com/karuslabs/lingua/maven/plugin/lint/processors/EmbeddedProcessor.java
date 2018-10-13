@@ -72,6 +72,15 @@ public class EmbeddedProcessor extends TemplateProcessor {
         return success;
     }
     
+    /**
+     * Determines if the specified destination exists and is a folder.
+     * 
+     * @param logger the logger
+     * @param type the annotated class
+     * @param annotation the annotation name
+     * @param destination the destination folder
+     * @return true if the specified destination exists and is a folder
+     */
     protected boolean processDestination(Log logger, Class<?> type, String annotation, String destination) {
         var folder = new File(resources, destination);
         var valid = folder.exists() && folder.isDirectory();

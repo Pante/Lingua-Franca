@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Signifies the folder(s) in the runtime system from which locale files can be found.
  * <p>
- * Declared in conjunction with the {@link Bundled} annotation to signify the namespace
+ * Declared in conjunction with the {@link Namespace} annotation to signify the namespace
  * to which the sources in this annotation are registered.
  */
 @Documented

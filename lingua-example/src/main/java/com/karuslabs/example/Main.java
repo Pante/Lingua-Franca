@@ -52,9 +52,11 @@ public class Main {
     
     
     public static void main(String... args) {
+        // Registers the sources to the puns and global namespaces of the global bundler respectively
         Bundler.bundler().loader().add(PUNS);
         Bundler.bundler().loader().add(new ClassLoaderSource(""), new ModuleSource(""));
         
+        // Creates the default locale files in the folder which contains this JAR
         Templates.fromPlatforms(PUNS);
         
         while (true) {
@@ -94,11 +96,17 @@ public class Main {
 }
 
 
+// Base name of bundle
 @Namespace("puns")
+// Location of bundles, relative to the resources folder
 @ClassLoaderSources({"puns/classloader"})
+// Location of bundles, relative to the resources folder
 @ModuleSources({"puns/module"})
+// Location of bundles, relative to this JAR
 @SystemSources({"./"})
+// Used by Lingua-Maven-Plugin:generate to generate locale files embededed in the JAR at compile-time
 @Embedded(template = "puns/classloader/puns.yml", locales = {"NL"}, destination = "puns/classloader")
+// Used by Templates#fromPlatforms(...) to generate default locale files in the runtime system
 @Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./")
 class Puns {
     

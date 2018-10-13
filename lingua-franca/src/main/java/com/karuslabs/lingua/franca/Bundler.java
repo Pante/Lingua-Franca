@@ -95,7 +95,7 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the default {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated object and locale, 
+     * {@link Namespace} annotation on the specified annotated object and locale, 
      * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
@@ -108,7 +108,7 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the specified {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated object and locale,
+     * {@link Namespace} annotation on the specified annotated object and locale,
      * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
@@ -123,7 +123,7 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the default {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated class and locale,
+     * {@link Namespace} annotation on the specified annotated class and locale,
      * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
@@ -136,7 +136,7 @@ public class Bundler {
     
     /**
      * Reloads the bundle and its parents using the specified {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated class and locale,
+     * {@link Namespace} annotation on the specified annotated class and locale,
      * invalidating cached entries. An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
@@ -177,7 +177,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the default {@code BundleLoader}, 
-     * {@link Bundled} annotation on the specified annotated object and locale. 
+     * {@link Namespace} annotation on the specified annotated object and locale. 
      * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
@@ -190,7 +190,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated object and locale. 
+     * {@link Namespace} annotation on the specified annotated object and locale. 
      * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated object
@@ -205,7 +205,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the default {@code BundleLoader}, 
-     * {@link Bundled} annotation on the specified annotated class and specified locale. 
+     * {@link Namespace} annotation on the specified annotated class and specified locale. 
      * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
@@ -218,7 +218,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated class and locale. 
+     * {@link Namespace} annotation on the specified annotated class and locale. 
      * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
@@ -233,7 +233,7 @@ public class Bundler {
     
     /**
      * Loads the bundle and its parents using the specified {@code BundleLoader},
-     * {@link Bundled} annotation on the specified annotated class, locale and reload flag.
+     * {@link Namespace} annotation on the specified annotated class, locale and reload flag.
      * An empty bundle is returned if no annotation was found.
      * 
      * @param annotated the annotated class
