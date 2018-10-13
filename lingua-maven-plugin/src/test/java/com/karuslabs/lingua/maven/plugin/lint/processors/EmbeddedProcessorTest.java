@@ -25,11 +25,13 @@ package com.karuslabs.lingua.maven.plugin.lint.processors;
 
 import com.karuslabs.lingua.franca.template.annotations.Embedded;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.apache.maven.plugin.logging.Log;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -41,18 +43,41 @@ import static org.mockito.Mockito.*;
 @Embedded(template = "", locales = {}, destination = "")
 class EmbeddedProcessorTest {
     
-    EmbeddedProcessor processor = spy(new EmbeddedProcessor(null));
+    EmbeddedProcessor processor;
     Log logger = mock(Log.class);
+    
+    
+    @BeforeEach
+    void before() throws URISyntaxException {
+        var folder = new File(getClass().getClassLoader().getResource("folder/file.yml").toURI());
+        processor = spy(new EmbeddedProcessor(folder.getParentFile()));
+    }
     
     
     @Test
     void process() {
         doReturn(false).when(processor).processEmbedded(any(), any(), any(), any());
-        doReturn(false).when(processor).processLocales(any(), any(), any(), any());
+        doReturn(true).when(processor).processLocales(any(), any(), any(), any());
+        doReturn(false).when(processor).processDestination(any(), any(), any(), any());
         
         assertFalse(processor.process(Set.of(EmbeddedProcessorTest.class), logger));
-        verify(processor, times(2)).processEmbedded(any(), any(), any(), any());
-        verify(processor, times(1)).processLocales(any(), any(), any(), any());
+        verify(processor).processEmbedded(any(), any(), any(), any());
+        verify(processor).processLocales(any(), any(), any(), any());
+        verify(processor).processDestination(any(), any(), any(), any());
+    }
+    
+    
+    @Test
+    void processDestiantion() {
+        assertTrue(processor.processDestination(logger, getClass(), "Test", ""));
+        verify(logger, times(0)).error(any(CharSequence.class));
+    }
+    
+    
+    @Test
+    void processDestination_error() {
+        assertFalse(processor.processDestination(logger, getClass(), "Test", "invalid.yml"));
+        verify(logger).error("Invalid @Test annotation for " + getClass().getName() + ", 'invalid.yml' either does not exist or is not a folder");
     }
     
 }

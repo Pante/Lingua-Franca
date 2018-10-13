@@ -26,12 +26,14 @@ package com.karuslabs.example;
 import com.karuslabs.lingua.franca.Bundle;
 import com.karuslabs.lingua.franca.Bundler;
 import com.karuslabs.lingua.franca.Locales;
+import com.karuslabs.lingua.franca.annotations.Namespace;
 import com.karuslabs.lingua.franca.annotations.ClassLoaderSources;
 import com.karuslabs.lingua.franca.annotations.ModuleSources;
 import com.karuslabs.lingua.franca.annotations.SystemSources;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.sources.ModuleSource;
 import com.karuslabs.lingua.franca.template.Templates;
+import com.karuslabs.lingua.franca.template.annotations.Embedded;
 import com.karuslabs.lingua.franca.template.annotations.In;
 import com.karuslabs.lingua.franca.template.annotations.Platform;
 
@@ -40,7 +42,6 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 public class Main {
@@ -97,6 +98,7 @@ public class Main {
 @ClassLoaderSources({"puns/classloader"})
 @ModuleSources({"puns/module"})
 @SystemSources({"./"})
+@Embedded(template = "puns/classloader/puns.yml", locales = {"NL"}, destination = "puns/classloader")
 @Platform(template = @In(embedded = "puns/classloader/puns.yml"), locales = {"EOGWEGG", "fr_FR", "ja_JP"}, destination = "./")
 class Puns {
     
