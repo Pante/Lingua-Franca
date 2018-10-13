@@ -144,15 +144,15 @@ public class Templates {
      * <p>
      * This method is caller sensitive.
      * 
-     * @param source the template file
+     * @param template the template file
      * @param locales the locales of the generated files
      * @param destination the destination folder in which the locales files are generated
      * @return true if all locale files were successfully generated
      * @throws IllegalArgumentException if the name of the template file is invalid
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean fromClassLoader(String source, Collection<Locale> locales, String destination) {
-        return fromClassLoader(source, STACK.getCallerClass().getClassLoader(), locales, destination);
+    public static boolean fromClassLoader(String template, Collection<Locale> locales, String destination) {
+        return fromClassLoader(template, STACK.getCallerClass().getClassLoader(), locales, destination);
     }
     
     /**
@@ -160,7 +160,7 @@ public class Templates {
      * template file relative to the specified ClassLoader with the specified base 
      * name and locales.
      * 
-     * @param source the template file
+     * @param template the template file
      * @param loader the ClassLoader from which the template file is located
      * @param locales the locales of the generated files
      * @param destination the destination folder in which the locales files are generated
@@ -168,8 +168,8 @@ public class Templates {
      * @throws IllegalArgumentException if the name of the template file is invalid
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean fromClassLoader(String source, ClassLoader loader, Collection<Locale> locales, String destination) {
-        return from(new File(source), loader.getResourceAsStream(source), locales, destination);
+    public static boolean fromClassLoader(String template, ClassLoader loader, Collection<Locale> locales, String destination) {
+        return from(new File(template), loader.getResourceAsStream(template), locales, destination);
     }
     
     
@@ -179,22 +179,22 @@ public class Templates {
      * <p>
      * This method is caller sensitive.
      * 
-     * @param source the template file
+     * @param template the template file
      * @param locales the locales of the generated files
      * @param destination the destination folder in which the locales files are generated
      * @return true if all locale files were successfully generated
      * @throws IllegalArgumentException if the name of the template file is invalid
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean fromModule(String source, Collection<Locale> locales, String destination) {
-        return fromModule(source, STACK.getCallerClass().getModule(), locales, destination);
+    public static boolean fromModule(String template, Collection<Locale> locales, String destination) {
+        return fromModule(template, STACK.getCallerClass().getModule(), locales, destination);
     }
     
     /**
      * Generates the locale files in the specified destination folder from the template file 
      * in the module the with the specified base name and locales.
      * 
-     * @param source the template file
+     * @param template the template file
      * @param module the module in which the template file is located
      * @param locales the locales of the generated files
      * @param destination the destination folder in which the locales files are generated
@@ -202,9 +202,9 @@ public class Templates {
      * @throws IllegalArgumentException if the name of the template file is invalid
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean fromModule(String source, Module module, Collection<Locale> locales, String destination) {
+    public static boolean fromModule(String template, Module module, Collection<Locale> locales, String destination) {
         try {
-            return from(new File(source), module.getResourceAsStream(source), locales, destination);
+            return from(new File(template), module.getResourceAsStream(template), locales, destination);
             
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -216,16 +216,16 @@ public class Templates {
      * Generates the locale files in the specified destination folder from the specified 
      * template file with the specified base name and locales.
      * 
-     * @param source the template file
+     * @param template the template file
      * @param locales the locales of the generated files
      * @param destination the destination folder in which the locales files are generated
      * @return true if all locale files were successfully generated
      * @throws IllegalArgumentException if the name of the template file is invalid
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean from(File source, Collection<Locale> locales, String destination) {
+    public static boolean from(File template, Collection<Locale> locales, String destination) {
         try {
-            return from(source, new FileInputStream(source), locales, destination);
+            return from(template, new FileInputStream(template), locales, destination);
             
         } catch (FileNotFoundException e) {
             throw new UncheckedIOException(e);
@@ -237,7 +237,7 @@ public class Templates {
      * Generates the locale files in the specified destination folder from the specified 
      * template file with the specified base name and locales.
      * 
-     * @param source the template file
+     * @param template the template file
      * @param stream the stream for the template
      * @param locales the locales of the generated files
      * @param destination the destination folder in which the locales files are generated
@@ -245,8 +245,8 @@ public class Templates {
      * @throws IllegalArgumentException if the name of the template file is invalid
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean from(File source, InputStream stream, Collection<Locale> locales, String destination) {
-        var name = source.getName();
+    public static boolean from(File template, InputStream stream, Collection<Locale> locales, String destination) {
+        var name = template.getName();
         int index = name.lastIndexOf('.');
         if (index <= 0) {
             throw new IllegalArgumentException("Invalid file name, file name is either blank or missing an extension");
@@ -259,7 +259,7 @@ public class Templates {
      * Generates the locale files in the specified destination folder from the specified 
      * stream with the specified base name, format and locales.
      * 
-     * @param name the base name of the locale files
+     * @param template the base name of the locale files
      * @param format the format of the generated locale files
      * @param stream the stream for a template
      * @param locales the locales of the generated files
@@ -267,11 +267,11 @@ public class Templates {
      * @return true if all locale files were successfully generated
      * @throws UncheckedIOException if a locale file could not be copied
      */
-    public static boolean from(String name, String format, InputStream stream, Collection<Locale> locales, String destination) {
+    public static boolean from(String template, String format, InputStream stream, Collection<Locale> locales, String destination) {
         try (var in = stream.markSupported() ? stream : new BufferedInputStream(stream)) {
             boolean success = true;
             for (var locale : locales) {
-                var bundle = CONTROL.toResourceName(CONTROL.toBundleName(name, locale), format);
+                var bundle = CONTROL.toResourceName(CONTROL.toBundleName(template, locale), format);
                 var target = Paths.get(destination, bundle);
                 
                 var creatable = Files.notExists(target);

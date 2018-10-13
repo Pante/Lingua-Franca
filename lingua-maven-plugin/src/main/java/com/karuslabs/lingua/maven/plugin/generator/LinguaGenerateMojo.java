@@ -48,10 +48,9 @@ public class LinguaGenerateMojo extends LinguaMojo {
      * @throws MojoFailureException if an expected error occurs during generation
      */
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        var reflection = reflection();
-        
+    public void execute() throws MojoExecutionException, MojoFailureException {  
         getLog().info("Compile classpaths for project detected - generating locale files");
+        var reflection = reflection();
         
         if (processor().process(reflection.getTypesAnnotatedWith(Embedded.class), getLog())) {
             getLog().info("Generation completed successfully");

@@ -119,12 +119,12 @@ public class BundleLoader {
      * Loads the contents of a bundle with the specified localised bundle name, 
      * i.e. {@code bundle_en_GB} from the specified namespace.
      * 
-     * @param sources the namespace from which the bundle is loaded
+     * @param namespace the namespace from which the bundle is loaded
      * @param bundle the localised bundle name, i.e. "bundle_en_GB"
      * @return the contents of a bundle
      */
-    protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {
-        for (var source : sources) {
+    protected @Nullable Map<String, Object> load(Set<Source> namespace, String bundle) {
+        for (var source : namespace) {
             for (var format : formats) {
                 try (var stream = source.load(CONTROL.toResourceName(bundle, format))) {
                     if (stream != null) {
@@ -174,7 +174,7 @@ public class BundleLoader {
      * @return true if the registry did not already contain the specified sources
      */
     public boolean add(Class<?> annotated) {
-        var bundled = annotated.getAnnotation(Bundled.class);
+        var bundled = annotated.getAnnotation(Namespace.class);
         var sources = parse(annotated).toArray(SOURCE);
         
         return bundled == null ? add(sources) : add(bundled.value(), sources);

@@ -52,7 +52,7 @@ class BundleLoaderTest {
     }
     
     
-    @Bundled("named")
+    @Namespace("named")
     @ClassLoaderSources("a")
     @ModuleSources("b")
     @SystemSources("c")

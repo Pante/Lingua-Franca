@@ -53,12 +53,11 @@ public class LinguaLintMojo extends LinguaMojo {
      */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
+        getLog().info("Compile classpaths for project detected - analyzing project");
         var reflection = reflection();
         var success = true;
-
-        getLog().info("Compile classpaths for project detected - analyzing project");
         
-        success &= new BundledProcessor().process(reflection.getTypesAnnotatedWith(Bundled.class), getLog());
+        success &= new BundledProcessor().process(reflection.getTypesAnnotatedWith(Namespace.class), getLog());
         success &= new EmbeddedProcessor(resources).process(reflection.getTypesAnnotatedWith(Embedded.class), getLog());
         success &= new PlatformProcessor(resources).process(reflection.getTypesAnnotatedWith(Platform.class), getLog());
         success &= new ProvidesProcessor().process(reflection.getTypesAnnotatedWith(Provides.class), getLog());

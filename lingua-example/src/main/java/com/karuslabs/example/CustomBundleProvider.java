@@ -21,35 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations;
+package com.karuslabs.example;
 
-import java.lang.annotation.*;
+import com.karuslabs.lingua.franca.Bundle;
+import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
+import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.util.Locale;
+import java.util.Map;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-/**
- * Signifies the base name of a {@code Bundle}.
- * <p>
- * Usages
- * <ul>
- * <li>Denotes the {@code BundleLoader} namespace to which sources declared using
- *     the {@link ClassLoaderSources}, {@link ModuleSources} and {@link SystemSources} 
- *     annotations on the same class are registered.
- * <li>Denotes the base name of the bundle to be loaded via a {@code BundleLoader}.
- * </ul>
- */
-@Documented
-@Retention(RUNTIME)
-@Target(TYPE)
-public @interface Bundled {
-    
-    /**
-     * The base name of a bundle.
-     * 
-     * @return the base name.
-     */
-    String value();
+@Provides("custom_bundle")
+public class CustomBundleProvider extends AnnotatedBundleProvider {
+
+    @Override
+    public @Nullable Bundle get(String name, Locale locale) {
+        if (provides(name)) {
+            return new Bundle(Map.of("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward."), locale);
+            
+        } else {
+            return null;
+        }
+    }
     
 }

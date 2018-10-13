@@ -21,42 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.maven.plugin.lint.processors;
+package com.karuslabs.lingua.franca.annotations;
 
-import com.karuslabs.lingua.maven.plugin.Processor;
+import java.lang.annotation.*;
 
-import java.util.Collection;
-
-import org.apache.maven.plugin.logging.Log;
-import com.karuslabs.lingua.franca.annotations.Namespace;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * Determines if a {@link com.karuslabs.lingua.franca.annotations.Bundled Bundled} annotation
- * contains a non-empty bundle name.
+ * Signifies the base name of a {@code Bundle}.
+ * <p>
+ * Usages
+ * <ul>
+ * <li>Denotes the {@code BundleLoader} namespace to which sources declared using
+ *     the {@link ClassLoaderSources}, {@link ModuleSources} and {@link SystemSources} 
+ *     annotations on the same class are registered.
+ * <li>Denotes the base name of the bundle to be loaded via a {@code BundleLoader}.
+ * </ul>
  */
-public class BundledProcessor implements Processor {
+@Documented
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface Namespace {
     
     /**
-     * Determines if the annotated classes contain non-empty bundle names.
+     * The base name of a bundle.
      * 
-     * @param classes the annotated classes
-     * @param logger the logger
-     * @return true if all annotated classes contain a non-empty bundle name
+     * @return the base name.
      */
-    @Override
-    public boolean process(Collection<Class<?>> classes, Log logger) {
-        var success = true;
-        
-        for (var type : classes) {
-            var annotation = type.getAnnotation(Namespace.class);
-            if (annotation.value().isEmpty()) {
-                logger.error("Invalid @Bundled annotation for " + type.getName() + ", @Bundled cannot be empty");
-                success = false;
-            }
-        }
-        
-        return success;
-    }
+    String value();
     
 }
