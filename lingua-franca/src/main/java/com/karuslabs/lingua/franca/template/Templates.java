@@ -75,22 +75,22 @@ public class Templates {
     }
 
     
-    public static boolean fromClassLoader(String source, Collection<Locale> locales, String destination) {
-        return fromClassLoader(source, STACK.getCallerClass().getClassLoader(), locales, destination);
+    public static boolean fromClassLoader(String template, Collection<Locale> locales, String destination) {
+        return fromClassLoader(template, STACK.getCallerClass().getClassLoader(), locales, destination);
     }
     
-    public static boolean fromClassLoader(String source, ClassLoader loader, Collection<Locale> locales, String destination) {
-        return from(new File(source), loader.getResourceAsStream(source), locales, destination);
+    public static boolean fromClassLoader(String template, ClassLoader loader, Collection<Locale> locales, String destination) {
+        return from(new File(template), loader.getResourceAsStream(template), locales, destination);
     }
     
     
-    public static boolean fromModule(String source, Collection<Locale> locales, String destination) {
-        return fromModule(source, STACK.getCallerClass().getModule(), locales, destination);
+    public static boolean fromModule(String template, Collection<Locale> locales, String destination) {
+        return fromModule(template, STACK.getCallerClass().getModule(), locales, destination);
     }
     
-    public static boolean fromModule(String source, Module module, Collection<Locale> locales, String destination) {
+    public static boolean fromModule(String template, Module module, Collection<Locale> locales, String destination) {
         try {
-            return from(new File(source), module.getResourceAsStream(source), locales, destination);
+            return from(new File(template), module.getResourceAsStream(template), locales, destination);
             
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -98,9 +98,9 @@ public class Templates {
     }
 
     
-    public static boolean from(File source, Collection<Locale> locales, String destination) {
+    public static boolean from(File template, Collection<Locale> locales, String destination) {
         try {
-            return from(source, new FileInputStream(source), locales, destination);
+            return from(template, new FileInputStream(template), locales, destination);
             
         } catch (FileNotFoundException e) {
             throw new UncheckedIOException(e);
@@ -108,8 +108,8 @@ public class Templates {
     }
     
     
-    public static boolean from(File source, InputStream stream, Collection<Locale> locales, String destination) {
-        var name = source.getName();
+    public static boolean from(File template, InputStream stream, Collection<Locale> locales, String destination) {
+        var name = template.getName();
         int index = name.lastIndexOf('.');
         if (index <= 0) {
             throw new IllegalArgumentException("Invalid file name, file name is either blank or missing an extension");
@@ -118,11 +118,11 @@ public class Templates {
         return from(name.substring(0, index), name.substring(index + 1), stream, locales, destination);
     }
     
-    public static boolean from(String name, String format, InputStream stream, Collection<Locale> locales, String destination) {
+    public static boolean from(String template, String format, InputStream stream, Collection<Locale> locales, String destination) {
         try (var in = stream.markSupported() ? stream : new BufferedInputStream(stream)) {
             boolean success = true;
             for (var locale : locales) {
-                var bundle = CONTROL.toResourceName(CONTROL.toBundleName(name, locale), format);
+                var bundle = CONTROL.toResourceName(CONTROL.toBundleName(template, locale), format);
                 var target = Paths.get(destination, bundle);
                 
                 var creatable = Files.notExists(target);

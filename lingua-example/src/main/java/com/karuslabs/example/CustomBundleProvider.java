@@ -21,31 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.maven.plugin.lint.processors;
+package com.karuslabs.example;
 
-import com.karuslabs.lingua.maven.plugin.Processor;
+import com.karuslabs.lingua.franca.Bundle;
+import com.karuslabs.lingua.franca.spi.AnnotatedBundleProvider;
+import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
-import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
 
-import org.apache.maven.plugin.logging.Log;
-import com.karuslabs.lingua.franca.annotations.Namespace;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 
-public class BundledProcessor implements Processor {
+@Provides("custom_bundle")
+public class CustomBundleProvider extends AnnotatedBundleProvider {
 
     @Override
-    public boolean process(Collection<Class<?>> classes, Log logger) {
-        var success = true;
-        
-        for (var type : classes) {
-            var annotation = type.getAnnotation(Namespace.class);
-            if (annotation.value().isEmpty()) {
-                logger.error("Invalid @Bundled annotation for " + type.getName() + ", @Bundled cannot be empty");
-                success = false;
-            }
+    public @Nullable Bundle get(String name, Locale locale) {
+        if (provides(name)) {
+            return new Bundle(Map.of("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward."), locale);
+            
+        } else {
+            return null;
         }
-        
-        return success;
     }
     
 }

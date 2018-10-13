@@ -81,8 +81,8 @@ public class BundleLoader {
         return messages == null ? Bundle.empty(locale, parent) : new Bundle(messages, locale, parent);
     }
     
-    protected @Nullable Map<String, Object> load(Set<Source> sources, String bundle) {
-        for (var source : sources) {
+    protected @Nullable Map<String, Object> load(Set<Source> namespace, String bundle) {
+        for (var source : namespace) {
             for (var format : formats) {
                 try (var stream = source.load(CONTROL.toResourceName(bundle, format))) {
                     if (stream != null) {
@@ -108,7 +108,7 @@ public class BundleLoader {
     }
     
     public boolean add(Class<?> annotated) {
-        var bundled = annotated.getAnnotation(Bundled.class);
+        var bundled = annotated.getAnnotation(Namespace.class);
         var sources = parse(annotated).toArray(SOURCE);
         
         return bundled == null ? add(sources) : add(bundled.value(), sources);

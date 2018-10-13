@@ -26,7 +26,6 @@ package com.karuslabs.lingua.franca;
 import com.google.common.cache.*;
 import com.google.common.collect.Lists;
 
-import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.spi.BundleProvider;
 
 import java.util.*;
@@ -34,6 +33,7 @@ import java.util.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
+import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 public class Bundler {    
@@ -110,7 +110,7 @@ public class Bundler {
     
     
     protected Bundle load(Class<?> annotated, Locale locale, BundleLoader loader, boolean reload) {
-        var bundled = annotated.getAnnotation(Bundled.class);
+        var bundled = annotated.getAnnotation(Namespace.class);
         if (bundled != null) {
             return load(bundled.value(), locale, loader, reload);
             

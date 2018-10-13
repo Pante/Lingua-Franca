@@ -1,0 +1,16 @@
+{
+  "source": "https://www.fluentin3months.com/spanish-puns/",
+    
+  "title": "Puns in {0}",
+  "first": {
+    "question": "¿Qué hace el pez perezoso?",
+    "answer": "¡Nada!"
+  },
+  "second": {
+    "question": "¿Cuál es la fruta que más se ríe?",
+    "answer": "La naranja, ja, ja, ja, ja…"
+  },
+  "responses": [
+    "*{0} groans!*"
+  ]
+}

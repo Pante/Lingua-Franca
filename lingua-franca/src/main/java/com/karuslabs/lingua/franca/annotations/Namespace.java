@@ -21,31 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.maven.plugin.lint.processors;
+package com.karuslabs.lingua.franca.annotations;
 
-import com.karuslabs.lingua.maven.plugin.Processor;
+import java.lang.annotation.*;
 
-import java.util.Collection;
-
-import org.apache.maven.plugin.logging.Log;
-import com.karuslabs.lingua.franca.annotations.Namespace;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
-public class BundledProcessor implements Processor {
-
-    @Override
-    public boolean process(Collection<Class<?>> classes, Log logger) {
-        var success = true;
-        
-        for (var type : classes) {
-            var annotation = type.getAnnotation(Namespace.class);
-            if (annotation.value().isEmpty()) {
-                logger.error("Invalid @Bundled annotation for " + type.getName() + ", @Bundled cannot be empty");
-                success = false;
-            }
-        }
-        
-        return success;
-    }
+@Documented
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface Namespace {
+    
+    String value();
     
 }

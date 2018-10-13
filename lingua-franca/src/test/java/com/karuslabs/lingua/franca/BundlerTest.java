@@ -26,7 +26,6 @@ package com.karuslabs.lingua.franca;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 
-import com.karuslabs.lingua.franca.annotations.Bundled;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.spi.BundleProvider;
 
@@ -45,6 +44,7 @@ import org.mockito.quality.Strictness;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -80,7 +80,7 @@ class BundlerTest {
     }
     
     
-    @Bundled("loaded")
+    @Namespace("loaded")
     static class Annotated {
         
     }

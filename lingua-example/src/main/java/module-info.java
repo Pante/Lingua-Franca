@@ -21,19 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.karuslabs.lingua.franca.annotations;
-
-import java.lang.annotation.*;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-
-@Documented
-@Retention(RUNTIME)
-@Target(TYPE)
-public @interface Bundled {
+module com.karuslabs.lingua.franca.example {
+    provides com.karuslabs.lingua.franca.spi.BundleProvider with com.karuslabs.example.CustomBundleProvider;
+        
+    exports com.karuslabs.example;
     
-    String value();
-    
+    requires com.karuslabs.lingua.franca;
+    requires org.checkerframework.checker.qual;
 }

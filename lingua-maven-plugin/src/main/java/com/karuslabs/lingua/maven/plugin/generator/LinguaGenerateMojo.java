@@ -37,10 +37,9 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSE
 public class LinguaGenerateMojo extends LinguaMojo {
     
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        var reflection = reflection();
-        
+    public void execute() throws MojoExecutionException, MojoFailureException {  
         getLog().info("Compile classpaths for project detected - generating locale files");
+        var reflection = reflection();
         
         if (processor().process(reflection.getTypesAnnotatedWith(Embedded.class), getLog())) {
             getLog().info("Generation completed successfully");

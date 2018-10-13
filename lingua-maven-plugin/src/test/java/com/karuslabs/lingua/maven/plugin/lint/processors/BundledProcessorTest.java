@@ -23,7 +23,6 @@
  */
 package com.karuslabs.lingua.maven.plugin.lint.processors;
 
-import com.karuslabs.lingua.franca.annotations.Bundled;
 import java.util.Set;
 
 import java.util.stream.Stream;
@@ -40,6 +39,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
+import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -49,13 +49,13 @@ class BundledProcessorTest {
     Log logger = mock(Log.class);
     
     
-    @Bundled("valid")
+    @Namespace("valid")
     static class Valid {
         
     }
     
     
-    @Bundled("")
+    @Namespace("")
     static class Invalid {
         
     }
