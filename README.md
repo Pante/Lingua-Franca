@@ -36,7 +36,7 @@ The master branch contains the bleeding edge, unreleased version of the project.
   <dependency>
       <groupId>com.karuslabs</groupId>
       <artifactId>lingua-franca</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0</version>
   </dependency>
 </dependencies>
 
@@ -45,7 +45,7 @@ The master branch contains the bleeding edge, unreleased version of the project.
     <plugin>
         <groupId>com.karuslabs</groupId>
         <artifactId>lingua-maven-plugin</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <executions>
             <execution>
                 <goals>
