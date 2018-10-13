@@ -108,10 +108,10 @@ public class BundleLoader {
     }
     
     public boolean add(Class<?> annotated) {
-        var bundled = annotated.getAnnotation(Namespace.class);
+        var namespace = annotated.getAnnotation(Namespace.class);
         var sources = parse(annotated).toArray(SOURCE);
         
-        return bundled == null ? add(sources) : add(bundled.value(), sources);
+        return namespace == null ? add(sources) : add(namespace.value(), sources);
     }
     
     protected List<Source> parse(Class<?> annotated) {

@@ -46,7 +46,7 @@ public class LinguaLintMojo extends LinguaMojo {
         var reflection = reflection();
         var success = true;
         
-        success &= new BundledProcessor().process(reflection.getTypesAnnotatedWith(Namespace.class), getLog());
+        success &= new NamespaceProcessor().process(reflection.getTypesAnnotatedWith(Namespace.class), getLog());
         success &= new EmbeddedProcessor(resources).process(reflection.getTypesAnnotatedWith(Embedded.class), getLog());
         success &= new PlatformProcessor(resources).process(reflection.getTypesAnnotatedWith(Platform.class), getLog());
         success &= new ProvidesProcessor().process(reflection.getTypesAnnotatedWith(Provides.class), getLog());

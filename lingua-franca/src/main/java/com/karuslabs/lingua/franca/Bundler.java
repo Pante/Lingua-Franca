@@ -110,9 +110,9 @@ public class Bundler {
     
     
     protected Bundle load(Class<?> annotated, Locale locale, BundleLoader loader, boolean reload) {
-        var bundled = annotated.getAnnotation(Namespace.class);
-        if (bundled != null) {
-            return load(bundled.value(), locale, loader, reload);
+        var namespace = annotated.getAnnotation(Namespace.class);
+        if (namespace != null) {
+            return load(namespace.value(), locale, loader, reload);
             
         } else {
             return Bundle.EMPTY;
