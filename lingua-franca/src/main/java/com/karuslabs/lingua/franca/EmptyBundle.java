@@ -24,14 +24,18 @@
 package com.karuslabs.lingua.franca;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 
 public class EmptyBundle extends Bundle {    
     
+    private static final ConcurrentMap<String, Object> EMPTY = new ConcurrentHashMap<>(0);
+    
+    
     public EmptyBundle(Locale locale, Bundle parent) {
-        super(Map.of(), locale, parent);
+        super(EMPTY, locale, parent);
     }
     
         

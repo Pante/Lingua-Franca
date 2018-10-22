@@ -25,6 +25,7 @@ package com.karuslabs.lingua.franca;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -54,18 +55,18 @@ public class Bundle {
     protected static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
     
     
-    protected Map<String, Object> messages;
+    protected ConcurrentMap<String, Object> messages;
     private volatile @Nullable Set<String> keys;
     private final Locale locale;
     protected Bundle parent;
     private volatile int hash;
     
     
-    public Bundle(Map<String, Object> messages, Locale locale) {
-        this(messages, locale, EmptyBundle.EMPTY);
+    public Bundle(ConcurrentMap<String, Object> messages, Locale locale) {
+        this(messages, locale, Bundle.EMPTY);
     }
     
-    public Bundle(Map<String, Object> messages, Locale locale, Bundle parent) {
+    public Bundle(ConcurrentMap<String, Object> messages, Locale locale, Bundle parent) {
         this.messages = messages;
         this.keys = null;
         this.locale = locale;

@@ -29,6 +29,7 @@ import com.karuslabs.lingua.franca.spi.annotations.Provides;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -39,7 +40,10 @@ public class CustomBundleProvider extends AnnotatedBundleProvider {
     @Override
     public @Nullable Bundle get(String name, Locale locale) {
         if (provides(name)) {
-            return new Bundle(Map.of("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward."), locale);
+            var messages = new ConcurrentHashMap<String, Object>(1);
+            messages.put("description", "This is a bundle created by a custom bundle provider, the implementation is actually really straight-forward.");
+            
+            return new Bundle(messages, locale);
             
         } else {
             return null;

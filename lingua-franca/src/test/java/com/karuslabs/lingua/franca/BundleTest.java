@@ -43,15 +43,17 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 @ExtendWith(MockitoExtension.class)
 class BundleTest {
     
+    static final Map<String, Object> CHAINED_VALUES = Map.of("array", new String[] {"a"}, "array[0]", "a");
+    static final Map<String, Object> CHAINED_PARENT = Map.of("key", "value");
     static final Bundle BUNDLE = new Bundle(Stringifier.stringify().from(BundleTest.class.getClassLoader().getResourceAsStream("bundle.yml"), "yml"), Locale.ENGLISH);
-    static final Bundle CHAINED = new Bundle(Map.of("array", new String[] {"a"}, "array[0]", "a"), Locale.ENGLISH, new Bundle(Map.of("key", "value"), Locale.ROOT));
+    static final Bundle CHAINED = new Bundle(new ConcurrentHashMap<>(CHAINED_VALUES), Locale.ENGLISH, new Bundle(new ConcurrentHashMap<>(CHAINED_PARENT), Locale.ROOT));
     static final String VALUE = "?";
     static final String[] EMPTY = new String[] {};
     
     
     @Test
     void empty() {
-        assertSame(Bundle.EMPTY, Bundle.empty(Locale.ROOT, new Bundle(Map.of(), Locale.CANADA)));
+        assertSame(Bundle.EMPTY, Bundle.empty(Locale.ROOT, new Bundle(new ConcurrentHashMap<>(), Locale.CANADA)));
         assertEquals(Locale.CHINESE, Bundle.empty(Locale.CHINESE, Bundle.EMPTY).locale());
     }
     
@@ -166,7 +168,7 @@ class BundleTest {
     static Stream<Arguments> equality_provider() {
         return Stream.of(
             of(BUNDLE, true),
-            of(new Bundle(Map.of(), Locale.ENGLISH), true),
+            of(new Bundle(new ConcurrentHashMap<>(0), Locale.ENGLISH), true),
             of(Bundle.EMPTY, false)
         );
     }

@@ -68,7 +68,7 @@ public class BundleLoader {
         var sources = namespaces.getOrDefault(name, global);
         var bundleName = CONTROL.toBundleName(name, locale);
         
-        Map<String, Object> messages = null;
+        ConcurrentMap<String, Object> messages = null;
         
         if (!sources.isEmpty()) {
             messages = load(sources, bundleName);
@@ -81,7 +81,7 @@ public class BundleLoader {
         return messages == null ? Bundle.empty(locale, parent) : new Bundle(messages, locale, parent);
     }
     
-    protected @Nullable Map<String, Object> load(Set<Source> namespace, String bundle) {
+    protected @Nullable ConcurrentMap<String, Object> load(Set<Source> namespace, String bundle) {
         for (var source : namespace) {
             for (var format : formats) {
                 try (var stream = source.load(CONTROL.toResourceName(bundle, format))) {
