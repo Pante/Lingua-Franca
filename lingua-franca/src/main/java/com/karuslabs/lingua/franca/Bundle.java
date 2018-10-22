@@ -111,6 +111,9 @@ public class Bundle {
         var message = messages.get(key);
         if (message == null) {
             message = parent.retrieve(key);
+            if (message != null) {
+                messages.put(key, message);
+            }
         }
         
         return message;
