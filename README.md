@@ -17,6 +17,22 @@ The master branch contains the bleeding edge, unreleased version of the project.
 
 ***
 
+#### Feature Comparison:
+
+|                          | Plain Java | Lingua Franca |
+|--------------------------|:----------:|:-------------:|
+| Annotations              |      ❌     |       ✔       |
+| Formatted Messages       |      ❌     |       ✔       |
+| Optional Messages        |      ❌     |       ✔       |
+| Embedded Resources       |      ✔     |       ✔       |
+| Runtime Resources        |      ❌     |       ✔       |
+| Locale File Generation   |      ❌     |       ✔       |
+| Locale File (properties) |      ✔     |       ✔       |
+| Locale File (JSON)       |      ❌     |       ✔       |
+| Locale File (YAML)       |      ❌     |       ✔       |
+
+***
+
 #### Java 10+ Maven Artifact:
 ```XML
 
