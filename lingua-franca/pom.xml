@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.karuslabs</groupId>
         <artifactId>lingua-franca-project</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     
     <artifactId>lingua-franca</artifactId>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>26.0-jre</version>
+            <version>27.0-jre</version>
             <scope>compile</scope>
         </dependency>
               

@@ -24,6 +24,7 @@
 package com.karuslabs.lingua.franca;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -33,6 +34,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class EmptyBundle extends Bundle {    
     
+    private static final ConcurrentMap<String, Object> EMPTY = new ConcurrentHashMap<>(0);
+    
+    
     /**
      * Creates an {@code EmptyBundle} with the specified locale and parent bundle.
      * 
@@ -40,7 +44,7 @@ public class EmptyBundle extends Bundle {
      * @param parent the parent bundle
      */
     public EmptyBundle(Locale locale, Bundle parent) {
-        super(Map.of(), locale, parent);
+        super(EMPTY, locale, parent);
     }
     
     

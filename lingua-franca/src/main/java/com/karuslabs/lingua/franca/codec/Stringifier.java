@@ -30,6 +30,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -45,7 +46,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * similarly to strings, i.e. {@code path.to.array}. Support is provided for properties, 
  * JSON and YAML files.
  */
-public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object>> {
+public class Stringifier extends Visitor<ConcurrentMap<String, Object>, ConcurrentMap<String, Object>> {
     
     private static final Stringifier STRINGIFIER = new Stringifier();
     
@@ -83,9 +84,9 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
      * @return the flatten and stringified map, or null if the stream is invalid
      * @throws UnsupportedOperationException if the specified format is not supported
      */
-    public @Nullable Map<String, Object> from(InputStream stream, String format) {
+    public @Nullable ConcurrentMap<String, Object> from(InputStream stream, String format) {
         try (stream) {
-            return visit("", mapper(format).readTree(stream), new HashMap<>());
+            return visit("", mapper(format).readTree(stream), new ConcurrentHashMap<>());
 
         } catch (IOException ignored) {
             return null;
@@ -125,7 +126,7 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
      * @return the specified map
      */
     @Override
-    protected Map<String, Object> visit(String path, ObjectNode node, Map<String, Object> map) {
+    protected ConcurrentMap<String, Object> visit(String path, ObjectNode node, ConcurrentMap<String, Object> map) {
         var prefix = path.isEmpty() ? "" : path + ".";
         var fields = node.fields();
         while (fields.hasNext()) {
@@ -146,7 +147,7 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
      * @return the specified map
      */
     @Override
-    protected Map<String, Object> visit(String path, ArrayNode array, Map<String, Object> map) {
+    protected ConcurrentMap<String, Object> visit(String path, ArrayNode array, ConcurrentMap<String, Object> map) {
         if (array.size() == 0) {
             map.put(path, EMPTY);
             return map;
@@ -187,7 +188,7 @@ public class Stringifier extends Visitor<Map<String, Object>, Map<String, Object
      * @return the specified map
      */
     @Override
-    protected Map<String, Object> visit(String path, ValueNode value, Map<String, Object> map) {
+    protected ConcurrentMap<String, Object> visit(String path, ValueNode value, ConcurrentMap<String, Object> map) {
         map.put(path, value.asText());
         return map;
     }

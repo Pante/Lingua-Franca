@@ -26,6 +26,7 @@ package com.karuslabs.lingua.franca.spi;
 import com.karuslabs.lingua.franca.Bundle;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class MockBundleProvider implements BundleProvider {
@@ -33,7 +34,7 @@ public class MockBundleProvider implements BundleProvider {
     
     @Override
     public Bundle get(String name, Locale locale) {
-        return new Bundle(Map.of("key", "value"), Locale.ENGLISH);
+        return new Bundle(new ConcurrentHashMap<>(Map.of("key", "value")), Locale.ENGLISH);
     }
 
     @Override

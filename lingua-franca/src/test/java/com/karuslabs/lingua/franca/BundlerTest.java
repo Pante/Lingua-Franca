@@ -26,10 +26,12 @@ package com.karuslabs.lingua.franca;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 
+import com.karuslabs.lingua.franca.annotations.Namespace;
 import com.karuslabs.lingua.franca.sources.ClassLoaderSource;
 import com.karuslabs.lingua.franca.spi.BundleProvider;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -44,7 +46,6 @@ import org.mockito.quality.Strictness;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import com.karuslabs.lingua.franca.annotations.Namespace;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -61,7 +62,7 @@ class BundlerTest {
     
     
     final Bundler bundler = new Bundler(CacheBuilder.newBuilder().expireAfterAccess(10, MINUTES).maximumSize(512).build(), BundleLoader.loader());
-    final Bundle chained = new Bundle(Map.of(), Locale.UK, new Bundle(Map.of(), Locale.ENGLISH, new Bundle(Map.of(), Locale.ROOT)));
+    final Bundle chained = new Bundle(new ConcurrentHashMap<>(), Locale.UK, new Bundle(new ConcurrentHashMap<>(), Locale.ENGLISH, new Bundle(new ConcurrentHashMap<>(), Locale.ROOT)));
     ServiceLoader<BundleProvider> service;
     
         

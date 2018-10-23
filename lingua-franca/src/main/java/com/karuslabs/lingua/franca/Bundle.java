@@ -25,6 +25,7 @@ package com.karuslabs.lingua.franca;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -80,7 +81,7 @@ public class Bundle {
     protected static final Optional<String[]> EMPTY_ARRAY = Optional.empty();
     
     
-    protected Map<String, Object> messages;
+    protected ConcurrentMap<String, Object> messages;
     private volatile @Nullable Set<String> keys;
     private final Locale locale;
     protected Bundle parent;
@@ -93,8 +94,8 @@ public class Bundle {
      * @param messages the messages
      * @param locale the locale
      */
-    public Bundle(Map<String, Object> messages, Locale locale) {
-        this(messages, locale, EmptyBundle.EMPTY);
+    public Bundle(ConcurrentMap<String, Object> messages, Locale locale) {
+        this(messages, locale, Bundle.EMPTY);
     }
     
     /**
@@ -104,7 +105,7 @@ public class Bundle {
      * @param locale the locale
      * @param parent the parent of this bundle
      */
-    public Bundle(Map<String, Object> messages, Locale locale, Bundle parent) {
+    public Bundle(ConcurrentMap<String, Object> messages, Locale locale, Bundle parent) {
         this.messages = messages;
         this.keys = null;
         this.locale = locale;
@@ -193,6 +194,9 @@ public class Bundle {
     /**
      * Recursively retrieves the value associated with the specified key from this 
      * bundle and its parents.
+     * <p>
+     * Caches values retrieved from its parent to improve subsequent look-up performance
+     * from {@code O(n)} to {@code O(1)}.
      * 
      * @param key the key whose associated value is to be retrieved
      * @return the value to which the specified key is mapped, or null if this bundle
@@ -202,6 +206,9 @@ public class Bundle {
         var message = messages.get(key);
         if (message == null) {
             message = parent.retrieve(key);
+            if (message != null) {
+                messages.put(key, message);
+            }
         }
         
         return message;
