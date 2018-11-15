@@ -4,7 +4,7 @@
     <groupId>com.karuslabs</groupId>
     
     <artifactId>lingua-franca-project</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     
     <name>Lingua Franca Project</name>
@@ -18,8 +18,7 @@
     </modules>
     
     <properties>
-        <maven.compiler.source>10</maven.compiler.source>
-        <maven.compiler.release>10</maven.compiler.release>
+        <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
