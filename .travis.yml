@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - openjdk10
+  - openjdk11
   
 script: mvn --settings travis-settings.xml deploy site site-deploy
 
