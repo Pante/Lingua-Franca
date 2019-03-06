@@ -68,8 +68,16 @@ public class Bundle {
     public static Bundle empty(Locale locale, Bundle parent) {
         return Locale.ROOT.equals(locale) ?  EMPTY : new EmptyBundle(locale, parent);
     }
-
+        
     
+    /**
+     * Does not leak memory since MesssageFormat is a JDK class. Since MessageFormat
+     * is a JDK class, it is loaded at startup and not when this class is loaded.
+     * Only a single MessageFormat class will always be present.
+     *
+     * The memory leak will only occur if a custom value (library subclass of MessageFormat)
+     * is used.
+     */
     private static final ThreadLocal<MessageFormat> FORMATTER = new ThreadLocal<>() {
         @Override
         public MessageFormat initialValue() {
