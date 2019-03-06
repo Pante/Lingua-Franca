@@ -4,7 +4,7 @@
     <groupId>com.karuslabs</groupId>
     
     <artifactId>lingua-franca-project</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>Lingua Franca Project</name>
