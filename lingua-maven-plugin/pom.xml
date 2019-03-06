@@ -134,14 +134,10 @@
             <plugin> 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
                 <configuration>
                     <docfilessubdirs>true</docfilessubdirs>
                     <additionalOptions>-html5</additionalOptions>
-                    <links>
-                        <link>https://google.github.io/guava/releases/27.1-jre/api/docs/</link>
-                        <link>https://docs.oracle.com/javase/11/docs/api/</link>
-                    </links>
                 </configuration>
                 <executions>
                     <execution>

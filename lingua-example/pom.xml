@@ -41,7 +41,7 @@
                     <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
-            
+   
             <plugin>
                 <groupId>com.karuslabs</groupId>
                 <artifactId>lingua-maven-plugin</artifactId>
@@ -75,7 +75,33 @@
                 </configuration>
             </plugin>
             
-            <plugin>
+            <plugin> 
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <additionalOptions>-html5</additionalOptions>
+                </configuration>
+                <executions> 
+                    <execution>
+                        <id>generate-javadoc</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                    <execution> 
+                        <id>attach-javadocs</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals> 
+                    </execution>
+                </executions> 
+            </plugin>
+            
+            <plugin> 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.1</version>
