@@ -139,8 +139,8 @@
                     <docfilessubdirs>true</docfilessubdirs>
                     <additionalOptions>-html5</additionalOptions>
                     <links>
-                        <link>https://google.github.io/guava/releases/26.0-jre/api/docs/</link>
-                        <link>https://docs.oracle.com/javase/10/docs/api/</link>
+                        <link>https://google.github.io/guava/releases/27.1-jre/api/docs/</link>
+                        <link>https://docs.oracle.com/javase/11/docs/api/</link>
                     </links>
                 </configuration>
                 <executions>
@@ -169,7 +169,7 @@
                     <dependency>
                         <groupId>org.apache.maven.wagon</groupId>
                         <artifactId>wagon-webdav-jackrabbit</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.3.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
