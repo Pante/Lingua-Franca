@@ -63,7 +63,7 @@ The master branch contains the bleeding edge, unreleased version of the project.
     <plugin>
         <groupId>com.karuslabs</groupId>
         <artifactId>lingua-maven-plugin</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.4</version>
         <executions>
             <execution>
                 <goals>
