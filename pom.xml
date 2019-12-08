@@ -42,7 +42,7 @@
 
                 <site>
                     <id>karus</id>
-                    <url>dav:https://repo.karuslabs.com/repository/lingua-franca/${project.version}/</url>
+                    <url>dav:https://repo.karuslabs.com/repository/lingua-franca-project/${project.version}/</url>
                 </site>
             </distributionManagement>
         </profile>
