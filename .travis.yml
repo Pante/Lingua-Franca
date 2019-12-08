@@ -1,5 +1,6 @@
 language: java
 sudo: required
+distro: bionic
 jdk:
   - openjdk11
 
@@ -7,4 +8,4 @@ script:
   - mvn --settings travis-settings.xml deploy
 
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
