@@ -22,17 +22,49 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     
-    <distributionManagement>
-        <repository>
+    <profiles>
+        <profile>
             <id>karus</id>
-            <url>https://repo.karuslabs.com/repository/lingua-franca-releases</url>
-        </repository>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>karus</id>
+                    <url>https://repo.karuslabs.com/repository/lingua-franca-releases</url>
+                </repository>
+
+                <snapshotRepository>
+                    <id>karus</id>
+                    <url>https://repo.karuslabs.com/repository/lingua-franca-nightly</url>
+                </snapshotRepository>
+
+                <site>
+                    <id>karus</id>
+                    <url>dav:https://repo.karuslabs.com/repository/lingua-franca/${project.version}/</url>
+                </site>
+            </distributionManagement>
+        </profile>
         
-        <snapshotRepository>
-            <id>karus</id>
-            <url>https://repo.karuslabs.com/repository/lingua-franca-nightly</url>
-        </snapshotRepository>
-    </distributionManagement>
+        <profile>
+            <id>github-packages</id>
+            <activation>
+                <!-- Pending GitHub Package Registry's support for mutable packages !-->
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>github-packages</id>
+                    <url>https://maven.pkg.github.com/Pante/lingua-franca</url>
+                </repository>
+
+                <snapshotRepository>
+                    <id>GitHub-Packages</id>
+                    <url>https://maven.pkg.github.com/Pante/lingua-franca</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
     
     
     <dependencies>
