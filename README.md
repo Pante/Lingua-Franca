@@ -2,7 +2,8 @@
   <img src = "https://i.imgur.com/GQoZzTm.png">
 </p>
 
-[![Build Status](https://travis-ci.org/Pante/Lingua-Franca.svg?branch=master)](https://travis-ci.org/Pante/Lingua-Franca)
+[![Travis-CI](https://img.shields.io/travis/pante/lingua-franca/master?logo=travis)](https://travis-ci.org/Pante/Lingua-Franca)
+[![Funding](https://img.shields.io/badge/%F0%9F%A4%8D%20-sponsorship-ff69b4?style=flat-square)](https://github.com/sponsors/Pante)
 [![Maintainability](https://api.codeclimate.com/v1/badges/3151e7bc7078007cad19/maintainability)](https://codeclimate.com/github/Pante/Lingua-Franca/maintainability)
 [![Coverage](https://codecov.io/gh/Pante/Lingua-Franca/branch/master/graph/badge.svg)](https://codecov.io/gh/Pante/Lingua-Franca)
 [![Stable Branch](https://img.shields.io/badge/stable-branch-blue.svg)](https://github.com/Pante/Lingua-Franca/tree/stable)
