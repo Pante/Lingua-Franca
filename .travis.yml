@@ -1,11 +1,11 @@
 language: java
 sudo: required
-distro: bionic
+dist: bionic
 jdk:
   - openjdk11
 
 script: 
-  - mvn --settings travis-settings.xml deploy
+  - mvn deploy -Dhttps.protocols=TLSv1.2 --settings travis-settings.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
